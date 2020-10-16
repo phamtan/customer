@@ -55,7 +55,7 @@ tới lượt để nhận kết quả</div>
 					<div className="waitingNote">
 						Nếu bạn tắt trình duyệt lúc này sẽ phải đăng nhập lại
 		. Vì vậy chúng tôi khuyên bạn nên giữ nguyên
-trang này. Thông tin đến bạn!</div>
+trang này. <span onClick={() => props.setStep(8)}>Thông tin đến bạn!</span></div>
 				</div>
 			}
 			{checkLimit > 600 &&
@@ -70,9 +70,6 @@ trang này. Thông tin đến bạn!</div>
 
 				</>
 			}
-			<button onClick={() => props.setStep(8)} type="button" className="btn btnKeep">
-				Bỏ qua
-        			</button>
 		</JarvisFormStyle>
 	)
 }

@@ -39,6 +39,11 @@ const PLACE = [
 	{ value: 'dn', label: 'Cục cư trú' },
 ]
 
+const GENDER = [
+	{ value: 'n', label: 'Nam' },
+	{ value: 'nu', label: 'Nữ' },
+]
+
 const DISTRICT = [
 	{ value: 'hn', label: 'Hoàng Mai' },
 	{ value: 'hbt', label: 'Hai bà trưng' },
@@ -91,13 +96,7 @@ export default function Round1(props) {
 					</div>
 					<div className="form-group">
 						<label>Giới tính</label>
-						<input
-							name="gender"
-							className="form-control formControl"
-							placeholder="Giới tính"
-							type="text"
-							ref={register}
-						/>
+						<Select name="gender" className="formControl" options={GENDER} />
 						{errors.gender && (
 							<span className="formError">{errors.gender.message}</span>
 						)}

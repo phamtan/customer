@@ -241,7 +241,12 @@ const JarvisFormStyle = styled.div`
 		.ocrFrame {
 			width: 85%;
 			height: 200px;
+			max-height: 200px;
 			margin-bottom: 30px;
+			.cameraFrame {
+				height: 200px;
+				max-height: 200px;
+			}
 		}
 		.checkLimitContainer {
 			width: 90%;
