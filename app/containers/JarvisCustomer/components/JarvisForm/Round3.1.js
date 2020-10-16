@@ -66,7 +66,7 @@ export default function Round3(props) {
 						<input
 							name="national"
 							className="form-control formControl"
-							placeholder="Quốc tịch"
+							placeholder=""
 							type="text"
 							ref={register}
 						/>
@@ -87,7 +87,7 @@ export default function Round3(props) {
 						<input
 							name="permanentAddress.addressDetail"
 							className="form-control formControl"
-							placeholder="Địa chỉ thường trú"
+							placeholder=""
 							type="text"
 							ref={register}
 						/>

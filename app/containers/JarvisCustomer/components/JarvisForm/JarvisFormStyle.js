@@ -240,8 +240,6 @@ const JarvisFormStyle = styled.div`
 		}
 		.ocrFrame {
 			width: 85%;
-			height: 200px;
-			max-height: 200px;
 			margin-bottom: 30px;
 			.cameraFrame {
 				height: 200px;
@@ -320,7 +318,7 @@ const JarvisFormStyle = styled.div`
 			margin-top:20px;
 			.uploadItem {
 				margin-left: 20px;
-				margin-bottom:30px;
+				margin-bottom:20px;
 			}
 			.uploadButton {
 				width: 91px;
@@ -332,15 +330,15 @@ const JarvisFormStyle = styled.div`
 				border: solid 1px #01ad52;
 				background-color: white;
 				color: #01ad52;
-				margin-top: 10px;
-				margin-right: 20px;
+				margin-top: 5px;
+				margin-left: 20px;
 			}
 			.uploadImg {
 				display:flex;
 				flex-direction: column;
 				width: 100%;
-				align-items: flex-end;
-				justify-content: flex-end;
+				align-items: flex-start;
+				justify-content: flex-start;
 			}
 		}
 		.benefitTitle {

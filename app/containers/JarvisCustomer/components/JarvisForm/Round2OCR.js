@@ -20,6 +20,7 @@ export default function Round2OCRGuide(props) {
 			<div className="ocrFrame">
 				<Camera
 					className="cameraFrame"
+					idealResolution={{ width: 400, height: 380 }}
 					onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
 				/>
 			</div>
@@ -28,6 +29,7 @@ export default function Round2OCRGuide(props) {
 			<div className="ocrFrame">
 				<Camera
 					className="cameraFrame"
+					idealResolution={{ width: 400, height: 380 }}
 					onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
 				/>
 			</div>

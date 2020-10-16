@@ -68,37 +68,37 @@ export default function ConfirmDocument(props) {
 				<div className="uploadImg">
 					<img src={appform} />
 					<input type="file" id="appformfile" onChange={(e) => upload(e, "appform")} style={{ display: "none" }} />
-					<label className="uploadButton" for="appformfile">Upload</label>
+					<label className="uploadButton" htmlFor="appformfile">Upload</label>
 				</div>
 				<div className="uploadItem"><img src={documentIcon} />Chứng minh thông tin cá nhân *</div>
 				<div className="uploadImg">
 					<img src={idProof} />
 					<input type="file" id="idProoffile" onChange={(e) => upload(e, "idProof")} style={{ display: "none" }} />
-					<label className="uploadButton" for="idProoffile">Upload</label>
+					<label className="uploadButton" htmlFor="idProoffile">Upload</label>
 				</div>
 				<div className="uploadItem"><img src={documentIcon} />Chứng minh nơi ở hiện tại</div>
 				<div className="uploadImg">
 					<img src={addProof} />
 					<input type="file" id="addProoffile" onChange={(e) => upload(e, "addProof")} style={{ display: "none" }} />
-					<label className="uploadButton" for="addProoffile">Upload</label>
+					<label className="uploadButton" htmlFor="addProoffile">Upload</label>
 				</div>
 				<div className="uploadItem"><img src={documentIcon} />Chứng minh tài chính</div>
 				<div className="uploadImg">
 					<img src={financeProof} />
 					<input type="file" id="financeProoffile" onChange={(e) => upload(e, "financeProof")} style={{ display: "none" }} />
-					<label className="uploadButton" for="financeProoffile">Upload</label>
+					<label className="uploadButton" htmlFor="financeProoffile">Upload</label>
 				</div>
 				<div className="uploadItem"><img src={documentIcon} />Chứng minh công việc</div>
 				<div className="uploadImg">
 					<img src={employmentProof} />
 					<input type="file" id="employmentProoffile" onChange={(e) => upload(e, "employmentProof")} style={{ display: "none" }} />
-					<label className="uploadButton" for="employmentProofile">Upload</label>
+					<label className="uploadButton" htmlFor="employmentProofile">Upload</label>
 				</div>
 				<div className="uploadItem"><img src={documentIcon} />Chữ ký</div>
 				<div className="uploadImg">
 					<img src={signature} />
 					<input type="file" id="signaturefile" onChange={(e) => upload(e, "signature")} style={{ display: "none" }} />
-					<label className="uploadButton" for="signaturefile">Upload</label>
+					<label className="uploadButton" htmlFor="signaturefile">Upload</label>
 				</div>
 
 				<button type="button" onClick={handleShow} className="btn btnSubmit">

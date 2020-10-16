@@ -43,7 +43,7 @@ export default function OTP(props) {
               name="otp"
               ref={register}
               size={6}
-              maxlength={6}
+              maxLength={6}
             />
             {errors.otp && (
               <span className="formError">{errors.otp.message}</span>

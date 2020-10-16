@@ -64,7 +64,7 @@ export default function Round3(props) {
 						<input
 							name="national"
 							className="form-control formControl"
-							placeholder="Quốc tịch"
+							placeholder=""
 							type="text"
 							ref={register}
 						/>
@@ -74,13 +74,25 @@ export default function Round3(props) {
 					</div>
 					<div className="form-group">
 						<label>Bạn có thuộc một trong các điều kiện sau không: là công dân Hoa Kỳ, có thẻ thường trú nhân tại Hoa Kỳ (Thẻ Xanh) hoặc là cá nhân cư trú tại Hoa Kỳ?</label>
-						<input
-							name="gender"
-							className="form-control formControl"
-							placeholder="Giới tính"
-							type="text"
-							ref={register}
-						/>
+						<div className="radioWrapper">
+							<input
+								className="form-control radioControl"
+								name="fullName"
+								type="radio"
+								ref={register}
+							/> Có
+						</div>
+						<div className="radioWrapper">
+							<input
+								className="form-control radioControl"
+								name="fullName"
+								type="radio"
+								ref={register}
+							/> Không
+						{errors.fullName && (
+								<span className="formError">{errors.fullName.message}</span>
+							)}
+						</div>
 						{errors.gender && (
 							<span className="formError">{errors.gender.message}</span>
 						)}

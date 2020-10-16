@@ -19,6 +19,7 @@ export default function Round2OCRGuide(props) {
 			<div className="ocrSubtitle">Vui lòng nhìn vào camera và thực hiện theo các yêu cầu</div>
 			<div className="ocrFrame">
 				<Camera
+					idealResolution={{ width: 400, height: 380 }}
 					onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
 				/>
 			</div>
