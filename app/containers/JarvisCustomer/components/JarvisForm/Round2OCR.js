@@ -19,8 +19,9 @@ export default function Round2OCRGuide(props) {
 			<div className="ocrSubtitle">Đưa mặt trước GTTT của bạn lên trước camera và bấm chụp</div>
 			<div className="ocrFrame">
 				<Camera
-					className="cameraFrame"
-					idealResolution={{ width: 400, height: 380 }}
+					className="ocrFrame"
+					isDisplayStartCameraError={true}
+					idealResolution={{ width: 640, height: 480 }}
 					onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
 				/>
 			</div>
@@ -28,8 +29,9 @@ export default function Round2OCRGuide(props) {
 			<div className="ocrSubtitle">Đưa mặt sau GTTT của bạn lên trước camera và bấm chụp</div>
 			<div className="ocrFrame">
 				<Camera
-					className="cameraFrame"
-					idealResolution={{ width: 400, height: 380 }}
+					className="ocrFrame"
+					isDisplayStartCameraError={true}
+					idealResolution={{ width: 640, height: 480 }}
 					onTakePhoto={(dataUri) => { handleTakePhoto(dataUri); }}
 				/>
 			</div>
