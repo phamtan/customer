@@ -1,4 +1,5 @@
-export const ROOT_URI = 'https://jsonplaceholder.typicode.com/';
+// export const ROOT_URI = 'http://testdg.vpbank.com.vn/jarvisapi';
+export const ROOT_URI = 'http://10.39.168.169:9090/api';
 export const API_TIMEOUT = '30000';
 
 export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';

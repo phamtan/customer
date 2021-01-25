@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
@@ -34,7 +35,6 @@ import Liveness from './Liveness';
 import CompareCard from './CompareCard';
 import UploadDocumentSuccess from './UploadDocumentSuccess';
 import AllCards from './AllCards';
-import * as Actions from '../../actions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,7 +51,8 @@ function Alert(props) {
 
 export default function Application(props) {
   const classes = useStyles();
-  const [step, setStep] = useState(22);
+  const dispatch = useDispatch();
+  const [step, setStep] = useState(1);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -60,9 +61,7 @@ export default function Application(props) {
     severity: 'success',
   });
 
-  useEffect(() => {
-    props.dispatch(Actions.callapi());
-  }, []);
+
 
   const { vertical, horizontal, open, message, severity } = state;
 
@@ -103,7 +102,8 @@ export default function Application(props) {
       {step === 997 && <ChooseCard setStep={setStep} {...props} />}
       {step === 996 && <RegisLimitInfo setStep={setStep} {...props} />}
       {step === 0 && <Round1 setStep={setStep} {...props} />}
-      {step === 1 && <Otp setStep={setStep} {...props} />}
+      {step === 1 && <Otp handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
       {step === 2 && <Round2OCRGuide setStep={setStep} {...props} />}
       {step === 3 && <Round2OCR setStep={setStep} {...props} />}
       {step === 991 && <Round2OCRBack setStep={setStep} {...props} />}

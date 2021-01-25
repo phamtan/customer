@@ -7,11 +7,12 @@ import produce from 'immer';
 import {
   DEFAULT_ACTION,
   SAVE_DATA,
-  API_CALL_REQUEST,
-  API_CALL_SUCCESS,
-  API_CALL_FAILURE,
+  REQUEST_COUNTRIES,
+  REQUEST_COUNTRIES_SUCCESS,
+  REQUEST_COUNTRIES_FAILURE,
   REQUEST_PROVINCES_SUCCESS,
   REQUEST_PROVINCES_FAILURE,
+  SAVE_DATA_SUCCESS,
 } from './constants';
 
 export const initialState = {};
@@ -30,16 +31,25 @@ const jarvisCustomerV2Reducer = (state = initialState, action) =>
             ...action.payload,
           },
         };
-      case API_CALL_REQUEST:
+      case REQUEST_COUNTRIES:
         return { ...state, fetching: true, error: null };
-      case API_CALL_SUCCESS:
+      case REQUEST_COUNTRIES_SUCCESS:
         return { ...state, countries: action.payload };
-      case API_CALL_FAILURE:
+      case REQUEST_COUNTRIES_FAILURE:
         return { ...state, countries: [] };
       case REQUEST_PROVINCES_SUCCESS:
         return { ...state, provinces: action.payload };
       case REQUEST_PROVINCES_FAILURE:
         return { ...state, provinces: [] };
+      case SAVE_DATA_SUCCESS: 
+        return {
+          ...state,
+          jarvisCustomer: {
+            ...state.jarvisCustomer,
+            ...action.payload,
+          },
+        }
+        
     }
   });
 

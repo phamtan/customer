@@ -9,6 +9,7 @@ import * as yup from 'yup';
 import _ from 'lodash';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
+import * as Actions from '../../actions';
 
 const useStyles = makeStyles(() => ({
   formContainer: {
@@ -88,7 +89,21 @@ export default function OTP(props) {
 
   const classes = useStyles();
 
-  function onSubmitForm() {}
+  function onSubmitForm() {
+    return new Promise((resolve, reject) => {
+      props.dispatch(Actions.verifyOtp({
+        phoneOrEmail: jarvisCustomer.mobileNumber,
+        otpNumber: '447171',
+      }, resolve, reject))
+    }).then(() => {
+      props.setStep(17);
+    }).catch(() => {
+      props.handleShoMessage({
+        message: 'Lỗi xác thực OTP',
+        severity: 'error',
+      });
+    });
+  }
 
   return (
     <JarvisFormStyle>
@@ -96,7 +111,7 @@ export default function OTP(props) {
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>Nhập mã OTP</div>
         <div className={classes.secondHeader}>
-          Điền mã OTP đã được gửi tới số {jarvisCustomer.phone}{' '}
+          Điền mã OTP đã được gửi tới số {jarvisCustomer.mobileNumber}{' '}
         </div>
         <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
           <div className="formWrapper">
@@ -145,7 +160,7 @@ export default function OTP(props) {
             </div>
 
             <button
-              onClick={() => props.setStep(17)}
+              onClick={() => onSubmitForm()}
               type="button"
               className={classes.action}
             >

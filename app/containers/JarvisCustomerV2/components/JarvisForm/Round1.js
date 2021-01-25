@@ -88,7 +88,7 @@ const useStyles = makeStyles(() => ({
 
 const schema = yup.object().shape({
   fullName: yup.string().required('Bạn chưa nhập họ tên'),
-  phone: yup.string().required('Bạn chưa nhập số điện thoại'),
+  mobileNumber: yup.string().required('Bạn chưa nhập số điện thoại'),
   email: yup
     .string()
     .required('Bạn chưa nhập email')
@@ -140,7 +140,7 @@ export default function Round1(props) {
             <div className="form-group">
               <Controller
                 as={TextField}
-                name="phone"
+                name="mobileNumber"
                 fullWidth
                 variant="outlined"
                 label="Số điện thoại"

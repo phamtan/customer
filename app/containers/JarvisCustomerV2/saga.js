@@ -1,46 +1,85 @@
 import { takeEvery, call, put, all } from 'redux-saga/effects';
-import * as api from 'utils/request';
-import { API_CALL_REQUEST } from './constants';
+import * as Api from 'utils/request';
+import { REQUEST_COUNTRIES, REQUEST_OTP, SAVE_DATA, VERIFY_OTP } from './constants';
+import {callapiSuccess, callapiErorr, getProvincesSuccess, createApplication, requestOtp} from './actions'
 
 function* fetchCountriesSaga() {
-  const param = {
-    url: '/posts',
+  const payload = {
+    url: '/countries',
     params: null,
   };
-  const paramProvinces = {
-    url: '/comments',
+  const payloadProvinces = {
+    url: '/provinces',
     params: null,
   };
   try {
-    const response = yield call(api.get(param));
-    // const [countries, provinces] = yield all([
-    //   call(api.get(param)),
-    //   call(api.get(paramProvinces)),
-    // ]);
-    console.log(response.data);
-    // console.log(provinces);
-    // yield put({ type: 'API_CALL_SUCCESS', data });
+    const [countries, provinces] = yield all([
+      call(Api.get, payload),
+      call(Api.get, payloadProvinces),
+    ]);
+    yield put(callapiSuccess(countries));
+    yield put(getProvincesSuccess(provinces));
   } catch (error) {
-    yield put({ type: 'API_CALL_FAILURE', error });
+    yield put(callapiErorr());
   }
 }
 
-// function* fetchProvinceSaga() {
-//   const param = {
-//     url: '/countries',
-//     params: null,
-//   };
-//   try {
-//     const response = yield call(api.get(param));
-//     const { data } = response;
-//     yield put({ type: 'API_CALL_SUCCESS', data });
-//   } catch (error) {
-//     yield put({ type: 'API_CALL_FAILURE', error });
-//   }
-// }
+function* saveApplicationSaga(action) {
+  const payload = {
+    url: '/customer/save',
+    params: null,
+    data: action.payload,
+  };
+  try {
+    const response = yield call(Api.post, payload);
+    // yield put(callapiSuccess(countries));
+    // yield put(getProvincesSuccess(provinces));
+    yield put(requestOtp({
+      phoneOrEmail: response.mobileNumber
+    }));
+    return Promise.resolve(payload)
+  } catch (error) {
+    yield put(callapiErorr());
+    return Promise.reject(error);
+  }
+}
+
+function* requestOtpSaga(action) {
+  const payload = {
+    url: '/esb/assign-otp',
+    params: action.payload,
+  };
+  try {
+    const response = yield call(Api.post, payload);
+    // yield put(callapiSuccess(countries));
+    // yield put(getProvincesSuccess(provinces));
+    return Promise.resolve(payload)
+  } catch (error) {
+    yield put(callapiErorr());
+    return Promise.reject(error);
+  }
+}
+
+function* verifyOtpSaga(action, resolve, reject) {
+  const payload = {
+    url: '/esb/verify-otp',
+    params: action.payload,
+  };
+  try {
+    const response = yield call(Api.post, payload);
+    // yield put(callapiSuccess(countries));
+    // yield put(getProvincesSuccess(provinces));
+    resolve(response)
+  } catch (error) {
+    yield put(callapiErorr());
+  }
+}
 
 export default function* jarvisCustomerV2Saga() {
-  // See example in containers/HomePage/saga.js
-  yield takeEvery('API_CALL_REQUEST', fetchCountriesSaga);
-  // yield takeEvery(API_CALL_REQUEST, fetchProvinceSaga);
+  yield all([
+    takeEvery(REQUEST_COUNTRIES, fetchCountriesSaga),
+    takeEvery(SAVE_DATA, saveApplicationSaga),
+    takeEvery(REQUEST_OTP, requestOtpSaga),
+    takeEvery(VERIFY_OTP, verifyOtpSaga),
+  ]);
 }
