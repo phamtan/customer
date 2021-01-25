@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="186" height="96" viewBox="0 0 186 96">
+    <defs>
+        <filter id="49uniney9b" width="115.3%" height="132.5%" x="-7.6%" y="-11.2%" filterUnits="objectBoundingBox">
+            <feMorphology in="SourceAlpha" radius="1" result="shadowSpreadOuter1"/>
+            <feOffset dy="4" in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0.0352941176 0 0 0 0 0.117647059 0 0 0 0 0.258823529 0 0 0 0.25 0"/>
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
+            <feGaussianBlur in="shadowOffsetOuter2" result="shadowBlurOuter2" stdDeviation=".5"/>
+            <feColorMatrix in="shadowBlurOuter2" result="shadowMatrixOuter2" values="0 0 0 0 0.0352941176 0 0 0 0 0.117647059 0 0 0 0 0.258823529 0 0 0 0.31 0"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="shadowMatrixOuter2"/>
+            </feMerge>
+        </filter>
+        <rect id="r9ism9fhma" width="170" height="80" x="0" y="0" rx="8"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g transform="translate(-8 -297) translate(16 301)">
+                    <mask id="10tedvd0fc" fill="#fff">
+                        <use xlink:href="#r9ism9fhma"/>
+                    </mask>
+                    <g>
+                        <use fill="#000" filter="url(#49uniney9b)" xlink:href="#r9ism9fhma"/>
+                        <use fill="#128D9A" xlink:href="#r9ism9fhma"/>
+                    </g>
+                    <path fill="#0A575F" d="M180.305 64.273c-8.781-6.352-16.289-15.012-26.344-19.055-22.089-8.88-18.817 12.799-12.241 20.948 7.362 9.122 15.681 17.427 23.522 26.141" mask="url(#10tedvd0fc)" opacity=".3"/>
+                    <path fill="#0A575F" d="M216.816 23.011c-16.154-11.622-29.964-27.467-48.462-34.865-40.632-16.25-34.615 23.418-22.517 38.33 13.542 16.69 28.846 31.887 43.27 47.831" mask="url(#10tedvd0fc)" opacity=".3"/>
+                </g>
+                <text fill="#FFF" fill-opacity=".87" font-family="Roboto-Medium, Roboto" font-size="18" font-weight="400" letter-spacing=".129" transform="translate(-8 -297) translate(16 301)">
+                    <tspan x="45" y="45">Hoàn tiền</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

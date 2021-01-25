@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import JarvisFormStyle from './JarvisFormStyle';
-import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
+import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 
 const schema = yup.object().shape({
@@ -15,7 +16,6 @@ const schema = yup.object().shape({
 });
 
 export default function OTP(props) {
-
   const { register, handleSubmit, errors } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
@@ -24,13 +24,11 @@ export default function OTP(props) {
     resolver: yupResolver(schema),
   });
 
-  function onSubmitForm() {
-
-  }
+  function onSubmitForm() {}
 
   return (
     <JarvisFormStyle>
-      <Header className="header" />
+      <Header className="header" step={1} />
       <div className="roundTitle">BƯỚC 1:</div>
       <div className="roundName">THÔNG TIN CƠ BẢN</div>
       <div className="otpTitle">NHẬP MÃ OTP</div>
@@ -50,13 +48,15 @@ export default function OTP(props) {
             )}
           </div>
 
-          <button onClick={() => props.setStep(2)} type="button" className="btn btnSubmit">
+          <button
+            onClick={() => props.setStep(2)}
+            type="button"
+            className="btn btnSubmit"
+          >
             Tiếp tục
-        </button>
+          </button>
         </div>
       </form>
     </JarvisFormStyle>
-  )
+  );
 }
-
-

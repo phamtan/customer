@@ -1,131 +1,120 @@
+/* eslint-disable no-shadow */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/prop-types */
 import React from 'react';
-import JarvisFormStyle from './JarvisFormStyle';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
+import _ from 'lodash';
 import Select from 'react-select';
+import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
-
-const schema = yup.object().shape({
-	auth_email: yup
-		.string()
-		.email('This field must be a valid email')
-		.required('Email is required'),
-	password: yup.string().required('Password is required'),
-});
+import BackButton from './BackButton';
+import * as Actions from '../../actions';
 
 const QUESTION = [
-	{ value: 'htm', label: 'Họ tên mẹ' },
-	{ value: 'mg', label: 'Nơi sinh ra của mẹ' },
-	{ value: 'tth', label: 'Trường tiểu học của bạn là gì' },
-]
+  { value: 'htm', label: 'Họ tên mẹ' },
+  { value: 'mg', label: 'Nơi sinh ra của mẹ' },
+  { value: 'tth', label: 'Trường tiểu học của bạn là gì' },
+];
 
-const CARDS = [
-	{ value: 'platinum', label: 'Platinum cashback' },
-	{ value: 'mc2', label: 'MC2' },
-	{ value: 'titanium', label: 'Titanium cashback' },
-	{ value: 'travel', label: 'VP Travelmiles' },
-	{ value: 'no1', label: 'VP No1' },
-]
+const GREEN_CARD = [
+  { value: 'c', label: 'Có' },
+  { value: 'k', label: 'Không' },
+];
+
+const schema = yup.object().shape({
+  securityQuestion: yup.object().required('Bạn chưa chọn câu hỏi bí mật'),
+  securityAnswer: yup.string().required('Bạn chưa nhập câu trả lời'),
+});
 
 export default function Round3(props) {
+  const jarvisCustomer = _.get(props, 'jarvisCustomer.jarvisCustomer', {});
+  const { register, handleSubmit, errors, control } = useForm({
+    reValidateMode: 'onChange',
+    shouldFocusError: true,
+    shouldUnregister: true,
+    defaultValues: jarvisCustomer,
+    resolver: yupResolver(schema),
+  });
 
-	const { register, handleSubmit, errors } = useForm({
-		reValidateMode: 'onChange',
-		shouldFocusError: true,
-		shouldUnregister: true,
-		defaultValues: {},
-		resolver: yupResolver(schema),
-	});
+  function onSubmitForm(values) {
+    props.dispatch(Actions.saveData(values));
+    props.setStep(11);
+  }
 
-	function onSubmitForm() {
+  function goBack() {
+    props.setStep(9);
+  }
 
-	}
-
-
-
-	return (
-		<JarvisFormStyle>
-			<Header className="header" />
-			<div className="roundTitle">BƯỚC 3:</div>
-			<div className="roundName">XÁC NHẬN THÔNG TIN</div>
-			<div className="confirmTitle">Thông tin khác</div>
-			<form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
-				<div className="formWrapper">
-					<div className="form-group">
-						<label>Câu hỏi bảo mật</label>
-						<Select name="employmentStatus" className="formControl" options={QUESTION} />
-						{errors.fullName && (
-							<span className="formError">{errors.fullName.message}</span>
-						)}
-					</div>
-					<div className="form-group">
-						<label>Trả lời câu hỏi bảo mật</label>
-						<input
-							name="national"
-							className="form-control formControl"
-							placeholder=""
-							type="text"
-							ref={register}
-						/>
-						{errors.national && (
-							<span className="formError">{errors.national.message}</span>
-						)}
-					</div>
-					<div className="form-group">
-						<label>Bạn có thuộc một trong các điều kiện sau không: là công dân Hoa Kỳ, có thẻ thường trú nhân tại Hoa Kỳ (Thẻ Xanh) hoặc là cá nhân cư trú tại Hoa Kỳ?</label>
-						<div className="radioWrapper">
-							<input
-								className="form-control radioControl"
-								name="fullName"
-								type="radio"
-								ref={register}
-							/> Có
-						</div>
-						<div className="radioWrapper">
-							<input
-								className="form-control radioControl"
-								name="fullName"
-								type="radio"
-								ref={register}
-							/> Không
-						{errors.fullName && (
-								<span className="formError">{errors.fullName.message}</span>
-							)}
-						</div>
-						{errors.gender && (
-							<span className="formError">{errors.gender.message}</span>
-						)}
-					</div>
-
-					<div className="form-group">
-						<label>Loại thẻ tín dụng</label>
-						<Select name="employmentStatus" className="formControl" options={CARDS} />
-						{errors.permanentAddress && (
-							<span className="formError">{errors.permanentAddress.message}</span>
-						)}
-					</div>
-
-					<div className="form-group">
-						<label>Hạn mức đề nghị</label>
-						<input
-							name="permanentAddress.district"
-							className="form-control formControl"
-							placeholder="Hạn mức"
-							type="text"
-							ref={register}
-						/>
-						{errors.permanentAddress && (
-							<span className="formError">{errors.permanentAddress.message}</span>
-						)}
-					</div>
-					<button onClick={() => props.setStep(11)} type="button" className="btn btnSubmit">
-						Tiếp tục
-        </button>
-				</div>
-			</form>
-		</JarvisFormStyle>
-	)
+  return (
+    <JarvisFormStyle>
+      <Header className="header" step={3} />
+      <BackButton className="btnBack" goBack={goBack} />
+      <div className="roundTitle">BƯỚC 3:</div>
+      <div className="roundName">XÁC NHẬN THÔNG TIN</div>
+      <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
+        <div className="formWrapper">
+          <div className="form-group">
+            <label>Câu hỏi bảo mật</label>
+            <Controller
+              name="securityQuestion"
+              control={control}
+              render={props => (
+                <Select
+                  className="formControl"
+                  options={QUESTION}
+                  onChange={e => props.onChange(e)}
+                  value={props.value}
+                />
+              )}
+            />
+            {errors.securityQuestion && (
+              <span className="formError">
+                {errors.securityQuestion.message}
+              </span>
+            )}
+          </div>
+          <div className="form-group">
+            <label>Trả lời câu hỏi bảo mật</label>
+            <input
+              name="securityAnswer"
+              className="form-control formControl"
+              placeholder=""
+              type="text"
+              ref={register}
+            />
+            {errors.securityAnswer && (
+              <span className="formError">{errors.securityAnswer.message}</span>
+            )}
+          </div>
+          <div className="form-group">
+            <label>
+              Bạn có thuộc một trong các điều kiện sau không: là công dân Hoa
+              Kỳ, có thẻ thường trú nhân tại Hoa Kỳ (Thẻ Xanh) hoặc là cá nhân
+              cư trú tại Hoa Kỳ?
+            </label>
+            <Controller
+              name="haveGreenCard"
+              control={control}
+              render={props => (
+                <Select
+                  className="formControl"
+                  options={GREEN_CARD}
+                  onChange={e => props.onChange(e)}
+                  value={props.value}
+                />
+              )}
+            />
+            {errors.haveGreenCard && (
+              <span className="formError">{errors.haveGreenCard.message}</span>
+            )}
+          </div>
+          <button type="submit" className="btn btnSubmit">
+            Tiếp tục
+          </button>
+        </div>
+      </form>
+    </JarvisFormStyle>
+  );
 }
-
-

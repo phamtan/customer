@@ -4,9 +4,11 @@
  *
  */
 import produce from 'immer';
-import { DEFAULT_ACTION } from './constants';
+import { DEFAULT_ACTION, SAVE_DATA } from './constants';
 
-export const initialState = {};
+export const initialState = {
+  jarvisCustomer: {}
+};
 
 /* eslint-disable default-case, no-param-reassign */
 const jarvisCustomerReducer = (state = initialState, action) =>
@@ -14,6 +16,14 @@ const jarvisCustomerReducer = (state = initialState, action) =>
     switch (action.type) {
       case DEFAULT_ACTION:
         break;
+      case SAVE_DATA:
+        return {
+          ...state,
+          jarvisCustomer: {
+            ...state.jarvisCustomer,
+            ...action.payload,
+          },
+        };
     }
   });
 

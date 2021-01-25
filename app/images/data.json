@@ -1,0 +1,1353 @@
+{
+  "cards": [
+    {
+      "id": "VNA",
+      "id_int": 5,
+      "name": "Thẻ VNA",
+      "benefit_id": 2,
+      "have_small_detail": true,
+      "icon": "vnaCard",
+      "small_detail": ["Miễn phí dịch vụ phòng chờ Dragonpass 1 lần 1 quý"],
+      "comparison": {
+        "table_1": {
+          "type": "Platinum",
+          "creditLimit": "40 triệu - 1 tỷ VNĐ",
+          "interestRate": "2.79%/tháng",
+          "transactionLimit": "100 triệu VNĐ/ngày",
+          "anualFee": "899.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": ["Không có"],
+          "freeTicket": [
+            "- 29.000 VNĐ = 1,5 dặm thưởng với chi tiêu ngoại tệ",
+            "- 29.000 VNĐ = 1 dặm thưởng với chi tiêu bằng VNĐ",
+            "- Tặng 3000 dặm Bông Sen Vàng khi chi tiêu đạt từ 300 triệu trở lên mỗi năm"
+          ],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "Miễn phí năm đầu nếu tổng giao dịch đạt 2 triệu đồng trong vòng 30 ngày đầu tiên từ khi mở thẻ"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "15.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "Tích dặm VNA",
+          "value": "Tích dặm Bông Sen Vàng đối với chi tiêu trong nước 29.000 VNĐ = 1 dặm",
+          "delay": "500ms"
+        },
+        {
+          "key": "X1,5 dặm",
+          "value": "Nhân 1,5 dặm bay với chi tiêu quốc tế 29.000 VNĐ = 1,5 dặm",
+          "delay": "100ms"
+        },
+        {
+          "key": "3000 dặm",
+          "value": "Tặng dặm Bông Sen Vàng khi chi tiêu từ 300 triệu trở lên mỗi năm",
+          "delay": "1100ms"
+        }
+      ]
+    },
+    {
+      "id": "PlatinumTravel",
+      "id_int": 11,
+      "name": "THẺ PLATINUM TRAVEL MILES",
+      "benefit_id": 2,
+      "have_small_detail": true,
+      "small_detail": [
+        "Miễn phí dịch vụ phòng chờ Dragonpass 1 lần 1 quý",
+        "Đa dạng lựa chọn đổi Travel Miles với hơn 300 hãng hàng không và 300.000 khách sạn trên toàn thế giới tại website <a target='_blank' href='https://www.vptravelmiles.com.vn'>https://www.vptravelmiles.com.vn</a>"
+      ],
+      "comparison": {
+        "table_1": {
+          "type": "Visa Platinum",
+          "creditLimit": "40 triệu - 1 Tỷ VNĐ",
+          "interestRate": "2.79%/tháng",
+          "transactionLimit": "200 triệu VNĐ/ngày hoặc bằng hạn mức thẻ nếu hạn mức thẻ < 200 triệu VNĐ",
+          "anualFee": "899.000 VNĐ/ Thẻ chính - 250.000VNĐ/ thẻ phụ "
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": ["Không có"],
+          "freeTicket": [
+            "- Tặng 1.000 VNĐ = 9 Travel miles với mỗi chi tiêu khi tổng sao kê từ 0 đến 90 triệu đồng/kỳ",
+            "- Nhân 1,5 tỷ lệ 1.000 VNĐ = 13.5 VP Travel Miles với mỗi chi tiêu từ mốc tổng sao kê đạt từ 90 triệu đồng/kỳ",
+            "- Nhân đôi tỷ lệ 1.000 VNĐ = 18 VP Travel Miles cho các giao dịch chi tiêu du lịch, cửa hàng miễn thuế, ăn uống, siêu thị và giao dịch POS tại nước ngoài",
+            "- Miễn phí sử dụng dịch vụ phòng chờ sân bay cao cấp Dragon Pass tối đa 1 lần/quý"
+          ],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "- Miễn phí thường niên năm đầu của Thẻ chính & Thẻ phụ ",
+            "- Miễn phí thường niên năm tiếp theo của Thẻ chính nếu Chủ thẻ có tổng doanh số giao dịch thanh toán thẻ chính & thẻ phụ trong năm liền trước đạt từ 90 triệu VNĐ trở lên."
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "15.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "Tích điểm Travel miles",
+          "value": "Tặng 9 Travel Miles cho mỗi 1.000 VND chi tiêu bằng thẻ",
+          "delay": "100ms"
+        },
+        {
+          "key": "Nhân 1,5 lần Travel Miles",
+          "value": "Nếu tổng giao dịch trong kỳ sao kê đạt từ 90 triệu trở lên.",
+          "delay": "500ms"
+        },
+        {
+          "key": "Nhân đôi Travel Miles",
+          "value": "Nhân đôi Travel Miles cho các giao dịch chi tiêu du lịch, cửa hàng miễn thuế, ăn uống, siêu thị, và giao dịch POS tại nước ngoài",
+          "delay": "500ms"
+        }
+      ]
+    },
+    {
+      "id": "GoldTravelMiles",
+      "id_int": 15,
+      "name": "THẺ GOLD TRAVEL MILES",
+      "benefit_id": 2,
+      "have_small_detail": true,
+      "small_detail": [
+        "Đa dạng lựa chọn đổi Travel Miles với hơn 300 hãng hàng không và 300.000 khách sạn trên toàn thế giới tại website <a target='_blank' href='https://www.vptravelmiles.com.vn'>https://www.vptravelmiles.com.vn</a>"
+      ],
+      "comparison": {
+        "table_1": {
+          "type": "Visa Gold",
+          "creditLimit": "20 triệu - 500 triệu VNĐ",
+          "interestRate": "2.99%/tháng",
+          "transactionLimit": "70 triệu VNĐ/ngày hoặc bằng hạn mức thẻ nếu hạn mức thẻ < 70 triệu VNĐ",
+          "anualFee": "499.000 VNĐ/ Thẻ chính - 200.000VNĐ/ thẻ phụ "
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": ["Không có"],
+          "freeTicket": [
+            "- Tặng 1.000 VNĐ = 6 VP Travel Miles với mỗi chi tiêu khi tổng sao kê từ 0 đến 45 triệu đồng/kỳ",
+            "- Nhân 1,5 tỷ lệ 1.000 VNĐ = 9 VP Travel Miles với mỗi chi tiêu từ mốc tổng sao kê đạt từ 45 triệu đồng/kỳ",
+            "- Nhân đôi tỷ lệ 1.000 VNĐ = 12 VP Travel Miles cho các giao dịch chi tiêu du lịch, cửa hàng miễn thuế, ăn uống, siêu thị và giao dịch POS tại nước ngoài"
+          ],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "- Không thu phí thường niên năm đầu tiên của Thẻ chính khi Thẻ chính có phát sinh tổng doanh số giao dịch thanh toán thẻ từ 10 triệu đồng trong vòng 30 ngày kể từ ngày mở thẻ trên hệ thống",
+            "- Miễn phí thường niên năm tiếp theo của Thẻ chính nếu Chủ thẻ có tổng doanh số giao dịch thanh toán thẻ chính và thẻ phụ trong năm liền trước đạt từ 60 triệu VNĐ trở lên."
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "7.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "Tích lũy Travel Miles",
+          "value": "Tặng 6 Travel Miles cho mỗi 1.000VNĐ chi tiêu bằng thẻ",
+          "delay": "100ms"
+        },
+        {
+          "key": "Nhân 1,5 lần Travel Miles",
+          "value": "Cho giao dịch bất kỳ khi tổng sao kê đạt mốc từ 45 triệu trở lên",
+          "delay": "500ms"
+        },
+        {
+          "key": "Nhân đôi Travel Miles",
+          "value": "Nhân đôi Travel Miles cho các giao dịch chi tiêu du lịch, cửa hàng miễn thuế, ăn uống, siêu thị, và giao dịch POS tại nước ngoài",
+          "delay": "500ms"
+        }
+      ]
+    },
+    {
+      "id": "SignatureTravelMiles",
+      "id_int": 16,
+      "name": "THẺ SIGNATURE TRAVEL MILES",
+      "benefit_id": 2,
+      "have_small_detail": true,
+      "small_detail": [
+        "Miễn phí dịch vụ phòng chờ Dragonpass 1 lần 1 quý<br/>Đa dạng lựa chọn đổi Travel Miles với hơn 300 hãng hàng không và 300.000 khách sạn trên toàn thế giới tại website <a target='_blank' href='https://www.vptravelmiles.com.vn'>https://www.vptravelmiles.com.vn</a>"
+      ],
+      "comparison": {
+        "table_1": {
+          "type": "Visa Signature",
+          "creditLimit": "60 triệu - 1 tỷ VNĐ",
+          "interestRate": "2.79%/tháng",
+          "transactionLimit": "300 triệu VNĐ/ngày hoặc bằng hạn mức thẻ nếu hạn mức thẻ < 300 triệu VNĐ",
+          "anualFee": "1.200.000 VNĐ/ Thẻ chính - miễn phí thẻ phụ "
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": ["Không có"],
+          "freeTicket": [
+            "- Tặng 1.000 VNĐ = 10 VP Travel Miles với mỗi chi tiêu khi tổng sao kê từ 0 đến 90 triệu đồng/kỳ",
+            "- Nhân 1,5 tỷ lệ 1.000 VNĐ = 15 VP Travel Miles với mỗi chi tiêu từ mốc tổng sao kê đạt từ 90 triệu đồng/kỳ",
+            "- Nhân đôi tỷ lệ 1.000 VNĐ = 20 VP Travel Miles khi chi tiêu tại POS nước ngoài, du lịch, cửa hàng miễn thuế, ăn uống và siêu thị",
+            "- Miễn phí sử dụng dịch vụ phòng chờ sân bay cao cấp Dragon Pass tối đa 1 lần/quý"
+          ],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "- Miễn phí thường niên năm đầu của Thẻ chính & Thẻ phụ",
+            "- Miễn phí thường niên năm tiếp theo của Thẻ chính nếu Chủ thẻ có tổng doanh số giao dịch thanh toán thẻ chính & thẻ phụ trong năm liền trước đạt từ 120 triệu VNĐ trở lên."
+          ],
+          "specialPromotion": [
+            "Ưu đãi tại sân golf và trải nghiệm ẩm thực thượng hạng Tham khảo tại <a href='https://merchantoffersresource.visa.com'>https://merchantoffersresource.visa.com</a>"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "20.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "Tích lũy Travel Miles",
+          "value": "Tặng 10 Travel Miles cho mỗi 1.000VNĐ chi tiêu bằng thẻ",
+          "delay": "100ms"
+        },
+        {
+          "key": "Nhân 1,5 lần Travel Miles",
+          "value": "Cho giao dịch bất kỳ khi tổng sao kê đạt mốc từ 90 triệu trở lên",
+          "delay": "500ms"
+        },
+        {
+          "key": "Nhân đôi Travel Miles",
+          "value": "Nhân đôi Travel Miles cho các giao dịch chi tiêu du lịch, cửa hàng miễn thuế, ăn uống, siêu thị, và giao dịch POS tại nước ngoài",
+          "delay": "500ms"
+        }
+      ]
+    },
+    {
+      "id": "StepUp",
+      "id_int": 3,
+      "name": "Thẻ Step Up",
+      "benefit_id": 0,
+      "have_small_detail": true,
+      "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
+      "comparison": {
+        "table_1": {
+          "type": "Titanium",
+          "creditLimit": "20 - 500 triệu VNĐ",
+          "interestRate": "2.99%/tháng",
+          "transactionLimit": "70 triệu VNĐ/ngày",
+          "anualFee": "499.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": [
+            "Hoàn tiền cho mọi chi tiêu tối đa 600.000 VNĐ/kỳ sao kê*",
+            "- 6% cho mua sắm Online (thời trang, công nghệ, sách báo), Grab, Be, Goviet",
+            "- 2% cho chi tiêu ăn uống và xem phim",
+            "- 0.3% cho các chi tiêu khác"
+          ],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "Miễn phí thường niên năm đầu khi có từ 3 lần chi tiêu (từ 300.000 VNĐ/ 1 lần) trong vòng 30 ngày sau khi mở thẻ",
+            "Miễn phí thường niên năm tiếp theo cho thẻ chính nếu tổng chi tiêu năm liền trước  của Thẻ chính và thẻ phụ đạt từ 60 triệu đồng."
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "7.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "6%",
+          "value": "Hoàn tiền cho mua sắm Online (thời trang, công nghệ, sách báo), Grab, Be, Goviet",
+          "delay": "100ms"
+        },
+        {
+          "key": "2%",
+          "value": "Hoàn tiền cho ăn uống, xem phim",
+          "delay": "500ms"
+        },
+        {
+          "key": "0.3%",
+          "value": "Cho các chi tiêu còn lại",
+          "delay": "1100ms"
+        },
+        {
+          "key": "600K",
+          "value": "Hoàn tiền tối đa 600.000VNĐ/tháng",
+          "delay": "2000ms"
+        }
+      ]
+    },
+    {
+      "id": "VPLady",
+      "id_int": 2,
+      "name": "Thẻ VPLady",
+      "benefit_id": 0,
+      "have_small_detail": true,
+      "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
+      "comparison": {
+        "table_1": {
+          "type": "Titanium",
+          "creditLimit": "20 - 500 triệu đồng",
+          "interestRate": "2.99%/tháng",
+          "transactionLimit": "70 triệu đồng/ngày",
+          "anualFee": "499.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": [
+            "Hoàn tiền cho mọi chi tiêu tối đa 600.000 VNĐ/kỳ sao kê*",
+            "- 6% cho các giao dịch thanh toán Bảo hiểm online",
+            "- 2% cho chi tiêu Giáo dục, Y tế & tại siêu thị (Lotte mart, Big C, Co.op mart, Vinmart)",
+            "- 0.3% cho các chi tiêu khác"
+          ],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "Miễn phí thường niên năm đầu khi có từ 3 lần chi tiêu (từ 300.000 VNĐ/ 1 lần) trong vòng 30 ngày sau khi mở thẻ",
+            "Miễn phí thường niên năm tiếp theo cho thẻ chính nếu tổng chi tiêu năm liền trước  của Thẻ chính và thẻ phụ đạt từ 60 triệu đồng.",
+            "Miễn phí thường niên trọn đời cho thẻ phụ"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "7.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "6%",
+          "value": "Hoàn tiền cho các giao dịch thanh toán Bảo hiểm online",
+          "delay": "100ms"
+        },
+        {
+          "key": "2%",
+          "value": "Hoàn tiền cho chi tiêu Giáo dục, Y tế & tại siêu thị (Lotte mart, Big C, Co.op mart, Vinmart)",
+          "delay": "500ms"
+        },
+        {
+          "key": "0.3%",
+          "value": "Cho các chi tiêu còn lại",
+          "delay": "1100ms"
+        },
+        {
+          "key": "600K",
+          "value": "Hoàn tiền tối đa 600.000VNĐ/tháng",
+          "delay": "2000ms"
+        }
+      ]
+    },
+    {
+      "id": "VPPlatinumCashback",
+      "id_int": 10,
+      "name": "Thẻ Platinum Cashback",
+      "benefit_id": 0,
+      "have_small_detail": true,
+      "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
+      "comparison": {
+        "table_1": {
+          "type": "Platinum",
+          "creditLimit": "40 triệu - 1 tỷ VNĐ",
+          "interestRate": "2.79%/tháng",
+          "transactionLimit": "200 triệu đồng/ngày",
+          "anualFee": "899.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": [
+            "- Hoàn tiền cho mọi giao dịch, trong mọi lĩnh vực, tối đa 2.000.000 vnđ/ tháng,hoàn tiền gấp đôi cho giao dịch tại nước ngoài",
+            "- Hoàn tiền 0.5% khi chi tiêu từ 0 đến 30 triệu",
+            "- Hoàn tiền 1% cho 60 triệu tiêp theo ( mức chi tiêu từ 30 đến 90 triệu)",
+            "- Hoàn tiền 2% cho 30 triệu tiếp theo ( mức chi tiêu từ 90 đến dưới 120 triệu)",
+            "- Hoàn tiền 3% cho các giao dịch tiêp theo từ mức chi tiêu 120 triệu",
+            "- Hoàn tiền tối đa 2.000.000 VNĐ/tháng",
+            "(*) Điều kiện nhận hoàn tiền: chi tiêu tối thiểu từ 10 triệu/ tháng"
+          ],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "Miễn phí thường niên năm đầu nếu phat sinh chi tiêu từ 2 triệu trong vòng 30 ngày thẻ được phê duyệt trên hệ thống",
+            "Miễn phí thường niên năm tiếp theo nếu tổng chi tiêu trong năm đạt 90 triệu",
+            "Miễn phí thường niên năm đầu cho thẻ phụ"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "15.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "0.5%",
+          "value": "Hoàn tiền 0.5% khi chi tiêu từ 0 đến 30 triệu",
+          "delay": "1100ms"
+        },
+        {
+          "key": "1%",
+          "value": "Hoàn tiền 1% cho 60 triệu tiêp theo ( mức chi tiêu từ 30 đến 90 triệu)",
+          "delay": "1100ms"
+        },
+        {
+          "key": "2%",
+          "value": "Hoàn tiền 2% cho 30 triệu tiếp theo ( mức chi tiêu từ 90 đến dưới 120 triệu)",
+          "delay": "500ms"
+        },
+        {
+          "key": "3%",
+          "value": "Hoàn tiền 3% cho các giao dịch tiêp theo từ mức chi tiêu 120 triệu.",
+          "delay": "100ms"
+        },
+        {
+          "key": "2000K",
+          "value": "Hoàn tiền tối đa 2.000.000 VNĐ/tháng",
+          "delay": "2000ms"
+        },
+        {
+          "key": "(*)",
+          "value": "Điều kiện hoàn tiền: chi tiêu tối thiểu từ 10 triệu/ tháng",
+          "delay": "100ms"
+        }
+      ]
+    },
+    {
+      "id": "VPTitaniumCashback",
+      "id_int": 12,
+      "name": "Thẻ Titanium Cashback",
+      "benefit_id": 0,
+      "have_small_detail": true,
+      "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
+      "comparison": {
+        "table_1": {
+          "type": "Titanium",
+          "creditLimit": "20 triệu - 500 triệu VNĐ",
+          "interestRate": "2.99%/tháng",
+          "transactionLimit": "70 triệu đồng/ngày",
+          "anualFee": "499.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": [
+            "Hoàn tiền cho mọi lĩnh vực chi tiêu- tối đa 1 triệu trong kỳ sao kê*",
+            "- 0.3% khi chi tiêu từ 0 đến 15 triệu",
+            "- 0.5% cho 30 triệu tiếp theo ( mức chi tiêu từ 15 đến 45 triệu)",
+            "- 1% cho 15 triệu tiếp theo ( mức chi tiêu từ 45 đến dưới 60 triệu)",
+            "- 1.5% cho các giao dịch tiêp theo từ mức chi tiêu 60 triệu.",
+            "(*) Điều kiện nhận hoàn tiền: chi tiêu tối thiểu từ 5 triệu/ tháng"
+          ],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "Miễn phí thường niên năm đầu khi có từ 3 lần chi tiêu (từ 300.000 VNĐ/ 1 lần) trong vòng 30 ngày sau khi mở thẻ",
+            "Miễn phí thường niên năm tiếp theo cho thẻ chính nếu tổng chi tiêu năm liền trước  của Thẻ chính và thẻ phụ đạt từ 60 triệu đồng.",
+            "Miễn phí thường niên năm đầu cho thẻ phụ"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "7.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "0.3%",
+          "value": "Hoàn tiền 0.3% khi chi tiêu từ 0 đến 15 triệu",
+          "delay": "1100ms"
+        },
+        {
+          "key": "0.5%",
+          "value": "Hoàn tiền 0.5% cho 30 triệu tiếp theo ( mức chi tiêu từ 15 đến 45 triệu)",
+          "delay": "1100ms"
+        },
+        {
+          "key": "1%",
+          "value": "Hoàn tiền 1% cho 15 triệu tiếp theo ( mức chi tiêu từ 45 đến dưới 60 triệu)",
+          "delay": "500ms"
+        },
+        {
+          "key": "1.5%",
+          "value": "Hoàn tiền 1.5% cho các giao dịch tiêp theo từ mức chi tiêu 60 triệu",
+          "delay": "100ms"
+        },
+        {
+          "key": "1000K",
+          "value": "Hoàn tiền tối đa 1.000.000 VNĐ/ tháng trong kỳ sao kê",
+          "delay": "100ms"
+        },
+        {
+          "key": "(*)",
+          "value": "Điều kiện hoàn tiền: chi tiêu tối thiểu từ 5 triệu/ tháng",
+          "delay": "100ms"
+        }
+      ]
+    },
+    {
+      "id": "MC2",
+      "id_int": 1,
+      "name": "Thẻ MC2",
+      "benefit_id": 1,
+      "have_small_detail": true,
+      "small_detail": [
+        "- Tặng 1 vé xem phim hoặc Combo bắp nước khi đặt ít nhất 1 vé xem phim online tại CGV nếu tổng giao dịch qua mạng đạt 500.000 VNĐ trong tháng trước",
+        "- Tặng bảo hiểm thẻ tín dụng nếu phát sinh tối thiểu 3 giao dịch trong vòng 30 ngày kể từ ngày kích hoạt thẻ (gồm Bảo hiểm rút tiền mặt tại ATM; Bảo hiểm giao dịch thẻ; Bảo hiểm thất lạc ví)"
+      ],
+      "comparison": {
+        "table_1": {
+          "type": "Standardized",
+          "creditLimit": "10 - 70 triệu VNĐ",
+          "interestRate": "3.49%/tháng",
+          "transactionLimit": "70 triệu VNĐ/ngày",
+          "anualFee": "299.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": [
+            "1.000 VNĐ = 3 điểm",
+            "1.000 VNĐ = 6 điểm cho chi tiêu tại siêu thị"
+          ],
+          "cashback": ["Không có"],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "Miễn phí thường niên cho năm tiếp theo khi chi tiêu từ 30.000.000 VNĐ trở lên"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "4.500.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "6 điểm",
+          "value": "Tặng điểm thưởng cho giao dịch tại siêu thị 1.000 VNĐ = 6 điểm",
+          "delay": "100ms"
+        },
+        {
+          "key": "3 điểm",
+          "value": "Tặng điểm thưởng cho giao dịch khác 1.000 VNĐ = 3 điểm",
+          "delay": "500ms"
+        },
+        {
+          "key": "0 phí",
+          "value": "Miễn phí thường niên cho năm tiếp theo khi chi tiêu từ 30.000.000 VNĐ trở lên",
+          "delay": "1100ms"
+        }
+      ]
+    },
+    {
+      "id": "Platinum",
+      "id_int": 4,
+      "name": "Thẻ Platinum",
+      "benefit_id": 1,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Platinum",
+          "creditLimit": "40 triệu - 1 tỷ VNĐ",
+          "interestRate": "2.79%/tháng",
+          "transactionLimit": "200 triệu VNĐ/ngày",
+          "anualFee": "699.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": [
+            "1.000 VNĐ = 6 điểm",
+            "1.000 VNĐ = 12 điểm cho các chi tiêu nhu yếu phẩm hàng ngày, spa, làm đẹp, ăn uống, vận tải, du lịch"
+          ],
+          "cashback": ["Không có"],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": ["Không có"]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "15.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "12 điểm",
+          "value": "Tặng điểm thưởng cho giao dịch tại siêu thị, cửa hàng tiện lợi, spa, làm đẹp, du lịch và ăn uống 1.000 VNĐ = 12 điểm",
+          "delay": "100ms"
+        },
+        {
+          "key": "6 điểm",
+          "value": "Tặng điểm thưởng cho giao dịch còn lại 1.000 VNĐ = 6 điểm",
+          "delay": "500ms"
+        },
+        {
+          "key": "0 phí",
+          "value": "Miễn phí thường niên năm tiếp theo khi chi tiêu từ 90.000.000 VNĐ trở lên",
+          "delay": "1100ms"
+        }
+      ]
+    },
+    {
+      "id": "MClassic",
+      "id_int": 6,
+      "name": "Thẻ VPMobi Classic",
+      "benefit_id": 1,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Standardized",
+          "creditLimit": "10 - 70 triệu VNĐ",
+          "interestRate": "3.99%/tháng",
+          "transactionLimit": "70 triệu VNĐ/ngày",
+          "anualFee": "299.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["1.000 VNĐ = 3 điểm"],
+          "cashback": ["Không có"],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Có"],
+          "freeAnualFee": [
+            "Miễn phí thường niên năm đầu khi tổng chi tiêu tối thiểu từ 500.000 VNĐ trong vòng 30 ngày đầu sau khi mở thẻ (không áp dụng rút tiền mặt)"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "- Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ.",
+            "- Khách hàng sử dụng thuê bao Mobifone"
+          ],
+          "income": "4.500.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "3 điểm",
+          "value": "Tặng điểm thưởng cho mọi giao dịch 1.000 VNĐ = 3 điểm",
+          "delay": "100ms"
+        },
+        {
+          "key": "1 điểm",
+          "value": "Tặng thêm 1 điểm thưởng khi chi tiêu ở nước ngoài và nhân dịp sinh nhật",
+          "delay": "500ms"
+        },
+        {
+          "key": "0 phí",
+          "value": "Miễn phí thường niên năm đầu tiên khi tổng chi tiêu tối thiểu từ 500.000 VNĐ trong vòng 30 ngày đầu sau khi mở thẻ",
+          "delay": "1100ms"
+        }
+      ]
+    },
+    {
+      "id": "MTitanium",
+      "id_int": 8,
+      "name": "Thẻ VPMobi Titanium",
+      "benefit_id": 1,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Titanium",
+          "creditLimit": "20 - 500 triệu VNĐ",
+          "interestRate": "3.99%/tháng",
+          "transactionLimit": "70 triệu VNĐ/ngày",
+          "anualFee": "499.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["1.000 VNĐ = 5 điểm"],
+          "cashback": ["Không có"],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "Miễn phí thường niên năm đầu khi tổng chi tiêu tối thiểu từ 500.000 VNĐ trong vòng 30 ngày đầu sau khi mở thẻ (không áp dụng rút tiền mặt)"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "- Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ.",
+            "- Khách hàng sử dụng thuê bao Mobifone"
+          ],
+          "income": "7.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "5 điểm",
+          "value": "Tặng điểm thưởng cho mọi giao dịch 1.000 VNĐ = 5 điểm",
+          "delay": "100ms"
+        },
+        {
+          "key": "1 điểm",
+          "value": "Tặng thêm 1 điểm thưởng khi chi tiêu ở nước ngoài và nhân dịp sinh nhật",
+          "delay": "500ms"
+        },
+        {
+          "key": "0 phí",
+          "value": "Miễn phí thường niên năm đầu tiên khi tổng chi tiêu tối thiểu từ 500.000 VNĐ trong vòng 30 ngày đầu sau khi mở thẻ",
+          "delay": "500ms"
+        },
+        {
+          "key": "",
+          "value": "Ghi chú: Tận hưởng lợi ích và đặc quyền cao nhất trong các chương trình ưu đãi và khuyến mại",
+          "delay": "1100ms"
+        }
+      ]
+    },
+    {
+      "id": "MPlatinum",
+      "id_int": 7,
+      "name": "Thẻ VPMobi Platinum",
+      "benefit_id": 1,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Platinum",
+          "creditLimit": "40 triệu - 1 tỷ VNĐ",
+          "interestRate": "2.79%/tháng",
+          "transactionLimit": "200 triệu VNĐ/ngày",
+          "anualFee": "699.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["1.000 VNĐ = 6 điểm"],
+          "cashback": ["Không có"],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": [
+            "Miễn phí thường niên năm đầu khi tổng chi tiêu tối thiểu từ 500.000 VNĐ trong vòng 30 ngày đầu sau khi mở thẻ (không áp dụng rút tiền mặt)"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "- Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ.",
+            "- Khách hàng sử dụng thuê bao Mobifone"
+          ],
+          "income": "15.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "6 điểm",
+          "value": "Tặng điểm thưởng cho mọi giao dịch 1.000 VNĐ = 6 điểm",
+          "delay": "100ms"
+        },
+        {
+          "key": "1 điểm",
+          "value": "Tặng thêm 1 điểm thưởng khi chi tiêu ở nước ngoài và nhân dịp sinh nhật",
+          "delay": "500ms"
+        },
+        {
+          "key": "0 phí",
+          "value": "Miễn phí thường niên năm đầu tiên khi tổng chi tiêu tối thiểu từ 500.000 VNĐ trong vòng 30 ngày đầu sau khi mở thẻ",
+          "delay": "1100ms"
+        },
+        {
+          "key": "",
+          "value": "Ghi chú: Tận hưởng lợi ích và đặc quyền cao nhất trong các chương trình ưu đãi và khuyến mại",
+          "delay": "2000ms"
+        }
+      ]
+    },
+    {
+      "id": "NO1",
+      "id_int": 9,
+      "name": "Thẻ No.1",
+      "benefit_id": 1,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Standardized",
+          "creditLimit": "10 - 30 triệu VNĐ",
+          "interestRate": "3.99%/tháng",
+          "transactionLimit": "30 triệu VNĐ/ngày",
+          "anualFee": "150.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["1.000 VNĐ = 3 điểm"],
+          "cashback": ["Không có"],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Rút tiền mặt không mất phí"],
+          "freeAnualFee": [
+            "Miễn phí thường niên năm đầu khi phát sinh 1 giao dịch trong vòng 30 ngày đầu sau khi mở thẻ"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "4.500.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "0%",
+          "value": "Rút tiền mặt không mất phí",
+          "delay": "100ms"
+        },
+        {
+          "key": "3 điểm",
+          "value": "Tặng điểm thưởng cho giao dịch 1.000 VNĐ = 3 điểm",
+          "delay": "500ms"
+        },
+        {
+          "key": "2%",
+          "value": "Đăng ký trả góp cho giao dịch thẻ với lãi suất ưu đãi 2%/tháng khi đăng ký qua tổng đài 24/7",
+          "delay": "1100ms"
+        },
+        {
+          "key": "0 phí",
+          "value": "Miễn phí thường niên năm đầu tiên khi phát sinh 1 giao dịch tài chính bất kỳ trong vòng 30 ngày đầu sau khi mở thẻ",
+          "delay": "2000ms"
+        }
+      ]
+    },
+    {
+      "id": "VPCaliforniaFitness",
+      "id_int": 13,
+      "name": "Thẻ VPBank - California Fitness Platinum",
+      "benefit_id": 5,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Visa Platinum",
+          "creditLimit": "20 triệu - 1 tỷ VNĐ",
+          "interestRate": "3%/tháng",
+          "transactionLimit": "200 triệu VNĐ/ngày",
+          "anualFee": "1.000.000 VNĐ/thẻ chính - 250.000VNĐ/thẻ phụ"
+        },
+        "table_2": {
+          "bonusPoints": [
+            "1.000 VNĐ = 5 điểm cho giao dịch bất kỳ",
+            "1.000 VNĐ = 10 điểm cho giao dịch tại hệ thống CFYC, bệnh viện hoặc POS nước ngoài"
+          ],
+          "cashback": ["Không có"],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": ["Không có"],
+          "specialPromotion": [
+            "- Tặng bộ quà tặng (túi tập, áo, mũ) trị giá 900.000VNĐ",
+            "- Miễn phí 2 tuần tập trải nghiệm & miễn phí thêm 2 tuần tập chính thức khi thanh toán gói tập bằng thẻ VPBank – California Fitness Platinum",
+            "- Tặng 2 lượt sử dụng Huấn luyện viên cá nhân miễn phí trị giá 1 triệu đồng/lượt",
+            "- Tặng tối đa 3 Gymday/tháng khi chi tiêu thẻ tối thiểu 40 triệu đồng/kỳ sao kê"
+          ],
+          "specialPromotionCondition": [
+            "- Áp dụng với KH đóng phí thường niên thẻ năm đầu",
+            "- Với KH gia hạn thẻ CFYC - VPBank sau thời hạn 05 năm sử dụng, ưu đãi gồm 04 tuần tập luyện & 02 lượt sử dụng Huấn luyện viên cá nhân",
+            "- Với KH được miễn phí thường niên, ưu đãi CHỈ bao gồm 02 tuần tập luyện & 01 lượt sử dụng HLV cá nhân"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "10.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "Quà tặng",
+          "value": "Bộ quà tặng chào mừng (túi tập, áo, mũ) trị giá 900.000VNĐ",
+          "delay": "100ms"
+        },
+        {
+          "key": "4 Tuần",
+          "value": "Miễn phí 2 tuần tập trải nghiệm & miễn phí thêm 2 tuần tập chính thức khi thanh toán gói tập bằng thẻ VPBank – California Fitness Platinum",
+          "delay": "500ms"
+        },
+        {
+          "key": "2 lượt",
+          "value": "Tặng 2 lượt sử dụng Huấn luyện viên cá nhân miễn phí trị giá 1 triệu VNĐ/Lượt",
+          "delay": "1100ms"
+        },
+        {
+          "key": "5 điểm",
+          "value": "Hoàn điểm thưởng 1.000 VNĐ = 5 điểm cho giao dịch bất kỳ",
+          "delay": "2000ms"
+        },
+        {
+          "key": "10 điểm",
+          "value": "Hoàn điểm thưởng 1.000 VNĐ = 10 điểm cho giao dịch tại hệ thống CFYC, bệnh viện hoặc POS nước ngoài",
+          "delay": "2000ms"
+        },
+        {
+          "key": "3 ngày",
+          "value": "Tặng tối đa 3 Gymday/tháng khi chi tiêu thẻ tối thiểu 40.000.000VNĐ/kỳ sao kê",
+          "delay": "2000ms"
+        }
+      ]
+    },
+    {
+      "id": "VPCaliforniaCenturyonSignature",
+      "id_int": 14,
+      "name": "Thẻ VPBank - California Centuryon Signature",
+      "benefit_id": 5,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Visa Signature",
+          "creditLimit": "40 triệu - 1 tỷ VNĐ",
+          "interestRate": "2.75%/tháng",
+          "transactionLimit": "300 triệu VNĐ/ngày",
+          "anualFee": "1.500.000 VNĐ/thẻ chính - miễn phí thẻ phụ"
+        },
+        "table_2": {
+          "bonusPoints": [
+            "1.000 VNĐ = 7 điểm cho giao dịch bất kỳ",
+            "1.000 VNĐ = 14 điểm cho giao dịch tại hệ thống CFYC, bệnh viện hoặc POS nước ngoài"
+          ],
+          "cashback": ["Không có"],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": ["Không có"],
+          "specialPromotion": [
+            "- Tặng 02 buổi liệu trình Oru giảm mỡ thon gọn tại viện thẩm mỹ Eri International trị giá 11 triệu đồng/buổi",
+            "- Miễn phí 2 tuần tập trải nghiệm & miễn phí thêm 2 tuần tập chính thức khi thanh toán gói tập bằng thẻ VPBank – California Centuryon Signature",
+            "- Tặng 2 lượt sử dụng Huấn luyện viên cá nhân miễn phí trị giá 1 triệu đồng/lượt",
+            "- Tặng tối đa 15 Gymday/tháng khi chi tiêu thẻ tối thiểu 40 triệu đồng/kỳ sao kê"
+          ],
+          "specialPromotionCondition": [
+            "- Áp dụng với KH đóng phí thường niên thẻ năm đầu & KH gia hạn thẻ sau 05 năm sử dụng",
+            "- Với KH được miễn phí thường niên, ưu đãi CHỈ bao gồm 01 buổi liệu trình Oru giảm mỡ thon gọn, 02 tuần tập luyện & 01 lượt sử dụng HLV cá nhân"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 22 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "20.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "2 Buổi",
+          "value": "Tặng 02 buổi liệu trình Oru giảm mỡ thon gọn tại viện thẩm mỹ Eri International trị giá 11 triệu đồng/buổi",
+          "delay": "100ms"
+        },
+        {
+          "key": "4 Tuần",
+          "value": "Miễn phí 2 tuần tập trải nghiệm & miễn phí thêm 2 tuần tập chính thức khi thanh toán gói tập bằng thẻ VPBank – California Centuryon Signature",
+          "delay": "500ms"
+        },
+        {
+          "key": "2 Lượt",
+          "value": "Tặng 2 lượt sử dụng Huấn luyện viên cá nhân miễn phí trị giá 1 triệu đồng/lượt",
+          "delay": "500ms"
+        },
+        {
+          "key": "7 điểm",
+          "value": "Hoàn điểm thưởng 1.000 VNĐ = 7 điểm cho giao dịch bất kỳ",
+          "delay": "2000ms"
+        },
+        {
+          "key": "14 điểm",
+          "value": "Hoàn điểm thưởng 1.000 VNĐ = 14 điểm cho giao dịch tại hệ thống CFYC, bệnh viện hoặc POS nước ngoài",
+          "delay": "2000ms"
+        },
+        {
+          "key": "15 ngày",
+          "value": "Tặng tối đa 15 Gymday/tháng khi chi tiêu thẻ tối thiểu 40.000.000VNĐ/kỳ sao kê",
+          "delay": "2000ms"
+        }
+      ]
+    },
+    {
+      "id": "VPShopee",
+      "id_int": 17,
+      "name": "Thẻ VPBank - Shopee Platinum",
+      "benefit_id": 6,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Visa Platinum",
+          "creditLimit": "10 - 100 triệu VNĐ",
+          "interestRate": "3.19%/tháng",
+          "transactionLimit": "70 triệu VNĐ/ngày",
+          "anualFee": "299.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": [
+            "- Hoàn tiền 6% giao dịch chi tiêu tại Shopee và NowFood. Giá trị tiền hoàn tối đa: 250,000 VNĐ/tháng",
+            "- Hoàn tiền 1% cho giao dịch chi tiêu Ăn uống, siêu thị (Co.op, Big C, Lotte Mart, Vinmart), Di chuyển (Grab,Be). Giá trị tiền hoàn tối đa: 150,000 VNĐ/tháng",
+            "- Hoàn tiền 0.3% cho các giao dịch chi tiêu khác. Không giới hạn số tiền được hoàn."
+          ],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": ["Không có"],
+          "specialPromotion": [
+            "- Quà chào mừng: Tặng 1 Shopee E-Voucher trị giá 200,000 VND cho KH mở thẻ tín dụng  Shopee Platinum và đạt tổng doanh số chi tiêu 1 triệu VND trở lên trong vòng 30 ngày kể từ ngày mở thẻ.",
+            "- Quà sinh nhật:  Tặng 1 mã hoàn 50% giá trị đơn hàng trên Shopee vào tháng sinh nhật. Giá trị hoàn dưới dạng Shopee Xu (tối đa 50,000 xu)",
+            "- Miễn phí lượt vận chuyển: Tặng  02 mã miễn phí vận chuyển (tối đa: 30.000 VND/mã) mỗi tháng, áp dụng cho cho đơn hàng từ 300,000 VND.",
+            "- Bảo hiểm: Tặng bảo hiểm mua sắm cho thẻ được mở và có phát sinh giao dịch chi tiêu trong vòng 30 ngày kể từ ngày mở thẻ"
+          ],
+          "specialPromotionCondition": [
+            "Điều kiện áp dụng thay đổi theo quy định của VPBank từng thời kì"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 23 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "5.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "Quà chào mừng",
+          "value": "Tặng 1 Shopee E-Voucher trị giá 200,000 VND cho KH mở thẻ tín dụng  Shopee Platinum và đạt tổng doanh số chi tiêu 1 triệu VND trở lên trong vòng 30 ngày kể từ ngày mở thẻ",
+          "delay": "100ms"
+        },
+        {
+          "key": "Quà sinh nhật",
+          "value": " Tặng 1 mã hoàn 50% giá trị đơn hàng trên Shopee vào tháng sinh nhật. Giá trị hoàn dưới dạng Shopee Xu (tối đa 50,000 xu)",
+          "delay": "500ms"
+        },
+        {
+          "key": "Miễn phí lượt vận chuyển",
+          "value": "Tặng  02 mã miễn phí vận chuyển (tối đa: 30.000 VND/mã) mỗi tháng, áp dụng cho cho đơn hàng từ 300,000 VND",
+          "delay": "1100ms"
+        },
+        {
+          "key": "Bảo hiểm",
+          "value": "Tặng bảo hiểm mua sắm cho thẻ được mở và có phát sinh giao dịch chi tiêu trong vòng 30 ngày kể từ ngày mở thẻ",
+          "delay": "2000ms"
+        },
+        {
+          "key": "Hoàn tiền 6%",
+          "value": "Hoàn tiền 6% giao dịch chi tiêu tại Shopee và NowFood. Giá trị tiền hoàn tối đa: 250,000 VNĐ/tháng",
+          "delay": "2000ms"
+        },
+        {
+          "key": "Hoàn tiền 1%",
+          "value": "Hoàn tiền 1% cho giao dịch chi tiêu Ăn uống, siêu thị (Co.op, Big C, Lotte Mart, Vinmart), Di chuyển (Grab,Be). Giá trị tiền hoàn tối đa: 150,000 VNĐ/tháng",
+          "delay": "2000ms"
+        },
+        {
+          "key": "Hoàn tiền 0.3%",
+          "value": "Hoàn tiền 0.3% cho các giao dịch chi tiêu khác. Không giới hạn số tiền được hoàn.",
+          "delay": "2000ms"
+        }
+      ]
+    },
+    {
+      "id": "VPSuperShopeePlatinum",
+      "id_int": 18,
+      "name": "Thẻ VPBank - Super Shopee Platinum",
+      "benefit_id": 6,
+      "have_small_detail": false,
+      "small_detail": "",
+      "comparison": {
+        "table_1": {
+          "type": "Super Platinum",
+          "creditLimit": "15 triệu - 100 triệu VNĐ",
+          "interestRate": "2.99%/tháng",
+          "transactionLimit": "70 triệu VNĐ/ngày",
+          "anualFee": "499.000 VNĐ"
+        },
+        "table_2": {
+          "bonusPoints": ["Không có"],
+          "cashback": [
+            "- Hoàn tiền 10% giao dịch chi tiêu tại Shopee và NowFood. Giá trị tiền hoàn tối đa: 400,000 VNĐ/tháng",
+            "- Hoàn tiền 2% cho giao dịch chi tiêu Ăn uống, siêu thị (Co.op, Big C, Lotte Mart, Vinmart), Di chuyển (Grab,Be). Giá trị tiền hoàn tối đa: 200,000 VNĐ/tháng",
+            "- Hoàn tiền 0.3% cho các giao dịch chi tiêu khác. Không giới hạn số tiền được hoàn"
+          ],
+          "freeTicket": ["Không có"],
+          "mobifone": ["Không có"],
+          "rutTienmat": ["Không có"],
+          "freeAnualFee": ["Không có"],
+          "specialPromotion": [
+            "- Quà chào mừng: Tặng 1 Shopee E-Voucher trị giá 400,000 VND cho KH mở thẻ tín dụng  Shopee Platinum và đạt tổng doanh số chi tiêu 2 triệu VND trở lên trong vòng 30 ngày kể từ ngày mở thẻ",
+            "- Quà sinh nhật:  Tặng 1 mã hoàn 50% giá trị đơn hàng trên Shopee vào tháng sinh nhật. Giá trị hoàn dưới dạng Shopee Xu (tối đa 100,000 xu)",
+            "- Miễn phí lượt vận chuyển: Tặng 04 mã miễn phí vận chuyển (tối đa: 30.000 VND/mã) mỗi tháng,  áp dụng cho cho đơn hàng từ 300,000 VND",
+            "- Bảo hiểm: tặng bảo hiểm mua sắm cho thẻ được mở và có phát sinh giao dịch chi tiêu trong vòng 30 ngày kể từ ngày mở thẻ"
+          ],
+          "specialPromotionCondition": [
+            "Điều kiện áp dụng thay đổi theo quy định của VPBank từng thời kì"
+          ]
+        },
+        "table_3": {
+          "paymentOverGlobe": "Có",
+          "threeDsecure": "Có",
+          "fortyfiveDays": "Có",
+          "uudai50": "Có",
+          "tragop1": "Có",
+          "ruttien70": "Có"
+        },
+        "table_4": {
+          "commonCond": [
+            "Cá nhân, là người Việt Nam hoặc người nước ngoài đang sống tại Việt Nam, tuổi từ 23 đến 60 tại thời điểm nộp hồ sơ."
+          ],
+          "income": "5.000.000 VNĐ/tháng"
+        }
+      },
+      "details": [
+        {
+          "key": "Quà chào mừng",
+          "value": "Tặng 1 Shopee E-Voucher trị giá 400,000 VND cho KH mở thẻ tín dụng  Shopee Platinum và đạt tổng doanh số chi tiêu 2 triệu VND trở lên trong vòng 30 ngày kể từ ngày mở thẻ",
+          "delay": "100ms"
+        },
+        {
+          "key": "Quà sinh nhật",
+          "value": "Tặng 1 mã hoàn 50% giá trị đơn hàng trên Shopee vào tháng sinh nhật. Giá trị hoàn dưới dạng Shopee Xu (tối đa 100,000 xu)",
+          "delay": "500ms"
+        },
+        {
+          "key": "Miễn phí lượt vận chuyển",
+          "value": "Tặng 04 mã miễn phí vận chuyển (tối đa: 30.000 VND/mã) mỗi tháng,  áp dụng cho cho đơn hàng từ 300,000 VND",
+          "delay": "500ms"
+        },
+        {
+          "key": "Bảo hiểm",
+          "value": "Tặng bảo hiểm mua sắm cho thẻ được mở và có phát sinh giao dịch chi tiêu trong vòng 30 ngày kể từ ngày mở thẻ",
+          "delay": "2000ms"
+        },
+        {
+          "key": "Hoàn tiền 10%",
+          "value": "Hoàn tiền 10% giao dịch chi tiêu tại Shopee và NowFood. Giá trị tiền hoàn tối đa: 400,000 VNĐ/tháng",
+          "delay": "2000ms"
+        },
+        {
+          "key": "Hoàn tiền 2%",
+          "value": "Hoàn tiền 2% cho giao dịch chi tiêu Ăn uống, siêu thị (Co.op, Big C, Lotte Mart, Vinmart), Di chuyển (Grab,Be). Giá trị tiền hoàn tối đa: 200,000 VNĐ/tháng",
+          "delay": "2000ms"
+        },
+        {
+          "key": "Hoàn tiền 0.3%",
+          "value": "Hoàn tiền 0.3% cho các giao dịch chi tiêu khác. Không giới hạn số tiền được hoàn",
+          "delay": "2000ms"
+        }
+      ]
+    }
+  ],
+  "benefits": [
+    {
+      "key": "Hoàn tiền",
+      "param": "HoanTien",
+      "cards": ["StepUp", "VPLady"],
+      "id": 0
+    },
+    {
+      "key": "Điểm thưởng",
+      "param": "DiemThuong",
+      "cards": ["MC2", "Platinum"],
+      "id": 1
+    },
+    {
+      "key": "Du lịch",
+      "param": "DuLich",
+      "cards": ["VNA", "PlatinumTravel"],
+      "id": 2
+    },
+    {
+      "key": "Mobifone",
+      "param": "Mobifone",
+      "cards": ["VPMobi Classic", "VPMobi Titanium", "VPMobi Platinum"],
+      "id": 3
+    },
+    {
+      "key": "Rút tiền",
+      "param": "RutTien",
+      "cards": ["NO.1"],
+      "id": 4
+    },
+    {
+      "key": "Sức khỏe",
+      "param": "SucKhoe",
+      "cards": ["NO.1"],
+      "id": 5
+    },
+    {
+      "key": "Shopee",
+      "param": "Shopee",
+      "cards": ["VPSuperShopeePlatinum", "VPShopee"],
+      "id": 6
+    }
+  ],
+  "features": [
+    {
+      "key": "10 phút đăng ký",
+      "desc": "Điền thông tin upload hồ sơ hoàn toàn online",
+      "delay": 200
+    },
+    {
+      "key": "Phê duyệt tự động",
+      "desc": "Hệ thống VPBank thực hiện phê duyệt thẻ hoàn toàn tự động",
+      "delay": 700
+    },
+    {
+      "key": "Duyệt hồ sơ trong 24h",
+      "desc": "Phê duyệt tín dụng siêu tốc, nhận kết quả chỉ trong 24h",
+      "delay": 1100
+    }
+  ]
+}

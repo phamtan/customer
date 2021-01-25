@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="186" height="96" viewBox="0 0 186 96">
+    <defs>
+        <filter id="y8sf2xiagb" width="115.3%" height="132.5%" x="-7.6%" y="-11.2%" filterUnits="objectBoundingBox">
+            <feMorphology in="SourceAlpha" radius="1" result="shadowSpreadOuter1"/>
+            <feOffset dy="4" in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0.0352941176 0 0 0 0 0.117647059 0 0 0 0 0.258823529 0 0 0 0.25 0"/>
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
+            <feGaussianBlur in="shadowOffsetOuter2" result="shadowBlurOuter2" stdDeviation=".5"/>
+            <feColorMatrix in="shadowBlurOuter2" result="shadowMatrixOuter2" values="0 0 0 0 0.0352941176 0 0 0 0 0.117647059 0 0 0 0 0.258823529 0 0 0 0.31 0"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="shadowMatrixOuter2"/>
+            </feMerge>
+        </filter>
+        <rect id="dah9x5p4ua" width="170" height="80" x="0" y="0" rx="8"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g transform="translate(-8 -405) translate(16 409)">
+                <mask id="7uporrqtjc" fill="#fff">
+                    <use xlink:href="#dah9x5p4ua"/>
+                </mask>
+                <g>
+                    <use fill="#000" filter="url(#y8sf2xiagb)" xlink:href="#dah9x5p4ua"/>
+                    <use fill="#03A659" xlink:href="#dah9x5p4ua"/>
+                </g>
+                <g mask="url(#7uporrqtjc)" opacity=".2">
+                    <g>
+                        <path stroke="#49CED9" stroke-width="3" d="M13.795.014c5.542.293 9.797 5.023 9.504 10.565-.292 5.542-5.022 9.798-10.564 9.505C7.193 19.79 2.937 15.06 3.23 9.519 3.523 3.977 8.253-.278 13.795.014z" transform="translate(120 37)"/>
+                        <path fill="#49CED9" d="M10.579 9.661c5.542.293 9.798 5.023 9.505 10.565-.293 5.542-5.023 9.798-10.565 9.505-5.542-.293-9.798-5.023-9.505-10.565.293-5.542 5.023-9.797 10.565-9.505" transform="translate(120 37)"/>
+                        <path fill="#FAD141" d="M36.43 24.928c2.661.14 4.704 2.411 4.563 5.071-.14 2.66-2.41 4.703-5.07 4.563-2.661-.14-4.704-2.411-4.563-5.071.14-2.66 2.41-4.703 5.07-4.563" transform="translate(120 37)"/>
+                    </g>
+                </g>
+                <g mask="url(#7uporrqtjc)" opacity=".2">
+                    <g>
+                        <path stroke="#028547" stroke-width="3" d="M6.643 6.643L6.643 39.994 39.994 39.994 39.994 6.643z" transform="translate(0 -3)"/>
+                        <path fill="#028547" d="M0 33.351L33.351 33.351 33.351 0 0 0z" transform="translate(0 -3)"/>
+                    </g>
+                </g>
+                <text fill="#FFF" fill-opacity=".87" font-family="Roboto-Medium, Roboto" font-size="18" font-weight="400" letter-spacing=".129" mask="url(#7uporrqtjc)">
+                    <tspan x="57" y="45">Du lịch</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

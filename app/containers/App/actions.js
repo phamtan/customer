@@ -17,6 +17,13 @@ export function getProfessions() {
   };
 }
 
+export function getLogin() {
+  console.log('login');
+  return {
+    type: GET_PROFESSIONS_PENDING,
+  };
+}
+
 export function getProfessionsSuccess(respond) {
   return {
     type: GET_PROFESSIONS_SUCCESS,

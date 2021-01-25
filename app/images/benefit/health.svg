@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="186" height="96" viewBox="0 0 186 96">
+    <defs>
+        <filter id="w9ahu0kc0b" width="115.3%" height="132.5%" x="-7.6%" y="-11.2%" filterUnits="objectBoundingBox">
+            <feMorphology in="SourceAlpha" radius="1" result="shadowSpreadOuter1"/>
+            <feOffset dy="4" in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0.0352941176 0 0 0 0 0.117647059 0 0 0 0 0.258823529 0 0 0 0.25 0"/>
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
+            <feGaussianBlur in="shadowOffsetOuter2" result="shadowBlurOuter2" stdDeviation=".5"/>
+            <feColorMatrix in="shadowBlurOuter2" result="shadowMatrixOuter2" values="0 0 0 0 0.0352941176 0 0 0 0 0.117647059 0 0 0 0 0.258823529 0 0 0 0.31 0"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="shadowMatrixOuter2"/>
+            </feMerge>
+        </filter>
+        <rect id="rtmk2rnj8a" width="170" height="80" x="0" y=".13" rx="8"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g transform="translate(-194 -509) translate(202 512) translate(0 .87)">
+                    <mask id="gjfp8d7xoc" fill="#fff">
+                        <use xlink:href="#rtmk2rnj8a"/>
+                    </mask>
+                    <g>
+                        <use fill="#000" filter="url(#w9ahu0kc0b)" xlink:href="#rtmk2rnj8a"/>
+                        <use fill="#0D636C" xlink:href="#rtmk2rnj8a"/>
+                    </g>
+                    <path fill="#0D8692" d="M95.263 2.13L42.615 43.251 107 29.438 85 67.844 138 52.13 131.187 60.031 170 43.251 170 -8z" mask="url(#gjfp8d7xoc)" opacity=".3"/>
+                </g>
+                <text fill="#FFF" fill-opacity=".87" font-family="Roboto-Medium, Roboto" font-size="18" font-weight="400" letter-spacing=".129" transform="translate(-194 -509) translate(202 512)">
+                    <tspan x="47" y="46">Sức khỏe</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,14 @@
+/*
+ *
+ * JarvisCustomer constants
+ *
+ */
+
+export const DEFAULT_ACTION = 'app/JarvisCustomer/DEFAULT_ACTION';
+export const SAVE_DATA = 'SAVE DATA';
+export const API_CALL_REQUEST = 'API_CALL_REQUEST';
+export const API_CALL_SUCCESS = 'API_CALL_SUCCESS';
+export const API_CALL_FAILURE = 'API_CALL_FAILURE';
+export const REQUEST_PROVINCES = 'REQUEST_PROVINCES';
+export const REQUEST_PROVINCES_SUCCESS = 'REQUEST_PROVINCES_SUCCESS';
+export const REQUEST_PROVINCES_FAILURE = 'REQUEST_PROVINCES_FAILURE';

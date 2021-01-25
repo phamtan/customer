@@ -420,6 +420,12 @@ const GlobalStyle = createGlobalStyle`
       text-align: center;
       color: #2a2e2f;
     }
+    .limitText {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      color: #00b245;
+    }
     .questionTitle {
       font-size: 14px;
       font-weight: bold;
@@ -449,6 +455,65 @@ const GlobalStyle = createGlobalStyle`
 			margin-bottom: 20px;
 			background-color:#4daa5c;
 			color:white;
+    }
+  }
+  .sliderWrapper {
+    width:90%;
+    margin-top:30px;
+    .slideItem {
+      width: 90%;
+      display:flex !important;
+      flex-direction: column;
+      justify-content: center !important;
+    }
+    .cardBenefit {
+      margin-top: 20px;
+      width: 100%;
+      display:flex;
+      flex-wrap:wrap;
+      .benefitPercent {
+        font-family: Montserrat;
+        font-size: 40px;
+        font-weight: bold;
+        text-align: center;
+        color: #00ae52;
+      }
+      .cardBenefitDescription {
+        font-family: Montserrat;
+        font-size: 12px;
+        color: #0b0b0b;
+        width: 95%;
+      }
+      .cardBenefitItem {
+        width: 48%;
+        margin-bottom: 15px;
+      }
+    }
+    .btnSubmit {
+      width: 99%;
+      text-align: left;
+      margin: auto;
+      margin-top: 50px;
+      margin-bottom: 20px;
+      background-color:#4daa5c;
+      color:white;
+    }
+  }
+  .slick-slide .floatAction {
+    display: none;
+  }
+  .floatAction {
+    display: flex;
+    flex-direction: column;
+    background-color: #ddd;
+  }
+
+  .slick-slide:hover {
+    .imageSlide {
+      display:none;
+    }
+    .floatAction {
+      display: flex;
     }
   }
 `;

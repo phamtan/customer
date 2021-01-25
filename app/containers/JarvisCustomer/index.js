@@ -20,7 +20,7 @@ import saga from './saga';
 import messages from './messages';
 import Application from './components/JarvisForm/Application';
 
-export function JarvisCustomer() {
+export function JarvisCustomer(props) {
   useInjectReducer({ key: 'jarvisCustomer', reducer });
   useInjectSaga({ key: 'jarvisCustomer', saga });
 
@@ -31,7 +31,7 @@ export function JarvisCustomer() {
         <meta name="description" content="Description of JarvisCustomer" />
       </Helmet>
 
-      <Application />
+      <Application {...props} />
     </div>
   );
 }

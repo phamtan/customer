@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="186" height="96" viewBox="0 0 186 96">
+    <defs>
+        <filter id="jku6o9vyfb" width="115.3%" height="132.5%" x="-7.6%" y="-11.2%" filterUnits="objectBoundingBox">
+            <feMorphology in="SourceAlpha" radius="1" result="shadowSpreadOuter1"/>
+            <feOffset dy="4" in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0.0352941176 0 0 0 0 0.117647059 0 0 0 0 0.258823529 0 0 0 0.25 0"/>
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
+            <feGaussianBlur in="shadowOffsetOuter2" result="shadowBlurOuter2" stdDeviation=".5"/>
+            <feColorMatrix in="shadowBlurOuter2" result="shadowMatrixOuter2" values="0 0 0 0 0.0352941176 0 0 0 0 0.117647059 0 0 0 0 0.258823529 0 0 0 0.31 0"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="shadowMatrixOuter2"/>
+            </feMerge>
+        </filter>
+        <rect id="1b78pppaya" width="170" height="80" x="0" y="0" rx="8"/>
+        <path id="b63rgqqrld" d="M11.925.019c6.583 0 11.92 5.337 11.92 11.92 0 6.584-5.337 11.92-11.92 11.92-6.584 0-11.92-5.336-11.92-11.92C.004 5.356 5.34.02 11.924.02z"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g transform="translate(-194 -405) translate(202 409)">
+                    <mask id="pyelw611ac" fill="#fff">
+                        <use xlink:href="#1b78pppaya"/>
+                    </mask>
+                    <g>
+                        <use fill="#000" filter="url(#jku6o9vyfb)" xlink:href="#1b78pppaya"/>
+                        <use fill="#005DB2" xlink:href="#1b78pppaya"/>
+                    </g>
+                    <g mask="url(#pyelw611ac)" opacity=".2">
+                        <g>
+                            <g transform="translate(112 4) translate(6)">
+                                <mask id="il8kf7mt8e" fill="#fff">
+                                    <use xlink:href="#b63rgqqrld"/>
+                                </mask>
+                                <path fill="#FAD141" d="M-1.626 3.127L25.475 3.127 25.475 2.171-1.626 2.171zM-1.626.935L25.475.935 25.475-.021-1.626-.021zM-1.626 5.319L25.475 5.319 25.475 4.363-1.626 4.363zM-1.626 7.511L25.475 7.511 25.475 6.555-1.626 6.555zM-1.626 9.703L25.475 9.703 25.475 8.747-1.626 8.747zM-1.626 11.895L25.475 11.895 25.475 10.939-1.626 10.939zM-1.626 14.087L25.475 14.087 25.475 13.131-1.626 13.131zM-1.626 16.279L25.475 16.279 25.475 15.323-1.626 15.323zM-1.626 18.471L25.475 18.471 25.475 17.515-1.626 17.515zM-1.626 20.662L25.475 20.662 25.475 19.707-1.626 19.707zM-1.626 22.855L25.475 22.855 25.475 21.899-1.626 21.899zM-1.626 25.047L25.475 25.047 25.475 24.091-1.626 24.091z" mask="url(#il8kf7mt8e)"/>
+                            </g>
+                            <path stroke="#49CED9" stroke-width="3" d="M58.528 12.028c10.755.568 19.012 9.746 18.444 20.5-.568 10.755-9.746 19.013-20.5 18.444-10.755-.567-19.012-9.746-18.444-20.5.568-10.754 9.746-19.012 20.5-18.444z" transform="translate(112 4)"/>
+                            <path fill="#49CED9" d="M51.528 32.028c10.755.567 19.012 9.746 18.444 20.5-.568 10.755-9.746 19.013-20.5 18.444-10.755-.567-19.012-9.746-18.444-20.5.568-10.755 9.746-19.012 20.5-18.444" transform="translate(112 4)"/>
+                            <path fill="#FAD141" d="M16.317 67.022c8.549.45 15.112 7.746 14.661 16.295-.452 8.549-7.747 15.112-16.295 14.661C6.134 97.527-.43 90.231.022 81.683c.451-8.549 7.747-15.112 16.295-14.661" transform="translate(112 4)"/>
+                        </g>
+                    </g>
+                </g>
+                <text fill="#FFF" fill-opacity=".87" font-family="Roboto-Medium, Roboto" font-size="18" font-weight="400" letter-spacing=".129" transform="translate(-194 -405) translate(202 409)">
+                    <tspan x="11" y="45">Liên kết Mobifone</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>
