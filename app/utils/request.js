@@ -59,18 +59,22 @@ const handleError = (error, apiName) => {
     }
   }
 
-  message = `${apiName} is failed`;
+  if (apiName) {
+    message = `${apiName} is failed`;
 
-  store.addNotification({
-    message,
-    type: 'danger',
-    insert: 'top',
-    container: 'top-right',
-    animationIn: ['animate__animated', 'animate__fadeIn'],
-    animationOut: ['animate__animated', 'animate__fadeOut'],
-    dismiss: {
-      duration: 2000,
-    },
-  });
+    store.addNotification({
+      message,
+      type: 'danger',
+      insert: 'top',
+      container: 'top-right',
+      animationIn: ['animate__animated', 'animate__fadeIn'],
+      animationOut: ['animate__animated', 'animate__fadeOut'],
+      dismiss: {
+        duration: 2000,
+      },
+    });
+  }
+
+  
   return Promise.reject(error);
 };

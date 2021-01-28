@@ -6,11 +6,71 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
 import _ from 'lodash';
-import Select from 'react-select';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import BackButton from './BackButton';
 import * as Actions from '../../actions';
+
+const useStyles = makeStyles(() => ({
+  formContainer: {
+    width: '100%',
+    backgroundColor: 'white',
+    minHeight: '100vh',
+    marginTop: '16px',
+  },
+  titleHeader: {
+    fontSize: '24px',
+    width: '100%',
+    textAlign: 'left',
+    paddingLeft: '16px',
+    marginTop: '16px',
+    marginBottom: '36px',
+  },
+  secondHeader: {
+    fontSize: '16px',
+    width: '100%',
+    textAlign: 'center',
+    paddingLeft: '16px',
+    paddingRight: '24px',
+  },
+  action: {
+    width: '100%',
+    height: '46px',
+    borderRadius: '4px',
+    paddingLeft: '16px',
+    paddingRight: '16px',
+    marginTop: '16px',
+    marginBottom: '16px',
+    backgroundColor: '#028547',
+    color: 'white',
+    fontSize: '14px',
+    border: 'none',
+    textTransform: 'uppercase',
+  },
+  genderContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  lableStyle: {
+    fontSize: '16px',
+  },
+  option: {
+    fontSize: 15,
+    '& > span': {
+      marginRight: 10,
+      fontSize: 18,
+    },
+  },
+}));
+
 
 const QUESTION = [
   { value: 'htm', label: 'Họ tên mẹ' },
@@ -29,12 +89,18 @@ const schema = yup.object().shape({
 });
 
 export default function Round3(props) {
+  const classes = useStyles();
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
+  const selections = _.get(props, 'jarvisCustomerV2.selections', []);
   const { register, handleSubmit, errors, control } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
-    defaultValues: jarvisCustomer,
+    defaultValues: {
+      ...jarvisCustomer,
+      id: jarvisCustomer.id,
+      haveGreenCard: jarvisCustomer && jarvisCustomer.haveGreenCard ? jarvisCustomer.haveGreenCard : "0"
+    },
     resolver: yupResolver(schema),
   });
 
@@ -49,26 +115,43 @@ export default function Round3(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={3} />
-      <BackButton className="btnBack" goBack={goBack} />
-      <div className="roundTitle">BƯỚC 3:</div>
-      <div className="roundName">XÁC NHẬN THÔNG TIN</div>
+      <Header className="header" step={3} showStep />
+      <div className={classes.formContainer}>
+      <div className={classes.titleHeader}>Thông tin khác</div>
       <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
         <div className="formWrapper">
           <div className="form-group">
-            <label>Câu hỏi bảo mật</label>
-            <Controller
-              name="securityQuestion"
-              control={control}
-              render={props => (
-                <Select
-                  className="formControl"
-                  options={QUESTION}
-                  onChange={e => props.onChange(e)}
-                  value={props.value}
-                />
-              )}
-            />
+           <Controller
+                name="permanentProvince"
+                control={control}
+                render={({ value, onChange }) => (
+                  <Autocomplete
+                    style={{ width: '90vw' }}
+                    options={selections && selections.filter(selection => selection.category === "SECURITYQUESTION").map(selection => ({
+                      value: selection.code,
+                      label: selection.nameVi
+                    }))}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      onChange(newValue.value);
+                    }}
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Câu hỏi bảo mật"
+                        variant="outlined"
+                        inputProps={{
+                          ...params.inputProps,
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              />
             {errors.securityQuestion && (
               <span className="formError">
                 {errors.securityQuestion.message}
@@ -76,36 +159,33 @@ export default function Round3(props) {
             )}
           </div>
           <div className="form-group">
-            <label>Trả lời câu hỏi bảo mật</label>
-            <input
-              name="securityAnswer"
-              className="form-control formControl"
-              placeholder=""
-              type="text"
-              ref={register}
-            />
+            <Controller 
+              as={TextField} 
+              name="securityAnswer" 
+              fullWidth 
+              variant="outlined" 
+              label="Trả lời câu hỏi bảo mật"
+              control={control} />
             {errors.securityAnswer && (
               <span className="formError">{errors.securityAnswer.message}</span>
             )}
           </div>
           <div className="form-group">
-            <label>
-              Bạn có thuộc một trong các điều kiện sau không: là công dân Hoa
-              Kỳ, có thẻ thường trú nhân tại Hoa Kỳ (Thẻ Xanh) hoặc là cá nhân
-              cư trú tại Hoa Kỳ?
-            </label>
             <Controller
-              name="haveGreenCard"
-              control={control}
-              render={props => (
-                <Select
-                  className="formControl"
-                  options={GREEN_CARD}
-                  onChange={e => props.onChange(e)}
-                  value={props.value}
-                />
-              )}
-            />
+                name="haveGreenCard"
+                control={control}
+                render={({ value, onChange }) => (
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend" className={classes.labelStyle}>Bạn có thuộc một trong các điều kiện sau không: là công dân Hoa
+              Kỳ, có thẻ thường trú nhân tại Hoa Kỳ (Thẻ Xanh) hoặc là cá nhân
+              cư trú tại Hoa Kỳ?</FormLabel>
+                    <RadioGroup aria-label="haveGreenCard" name="haveGreenCard" value={value} onChange={(e) => onChange(e.target.value)} className={classes.genderContainer}>
+                      <FormControlLabel value="1" control={<Radio />} label="Có" />
+                      <FormControlLabel value="0" control={<Radio />} label="Không" />
+                    </RadioGroup>
+                  </FormControl>
+                )}
+              />
             {errors.haveGreenCard && (
               <span className="formError">{errors.haveGreenCard.message}</span>
             )}
@@ -115,6 +195,7 @@ export default function Round3(props) {
           </button>
         </div>
       </form>
+      </div>
     </JarvisFormStyle>
   );
 }

@@ -13,6 +13,8 @@ import {
   REQUEST_PROVINCES_SUCCESS,
   REQUEST_PROVINCES_FAILURE,
   SAVE_DATA_SUCCESS,
+  SAVE_RAW_DATA,
+  REQUEST_SELECTION_SUCCESS,
 } from './constants';
 
 export const initialState = {};
@@ -31,6 +33,14 @@ const jarvisCustomerV2Reducer = (state = initialState, action) =>
             ...action.payload,
           },
         };
+      case SAVE_RAW_DATA:
+        return {
+          ...state,
+          jarvisCustomer: {
+            ...state.jarvisCustomer,
+            ...action.payload,
+          },
+        };  
       case REQUEST_COUNTRIES:
         return { ...state, fetching: true, error: null };
       case REQUEST_COUNTRIES_SUCCESS:
@@ -39,6 +49,8 @@ const jarvisCustomerV2Reducer = (state = initialState, action) =>
         return { ...state, countries: [] };
       case REQUEST_PROVINCES_SUCCESS:
         return { ...state, provinces: action.payload };
+      case REQUEST_SELECTION_SUCCESS:
+        return { ...state, selections: action.payload };
       case REQUEST_PROVINCES_FAILURE:
         return { ...state, provinces: [] };
       case SAVE_DATA_SUCCESS: 

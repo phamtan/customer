@@ -34,6 +34,7 @@ import LivenessGuiline from './LivenessGuiline';
 import Liveness from './Liveness';
 import CompareCard from './CompareCard';
 import UploadDocumentSuccess from './UploadDocumentSuccess';
+import WaitingCheckLos from './WaitingCheckLos';
 import AllCards from './AllCards';
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +53,7 @@ function Alert(props) {
 export default function Application(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(15);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -85,12 +86,21 @@ export default function Application(props) {
       )}
       {step === 16 && <AllCards setStep={setStep} {...props} />}
       {step === 17 && <LivenessGuiline setStep={setStep} {...props} />}
-      {step === 18 && <Liveness setStep={setStep} {...props} />}
+      {step === 18 && <Liveness  handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
       {step === 19 && <ChooseDocument setStep={setStep} {...props} />}
       {step === 20 && <Round2OCR setStep={setStep} {...props} />}
       {step === 21 && <Round2OCRBack setStep={setStep} {...props} />}
       {step === 22 && (
         <CompareCard
+          handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage}
+          setStep={setStep}
+          {...props}
+        />
+      )}
+      {step === 23 && (
+        <WaitingCheckLos
           handleShoMessage={handleShoMessage}
           handleCloseMessage={handleCloseMessage}
           setStep={setStep}
@@ -108,7 +118,8 @@ export default function Application(props) {
       {step === 3 && <Round2OCR setStep={setStep} {...props} />}
       {step === 991 && <Round2OCRBack setStep={setStep} {...props} />}
       {step === 4 && <Round2Liveness setStep={setStep} {...props} />}
-      {step === 5 && <Roun1FillInfo setStep={setStep} {...props} />}
+      {step === 5 && <Roun1FillInfo handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
       {step === 6 && <Round2Confirm setStep={setStep} {...props} />}
       {step === 7 && <Round2CheckLimit setStep={setStep} {...props} />}
       {step === 999 && <CheckSuccess setStep={setStep} {...props} />}

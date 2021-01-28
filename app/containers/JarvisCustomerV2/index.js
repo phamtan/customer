@@ -25,7 +25,7 @@ export function JarvisCustomerV2(props) {
   useInjectSaga({ key: 'jarvisCustomerV2', saga });
 
   useEffect(() => {
-    // props.dispatch(Actions.callapi());
+    props.dispatch(Actions.callapi());
   }, []);
 
   return (

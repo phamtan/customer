@@ -7,6 +7,8 @@
       "benefit_id": 2,
       "have_small_detail": true,
       "icon": "vnaCard",
+      "minLimit": "40",
+      "maxLimit": "1000",
       "small_detail": ["Miễn phí dịch vụ phòng chờ Dragonpass 1 lần 1 quý"],
       "comparison": {
         "table_1": {
@@ -69,6 +71,8 @@
       "name": "THẺ PLATINUM TRAVEL MILES",
       "benefit_id": 2,
       "have_small_detail": true,
+      "minLimit": "40",
+      "maxLimit": "1000",
       "small_detail": [
         "Miễn phí dịch vụ phòng chờ Dragonpass 1 lần 1 quý",
         "Đa dạng lựa chọn đổi Travel Miles với hơn 300 hãng hàng không và 300.000 khách sạn trên toàn thế giới tại website <a target='_blank' href='https://www.vptravelmiles.com.vn'>https://www.vptravelmiles.com.vn</a>"
@@ -135,6 +139,8 @@
       "id_int": 15,
       "name": "THẺ GOLD TRAVEL MILES",
       "benefit_id": 2,
+      "minLimit": "20",
+      "maxLimit": "500",
       "have_small_detail": true,
       "small_detail": [
         "Đa dạng lựa chọn đổi Travel Miles với hơn 300 hãng hàng không và 300.000 khách sạn trên toàn thế giới tại website <a target='_blank' href='https://www.vptravelmiles.com.vn'>https://www.vptravelmiles.com.vn</a>"
@@ -201,6 +207,8 @@
       "name": "THẺ SIGNATURE TRAVEL MILES",
       "benefit_id": 2,
       "have_small_detail": true,
+      "minLimit": "60",
+      "maxLimit": "1000",
       "small_detail": [
         "Miễn phí dịch vụ phòng chờ Dragonpass 1 lần 1 quý<br/>Đa dạng lựa chọn đổi Travel Miles với hơn 300 hãng hàng không và 300.000 khách sạn trên toàn thế giới tại website <a target='_blank' href='https://www.vptravelmiles.com.vn'>https://www.vptravelmiles.com.vn</a>"
       ],
@@ -270,6 +278,8 @@
       "name": "Thẻ Step Up",
       "benefit_id": 0,
       "have_small_detail": true,
+      "minLimit": "20",
+      "maxLimit": "500",
       "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
       "comparison": {
         "table_1": {
@@ -339,6 +349,8 @@
       "name": "Thẻ VPLady",
       "benefit_id": 0,
       "have_small_detail": true,
+      "minLimit": "20",
+      "maxLimit": "500",
       "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
       "comparison": {
         "table_1": {
@@ -408,6 +420,8 @@
       "id_int": 10,
       "name": "Thẻ Platinum Cashback",
       "benefit_id": 0,
+      "minLimit": "40",
+      "maxLimit": "1000",
       "have_small_detail": true,
       "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
       "comparison": {
@@ -491,6 +505,8 @@
       "id_int": 12,
       "name": "Thẻ Titanium Cashback",
       "benefit_id": 0,
+      "minLimit": "20",
+      "maxLimit": "500",
       "have_small_detail": true,
       "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
       "comparison": {
@@ -572,6 +588,8 @@
       "id": "MC2",
       "id_int": 1,
       "name": "Thẻ MC2",
+      "minLimit": "10",
+      "maxLimit": "70",
       "benefit_id": 1,
       "have_small_detail": true,
       "small_detail": [
@@ -638,6 +656,8 @@
       "name": "Thẻ Platinum",
       "benefit_id": 1,
       "have_small_detail": false,
+      "minLimit": "40",
+      "maxLimit": "1000",
       "small_detail": "",
       "comparison": {
         "table_1": {
@@ -696,6 +716,8 @@
       "id_int": 6,
       "name": "Thẻ VPMobi Classic",
       "benefit_id": 1,
+      "minLimit": "10",
+      "maxLimit": "70",
       "have_small_detail": false,
       "small_detail": "",
       "comparison": {
@@ -755,6 +777,8 @@
       "id_int": 8,
       "name": "Thẻ VPMobi Titanium",
       "benefit_id": 1,
+      "minLimit": "20",
+      "maxLimit": "500",
       "have_small_detail": false,
       "small_detail": "",
       "comparison": {
@@ -819,6 +843,8 @@
       "id_int": 7,
       "name": "Thẻ VPMobi Platinum",
       "benefit_id": 1,
+      "minLimit": "40",
+      "maxLimit": "1000",
       "have_small_detail": false,
       "small_detail": "",
       "comparison": {
@@ -883,6 +909,8 @@
       "id_int": 9,
       "name": "Thẻ No.1",
       "benefit_id": 1,
+      "minLimit": "10",
+      "maxLimit": "30",
       "have_small_detail": false,
       "small_detail": "",
       "comparison": {
@@ -946,6 +974,8 @@
       "id_int": 13,
       "name": "Thẻ VPBank - California Fitness Platinum",
       "benefit_id": 5,
+      "minLimit": "20",
+      "maxLimit": "1000",
       "have_small_detail": false,
       "small_detail": "",
       "comparison": {
@@ -1031,6 +1061,8 @@
       "id_int": 14,
       "name": "Thẻ VPBank - California Centuryon Signature",
       "benefit_id": 5,
+      "minLimit": "40",
+      "maxLimit": "1000",
       "have_small_detail": false,
       "small_detail": "",
       "comparison": {
@@ -1115,6 +1147,8 @@
       "id_int": 17,
       "name": "Thẻ VPBank - Shopee Platinum",
       "benefit_id": 6,
+      "minLimit": "10",
+      "maxLimit": "100",
       "have_small_detail": false,
       "small_detail": "",
       "comparison": {
@@ -1204,6 +1238,8 @@
       "id_int": 18,
       "name": "Thẻ VPBank - Super Shopee Platinum",
       "benefit_id": 6,
+      "minLimit": "15",
+      "maxLimit": "100",
       "have_small_detail": false,
       "small_detail": "",
       "comparison": {

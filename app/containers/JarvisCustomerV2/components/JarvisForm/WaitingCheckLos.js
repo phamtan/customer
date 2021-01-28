@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import logo from 'images/logo-vp.svg';
 import _ from 'lodash';
 import dataCard from 'images/data.json';
+import backGroundGreen from 'images/backgroundgreen.png';
 import Header from './Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -18,39 +19,18 @@ import * as Actions from '../../actions';
 
 import JarvisFormStyle from './JarvisFormStyle';
 
-const PrettoSlider = withStyles({
-  root: {
-    color: '#52af77',
-    height: 8,
-    width: '100%',
-    marginTop: '56px',
-  },
-  thumb: {
-    height: 24,
-    width: 24,
-    backgroundColor: '#fff',
-    border: '2px solid currentColor',
-    marginTop: -8,
-    marginLeft: -12,
-    '&:focus, &:hover, &$active': {
-      boxShadow: 'inherit',
-    },
-  },
-  active: {},
-  valueLabel: {
-    left: 'calc(-50% + 4px)',
-  },
-  track: {
-    height: 8,
-    borderRadius: 4,
-  },
-  rail: {
-    height: 8,
-    borderRadius: 4,
-  },
-})(Slider);
-
 const useStyles = makeStyles(() => ({
+  container: {
+    backgroundImage: `url(${backGroundGreen})`,
+    width: '100%',
+    height: '100%',
+    minHeight: '100vh',
+    backgroundSize: 'contain',
+    backgroundColor: 'white',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   titleHeader: {
     fontSize: '24px',
     width: '100%',
@@ -59,13 +39,15 @@ const useStyles = makeStyles(() => ({
     marginBottom: '24px',
   },
   cardStyle: {
-    width: '96%',
+    width: '92%',
     marginLeft: '16px',
     marginRight: '16px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     marginBottom: '16px',
+    marginTop: '24px',
+    minHeight: '85vh'
   },
   titleCard: {
     marginBottom: '48px',
@@ -174,46 +156,23 @@ export default function ChooseLimit(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" />
-
-      <div className={classes.titleHeader}>
-        <div>Chọn hạn mức phù hợp</div>
-      </div>
-
+      <div className={classes.container}>
       <Card className={classes.cardStyle}>
         <CardContent className={classes.cardStyle}>
           <div className={classes.cardContainer}>
-            <div className={classes.cardTitle}>{card ? card.name : ''}</div>
-            <div>{card ? card.comparison.table_1.creditLimit : ''}</div>
-          </div>
-          <Divider className={classes.dividerStyle} />
-          <div className={classes.cardName}>
-            <img src={logo} alt="vpbank" />
-            <div className={classes.nameStyle}>{card ? card.name : ''}</div>
-          </div>
-          <Divider className={classes.dividerStyle} />
-          <div className={classes.guiline}>Kéo để tăng giảm hạn mức</div>
-          <PrettoSlider
-            defaultValue={card ? Number(card.maxLimit) * 0.5 : 20}
-            aria-labelledby="discrete-slider-custom"
-            valueLabelDisplay="on"
-            marks={getMarks()}
-            // valueLabelFormat={valueLabelFormat}
-            min={card ? Number(card.minLimit) : 10}
-            max={card ? Number(card.maxLimit) : 100}
-            step={10}
-            onChange={e => updateLimit(e.target.innerText)}
-          />
           <div className={classes.limitText}>Hạn mức bạn chọn là: {amount} triệu VNĐ</div>
+          </div>
+          <button
+            type="button"
+            onClick={() => chooseThisBenefit()}
+            className={classes.action}
+          >
+            Tiếp tục
+          </button>
         </CardContent>
       </Card>
-      <button
-        type="button"
-        onClick={() => chooseThisBenefit()}
-        className={classes.action}
-      >
-        Tiếp tục
-      </button>
+      
+      </div>
     </JarvisFormStyle>
   );
 }

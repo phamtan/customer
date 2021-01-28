@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import { makeStyles } from '@material-ui/core/styles';
@@ -86,23 +86,35 @@ export default function OTP(props) {
     defaultValues: {},
     resolver: yupResolver(schema),
   });
+    const [activeInput, setActiveInput] = useState(0);
+  
+  // Define state otpValues = array with <length> items with default value = ""
+  const [otpValues, setOTPValues] = useState(Array(6).fill(""));
+  
 
   const classes = useStyles();
 
+  function handleOtpChange(value, index) {
+    let currentOtp = [...otpValues];
+    currentOtp[index] = value;
+    setOTPValues(currentOtp);
+  }
+
   function onSubmitForm() {
     return new Promise((resolve, reject) => {
-      props.dispatch(Actions.verifyOtp({
+     props.dispatch(Actions.verifyOtp({
         phoneOrEmail: jarvisCustomer.mobileNumber,
-        otpNumber: '447171',
+        otpNumber: otpValues.join(""),
       }, resolve, reject))
     }).then(() => {
-      props.setStep(17);
+      props.setStep(5);  
     }).catch(() => {
       props.handleShoMessage({
         message: 'Lỗi xác thực OTP',
         severity: 'error',
       });
     });
+    
   }
 
   return (
@@ -118,39 +130,39 @@ export default function OTP(props) {
             <div className={classes.otpContainer}>
               {Array(3)
                 .fill('')
-                .map(() => (
+                .map((_, index) => (
                   <TextField
-                    // className={classes.otpItem}
+                    key={`otp-${index}`}
                     name="otp"
                     ref={register}
-                    size="1"
-                    maxLength="1"
                     type="number"
                     variant="outlined"
                     InputProps={{
                       className: classes.otpItem,
-                      size: 1,
-                      maxLength: 1,
-                      max: 1,
                     }}
+                    onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,1)
+                    }}
+                    onChange={(e) => handleOtpChange(e.target.value, index)}
                   />
                 ))}
               <span className={classes.separate}>-</span>
               {Array(3)
                 .fill('')
-                .map(() => (
+                .map((_, index) => (
                   <TextField
-                    // className={classes.otpItem}
+                    key={`otp-${index+3}`}
                     name="otp"
                     ref={register}
-                    size="1"
-                    maxLength="1"
                     type="number"
                     variant="outlined"
                     InputProps={{
                       className: classes.otpItem,
-                      maxLength: 1,
                     }}
+                    onInput={(e)=>{ 
+                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,1)
+                    }}
+                    onChange={(e) => handleOtpChange(e.target.value, index+3)}
                   />
                 ))}
 

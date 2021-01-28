@@ -106,8 +106,16 @@ export default function Round1(props) {
   const classes = useStyles();
 
   function onSubmitForm(values) {
-    props.dispatch(Actions.saveData(values));
-    props.setStep(1);
+    return new Promise((resolve, reject) => {
+      props.dispatch(Actions.saveData(values, resolve, reject));
+    }).then(() => {
+      props.setStep(1);
+    }).catch(() => {
+      props.handleShoMessage({
+        message: 'Có lỗi xảy ra vui lòng thử lại',
+        severity: 'error',
+      });
+    })
   }
 
   return (

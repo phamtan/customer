@@ -12,6 +12,11 @@ import shopeeIcon from 'images/benefit/shopee.svg';
 import mobifoneIcon from 'images/benefit/mobifone.svg';
 import travelIcon from 'images/benefit/travel.svg';
 import withdrawIcon from 'images/benefit/withdraw.svg';
+import shopeesuper from 'images/cards/shopeesuper.png';
+import stepupCard from 'images/cards/step-up-card.png';
+import ladyCard from 'images/cards/lady-card.png';
+import theshopee from 'images/cards/theshopee.png';
+import platinumTravel from 'images/cards/platinum-travel.png';
 import platinumCashbackCard from 'images/cards/platinum-cashback.png';
 import platinumTravelCard from 'images/cards/platinum-travel.png';
 import californiacenturyon from 'images/cards/californiacenturyonhorizon.png';
@@ -98,8 +103,12 @@ export default function LandingCard(props) {
     values.card = cardId;
     values.selectedCard = cardId;
     values.limitType = '1';
-    props.dispatch(Actions.saveData(values));
-    props.setStep(1000);
+    return new Promise((resolve, reject) => {
+      props.dispatch(Actions.saveRawData(values, resolve, reject));
+    }).then(() => {
+      props.setStep(1000);
+    })
+    
   }
 
   return (
@@ -136,12 +145,33 @@ export default function LandingCard(props) {
       <Slider {...settings} className={classes.sliderStyle}>
         <div className={classes.sliderItem} width={170}>
           <div className="imageSlide">
-            <img src={platinumCashbackCard} alt="cashback" />
+            <img src={shopeesuper} alt="cashback" />
           </div>
           <div className="floatAction">
             <button
               type="button"
-              onClick={() => chooseThisCard(10)}
+              onClick={() => chooseThisCard(18)}
+              className={classes.openCardBtn}
+            >
+              Mở thẻ
+            </button>
+            <button
+              type="button"
+              // onClick={() => props.setStep(17)}
+              className={classes.compareCardBtn}
+            >
+              So sánh
+            </button>
+          </div>
+        </div>
+        <div className={classes.sliderItem} width={170}>
+          <div className="imageSlide">
+            <img src={stepupCard} alt="loyalty" />
+          </div>
+          <div className="floatAction">
+            <button
+              type="button"
+              onClick={() => chooseThisCard(3)}
               className={classes.openCardBtn}
             >
               Mở thẻ
@@ -157,54 +187,12 @@ export default function LandingCard(props) {
         </div>
         <div className={classes.sliderItem} width={170}>
           <div className="imageSlide">
-            <img src={platinumTravelCard} alt="loyalty" />
+            <img src={ladyCard} alt="health" />
           </div>
           <div className="floatAction">
             <button
               type="button"
-              onClick={() => chooseThisCard(11)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={no1} alt="health" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(9)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={californiacenturyon} alt="travel" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(14)}
+              onClick={() => chooseThisCard(2)}
               className={classes.openCardBtn}
             >
               Mở thẻ
@@ -223,12 +211,12 @@ export default function LandingCard(props) {
       <Slider {...settings} className={classes.sliderStyle}>
         <div className={classes.sliderItem} width={170}>
           <div className="imageSlide">
-            <img src={platinumCashbackCard} alt="cashback" />
+            <img src={shopeesuper} alt="cashback" />
           </div>
           <div className="floatAction">
             <button
               type="button"
-              onClick={() => chooseThisCard(10)}
+              onClick={() => chooseThisCard(18)}
               className={classes.openCardBtn}
             >
               Mở thẻ
@@ -244,54 +232,33 @@ export default function LandingCard(props) {
         </div>
         <div className={classes.sliderItem} width={170}>
           <div className="imageSlide">
-            <img src={platinumTravelCard} alt="loyalty" />
+            <img src={theshopee} alt="loyalty" />
+          </div>
+          <div className="floatAction">
+            <button
+              type="button"
+              onClick={() => chooseThisCard(17)}
+              className={classes.openCardBtn}
+            >
+              Mở thẻ
+            </button>
+            <button
+              type="button"
+              onClick={() => props.setStep(17)}
+              className={classes.compareCardBtn}
+            >
+              So sánh
+            </button>
+          </div>
+        </div>
+        <div className={classes.sliderItem} width={170}>
+          <div className="imageSlide">
+            <img src={platinumTravel} alt="health" />
           </div>
           <div className="floatAction">
             <button
               type="button"
               onClick={() => chooseThisCard(11)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={no1} alt="health" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(9)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={californiacenturyon} alt="travel" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(14)}
               className={classes.openCardBtn}
             >
               Mở thẻ

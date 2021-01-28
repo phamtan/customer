@@ -16,6 +16,10 @@ import {
   SAVE_DATA_SUCCESS,
   REQUEST_OTP,
   VERIFY_OTP,
+  CHECK_LOS_ROUND1,
+  SAVE_RAW_DATA,
+  UPLOAD_VIDEO_PENDING,
+  REQUEST_SELECTION_SUCCESS
 } from './constants';
 
 export function defaultAction() {
@@ -24,10 +28,21 @@ export function defaultAction() {
   };
 }
 
-export function saveData(form) {
+export function saveData(form, resolve, reject) {
   return {
     type: SAVE_DATA,
     payload: form,
+    resolve,
+    reject,
+  };
+}
+
+export function saveRawData(form, resolve, reject) {
+  return {
+    type: SAVE_RAW_DATA,
+    payload: form,
+    resolve,
+    reject,
   };
 }
 
@@ -71,6 +86,13 @@ export function getProvincesSuccess(data) {
   };
 }
 
+export function getSelectionSuccess(data) {
+  return {
+    type: REQUEST_SELECTION_SUCCESS,
+    payload: data,
+  };
+}
+
 export function getProvincesError() {
   return {
     type: REQUEST_PROVINCES_FAILURE,
@@ -98,4 +120,20 @@ export function verifyOtp(data, resolve, reject) {
     resolve,
     reject
   };
+}
+
+export function checkLosRound1(data, resolve, reject) {
+  return {
+    type: CHECK_LOS_ROUND1,
+    payload: data,
+    resolve,
+    reject,
+  }
+}
+
+export function uploadLiveNess(data) {
+  return {
+    type: UPLOAD_VIDEO_PENDING,
+    payload: data,
+  }
 }

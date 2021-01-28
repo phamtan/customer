@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React, {useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
@@ -17,6 +17,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from '@date-io/moment';
 import Header from './Header';
 import JarvisFormStyle from './JarvisFormStyle';
 import * as Actions from '../../actions';
@@ -120,38 +122,18 @@ const customStyles = {
   }
 }
 
-const CITY = [
-  { value: 'hn', label: 'Hà Nội' },
-  { value: 'hcm', label: 'Hồ chí minh' },
-  { value: 'dn', label: 'Đà nẵng' },
-  { value: 'hp', label: 'Hải phòng' },
-  { value: 'bn', label: 'Bắc Ninh' },
-  { value: 'other', label: 'Khác' },
-];
-
-const NATIONAL = [
-  { value: 'vn', label: 'Việt Nam' },
-  { value: 'hcm', label: 'England' },
-  { value: 'dn', label: 'American' },
-  { value: 'hp', label: 'Poland' },
-  { value: 'bn', label: 'Singapore' },
-  { value: 'other', label: 'China' },
-];
-
 const PLACE = [
   { value: 'vn', label: 'Công an tỉnh' },
   { value: 'hcm', label: 'Cục dữ liệu quốc gia về dân cư' },
   { value: 'dn', label: 'Cục cư trú' },
 ];
 
-const DISTRICT = [
-  { value: 'hn', label: 'Hoàng Mai' },
-  { value: 'hbt', label: 'Hai bà trưng' },
-  { value: 'lc', label: 'Lê chân' },
-  { value: 'hc', label: 'Hải châu' },
-  { value: 'ltn', label: 'Lê thanh nghị' },
-  { value: 'other', label: 'Khác' },
+const DOCUMENT_TYPE = [
+  { value: 'PV', label: 'Hộ chiếu' },
+  { value: 'IC', label: 'CMND/CCCD' },
+  { value: 'ICM', label: 'CMND Quân Đội' },
 ];
+
 
 const countries = [
   { code: 'AD', label: 'Andorra', phone: '376' },
@@ -406,25 +388,25 @@ const countries = [
 
 const schema = yup.object().shape({
   fullName: yup.string().required('Full name is required'),
-  national: yup
-    .object()
-    .nullable()
-    .required('Quốc tịch là bắt buộc'),
-  gender: yup
-    .object()
-    .nullable()
-    .required('Bạn chưa chọn giới tính'),
-  passportNumber: yup.string().required('Bạn chưa nhập số giấy tờ'),
-  issueDate: yup.string().required('Bạn chưa nhập số giấy tờ'),
-  permanentAddress: yup.object({
-    addressDetail: yup.string().required('Bạn chưa nhập địa chỉ chi tiết'),
-    district: yup.object().required('Bạn chưa chọn quận'),
-    province: yup.object().required('Bạn chưa chọn thành phố'),
-  }),
-  placeOfIssue: yup
-    .object()
-    .nullable()
-    .required('Bạn chưa chọn nơi cấp giấy tờ'),
+  // national: yup
+  //   .object()
+  //   .nullable()
+  //   .required('Quốc tịch là bắt buộc'),
+  // gender: yup
+  //   .object()
+  //   .nullable()
+  //   .required('Bạn chưa chọn giới tính'),
+  // documentNumber: yup.string().required('Bạn chưa nhập số giấy tờ'),
+  // issueDate: yup.string().required('Bạn chưa nhập số giấy tờ'),
+  // permanentAddress: yup.object({
+  //   addressDetail: yup.string().required('Bạn chưa nhập địa chỉ chi tiết'),
+  //   district: yup.object().required('Bạn chưa chọn quận'),
+  //   province: yup.object().required('Bạn chưa chọn thành phố'),
+  // }),
+  // placeOfIssue: yup
+  //   .object()
+  //   .nullable()
+  //   .required('Bạn chưa chọn nơi cấp giấy tờ'),
 });
 
 function countryToFlag(isoCode) {
@@ -438,22 +420,28 @@ function countryToFlag(isoCode) {
 export default function Round1(props) {
   const classes = useStyles();
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
+  const provinces = _.get(props, 'jarvisCustomerV2.provinces', []);
+  const selections = _.get(props, 'jarvisCustomerV2.selections', []);
+  const [district, setDistrict] = useState([]);
+  const [currentDistrict, setCurrentDistrict] = useState([]);
+  const [showPermanentAddress, setShowPermaneAddress] = useState(false);
   const { handleSubmit, errors, control } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
     defaultValues: {
       ...jarvisCustomer,
+      id: jarvisCustomer.id,
       national: {
         value: 'vn',
         label: 'Việt Nam',
       },
       fullName: jarvisCustomer.fullName,
-      gender: {
-        value: 'female',
-        label: 'Nữ',
-      },
-      passportNumber: '123250524',
+      email: jarvisCustomer.email,
+      mobileNumber: jarvisCustomer.mobileNumber,
+      gender: jarvisCustomer.gender ? jarvisCustomer.gender : 'F',
+      currentIsPermanent: jarvisCustomer.currentIsPermanent ? jarvisCustomer.currentIsPermanent : '1',
+      documentNumber: '123250524',
       issueDate: moment()
         .subtract(2, 'years')
         .format('yyyy-MM-DD'),
@@ -465,9 +453,43 @@ export default function Round1(props) {
     resolver: yupResolver(schema),
   });
 
+  function changeProvince(e) {
+    let district = [...district];
+    const province = provinces.filter(province => province.code === e.value)[0];
+    console.log(province)
+    setDistrict(province.districts);
+  }
+
+  function changeCurrentProvince(e) {
+    let district = [...district];
+    const province = provinces.filter(province => province.code === e.value)[0];
+    setCurrentDistrict(province.districts);
+  }
+
+  function changeCurrentIsPermanent(e) {
+    if(e === "1") {
+      setShowPermaneAddress(false);
+    } else {
+      setShowPermaneAddress(true);
+    }
+  }
+
   function onSubmitForm(values) {
-    props.dispatch(Actions.saveData(values));
-    props.setStep(8);
+    console.log(values)
+    values.id = jarvisCustomer.id;
+    values.docIssuedDate = moment(values.docIssuedDate).format('DD/MM/YYYY')
+    values.dob = moment(values.dob).format('YYYY-MM-DDTHH:mm:ss.SSS')
+    return new Promise((resolve, reject) => {
+    props.dispatch(Actions.checkLosRound1(values, resolve, reject));
+    }).then(() => {
+      props.setStep(9);
+    }).catch(() => {
+      props.handleShoMessage({
+        message: 'Có lỗi xảy ra',
+        severity: 'error',
+      });
+    });
+    
   }
 
   return (
@@ -478,53 +500,6 @@ export default function Round1(props) {
         <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
           <div className="formWrapper">
             <div className="form-group">
-              {/* <label className={classes.lableStyle}>Quốc tịch</label> */}
-              {/* <Controller
-                as={Select}
-                options={NATIONAL}
-                name="national"
-                isClearable
-                control={control}
-                components={{
-                  ValueContainer: CustomValueContainer
-                }}
-                styles={customStyles}
-                menuColor='black'
-                placeholder="Quốc tịch"
-              /> */}
-              <Autocomplete
-                id="country-select-demo"
-                style={{ width: '90vw' }}
-                options={countries}
-                classes={{
-                  option: classes.option,
-                }}
-                autoHighlight
-                getOptionLabel={(option) => option.label}
-                renderOption={(option) => (
-                  <React.Fragment>
-                    <span>{countryToFlag(option.code)}</span>
-                    {option.label} ({option.code}) +{option.phone}
-                  </React.Fragment>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Quốc gia"
-                    variant="outlined"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-
-              {errors.national && (
-                <span className="formError">{errors.national.message}</span>
-              )}
-            </div>
-            <div className="form-group">
               <Controller as={TextField} name="fullName" fullWidth variant="outlined" label="Họ tên" control={control} />
               {errors.fullName && (
                 <span className="formError">{errors.fullName.message}</span>
@@ -532,14 +507,77 @@ export default function Round1(props) {
             </div>
             <div className="form-group">
               <Controller
+                as={TextField}
+                name="mobileNumber"
+                fullWidth
+                variant="outlined"
+                label="Số điện thoại"
+                control={control}
+                className={classes.inputSytle}
+                classes={{
+                  root: classes.inputStyle,
+                }}
+              />
+              {errors.phone && (
+                <span className="formError">{errors.phone.message}</span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <Controller
+                as={TextField}
+                name="email"
+                fullWidth
+                variant="outlined"
+                label="Email"
+                control={control}
+                className={classes.inputSytle}
+                classes={{
+                  root: classes.inputStyle,
+                }}
+              />
+              {errors.email && (
+                <span className="formError">{errors.email.message}</span>
+              )}
+            </div>
+            
+            <div className="form-group">
+              {/* <Controller as={TextField} name="dob" type="date" fullWidth variant="outlined" label="Ngày sinh" control={control} /> */}
+              <Controller
+                name="dob"
+                control={control}
+                render={({ value, onChange }) => (
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <KeyboardDatePicker
+                      autoOk
+                      variant="inline"
+                      inputVariant="outlined"
+                      label="Ngày sinh"
+                      format="DD/MM/YYYY"
+                      value={value}
+                      InputAdornmentProps={{ position: "end" }}
+                      onChange={date => onChange(date)}
+                      fullWidth
+                    />
+                  </MuiPickersUtilsProvider>
+                )}
+               /> 
+              {errors.dob && (
+                <span className="formError">{errors.dob.message}</span>
+              )}
+            </div>
+
+            
+            <div className="form-group">
+              <Controller
                 name="gender"
                 control={control}
                 render={({ value, onChange }) => (
                   <FormControl component="fieldset">
                     <FormLabel component="legend" className={classes.labelStyle}>Giới tính</FormLabel>
-                    <RadioGroup aria-label="gender" name="gender" value={value} onChange={onChange} className={classes.genderContainer}>
-                      <FormControlLabel value="male" control={<Radio />} label="Nam" />
-                      <FormControlLabel value="female" control={<Radio />} label="Nữ" />
+                    <RadioGroup aria-label="gender" name="gender" value={value} onChange={(e) => onChange(e.target.value)} className={classes.genderContainer}>
+                      <FormControlLabel value="M" control={<Radio />} label="Nam" />
+                      <FormControlLabel value="F" control={<Radio />} label="Nữ" />
                     </RadioGroup>
                   </FormControl>
                 )}
@@ -550,40 +588,131 @@ export default function Round1(props) {
             </div>
 
             <div className="form-group">
-              <Controller as={TextField} name="passportNumber" type="number" fullWidth variant="outlined" label="Số CMND" control={control} />
-              {errors.passportNumber && (
-                <span className="formError">{errors.passportNumber.message}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <Controller as={TextField} name="issueDate" type="date" fullWidth variant="outlined" label="Ngày cấp" control={control} />
-              {errors.issueDate && (
-                <span className="formError">{errors.issueDate.message}</span>
+              <Controller
+                name="nationality"
+                control={control}
+                render={({ value, onChange }) => (
+                  <Autocomplete
+                    id="country-select-demo"
+                    style={{ width: '90vw' }}
+                    options={countries}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    onChange={(event, newValue) => {
+                      onChange(newValue.label);
+                    }}
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderOption={(option) => (
+                      <React.Fragment>
+                        <span>{countryToFlag(option.code)}</span>
+                        {option.label} ({option.code}) +{option.phone}
+                      </React.Fragment>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Quốc gia"
+                        variant="outlined"
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: 'new-password', // disable autocomplete and autofill
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              />
+              {errors.national && (
+                <span className="formError">{errors.national.message}</span>
               )}
             </div>
 
             <div className="form-group">
               <Controller
-                name="placeOfIssue"
+                name="documentType"
                 control={control}
                 render={({ value, onChange }) => (
-                  // <Select
-                  //   className="formControl"
-                  //   options={PLACE}
-                  //   onChange={e => onChange(e)}
-                  //   value={value}
-                  //   styles={customStyles}
-                  //   placeholder="Nơi cấp"
-                  //   components={{
-                  //     ValueContainer: CustomValueContainer
-                  //   }}
-                  // />
                   <Autocomplete
                     style={{ width: '90vw' }}
-                    options={PLACE}
+                    options={DOCUMENT_TYPE}
                     classes={{
                       option: classes.option,
+                    }}
+                    onChange={(event, newValue) => {
+                      onChange(newValue.value);
+                    }}
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Loại giấy tờ"
+                        variant="outlined"
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: 'new-password', // disable autocomplete and autofill
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              />
+              {errors.placeOfIssue && (
+                <span className="formError">{errors.placeOfIssue.message}</span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <Controller as={TextField} name="documentNumber" type="number" fullWidth variant="outlined" label="Số CMND" control={control} />
+              {errors.documentNumber && (
+                <span className="formError">{errors.documentNumber.message}</span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <Controller
+                name="docIssuedDate"
+                control={control}
+                render={({ value, onChange }) => (
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <KeyboardDatePicker
+                      autoOk
+                      variant="inline"
+                      inputVariant="outlined"
+                      label="Ngày cấp"
+                      format="DD/MM/YYYY"
+                      value={value}
+                      InputAdornmentProps={{ position: "end" }}
+                      onChange={date => onChange(date)}
+                      fullWidth
+                    />
+                  </MuiPickersUtilsProvider>
+                )}
+               /> 
+              {/* {errors.issueDate && (
+                <span className="formError">{errors.issueDate.message}</span>
+              )} */}
+            </div>
+            
+
+            <div className="form-group">
+              <Controller
+                name="docIssuedPlace"
+                control={control}
+                render={({ value, onChange }) => (
+                  <Autocomplete
+                    style={{ width: '90vw' }}
+                    options={selections && selections.filter(selection => selection.category==='PLACEOFISSUE').map((selection) => ({
+                      value: selection.code,
+                      label: selection.nameVi
+                    }))}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    onChange={(event, newValue) => {
+                      onChange(newValue.value);
                     }}
                     autoHighlight
                     getOptionLabel={(option) => option.label}
@@ -607,36 +736,72 @@ export default function Round1(props) {
             </div>
 
             <div className="form-group">
-              <Controller as={TextField} name="permanentAddress.addressDetail" type="text" fullWidth variant="outlined" label="Địa chỉ thường trú" control={control} />
-              {errors.permanentAddress &&
-              errors.permanentAddress.addressDetail && (
+              <Controller as={TextField} name="permanentAddressLine1" type="text" fullWidth variant="outlined" label="Địa chỉ thường trú" control={control} />
+              {errors.permanentAddressLine1 &&
+              errors.permanentAddressLine1 && (
                 <span className="formError">
-                  {errors.permanentAddress.addressDetail.message}
+                  {errors.permanentAddressLine1.message}
                 </span>
               )}
             </div>
 
             <div className="form-group">
               <Controller
-                name="permanentAddress.district"
+                name="permanentProvince"
                 control={control}
                 render={({ value, onChange }) => (
-                  // <Select
-                  //   className="formControl"
-                  //   options={DISTRICT}
-                  //   onChange={e => onChange(e)}
-                  //   value={value}
-                  //   styles={customStyles}
-                  //   placeholder="Quận"
-                  //   components={{
-                  //     ValueContainer: CustomValueContainer
-                  //   }}
-                  // />
                   <Autocomplete
                     style={{ width: '90vw' }}
-                    options={DISTRICT}
+                    options={provinces.map(province => ({
+                      value: province.code,
+                      label: province.name
+                    }))}
                     classes={{
                       option: classes.option,
+                    }}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      changeProvince(newValue);
+                      onChange(newValue.value);
+                    }}
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Thành phố"
+                        variant="outlined"
+                        inputProps={{
+                          ...params.inputProps,
+                          autoComplete: 'new-password', // disable autocomplete and autofill
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              />
+              {errors.permanentProvince &&  (
+                <span className="formError">
+                  {errors.permanentProvince.message}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <Controller
+                name="permanentDistrict"
+                control={control}
+                render={({ value, onChange }) => (
+                  <Autocomplete
+                    style={{ width: '90vw' }}
+                    options={district && district.map(dis => ({
+                      value: dis.code,
+                      label: dis.name,
+                    }))}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    onChange={(event, newValue) => {
+                      onChange(newValue.value);
                     }}
                     autoHighlight
                     getOptionLabel={(option) => option.label}
@@ -654,54 +819,9 @@ export default function Round1(props) {
                   />
                 )}
               />
-              {errors.permanentAddress && errors.permanentAddress.district && (
+              {errors.permanentDistrict && (
                 <span className="formError">
-                  {errors.permanentAddress.district.message}
-                </span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <Controller
-                name="permanentAddress.province"
-                control={control}
-                render={({ value, onChange }) => (
-                  // <Select
-                  //   className="formControl"
-                  //   options={CITY}
-                  //   onChange={e => onChange(e)}
-                  //   value={value}
-                  //   styles={customStyles}
-                  //   placeholder="Thành phố"
-                  //   components={{
-                  //     ValueContainer: CustomValueContainer
-                  //   }}
-                  // />
-                  <Autocomplete
-                    style={{ width: '90vw' }}
-                    options={CITY}
-                    classes={{
-                      option: classes.option,
-                    }}
-                    autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Thành phố"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
-                  />
-                )}
-              />
-              {errors.permanentAddress && errors.permanentAddress.province && (
-                <span className="formError">
-                  {errors.permanentAddress.province.message}
+                  {errors.permanentDistrict.message}
                 </span>
               )}
             </div>
@@ -709,18 +829,114 @@ export default function Round1(props) {
               <Controller
                 name="currentIsPermanent"
                 control={control}
-                defaultValue
-                rules={{ required: true }}
-                render={inputProps =>
-                  <Checkbox
-                    onChange={e => inputProps.onChange(e.target.checked)}
-                    checked={inputProps.value}
-                  />
-                } // props contains: onChange, onBlur and value
+                render={({ value, onChange }) => (
+                  <FormControl component="fieldset">
+                    <FormLabel component="legend" className={classes.labelStyle}>Địa chỉ thường trú trùng với địa chỉ hiện tại</FormLabel>
+                    <RadioGroup aria-label="currentIsPermanent" name="currentIsPermanent" value={value} onChange={(e) => {
+                      changeCurrentIsPermanent(e.target.value)
+                      onChange(e.target.value)
+                    }} className={classes.genderContainer}>
+                      <FormControlLabel value="1" control={<Radio />} label="Có" />
+                      <FormControlLabel value="0" control={<Radio />} label="Không" />
+                    </RadioGroup>
+                  </FormControl>
+                )}
               />
-              {' '}
-            Địa chỉ thường trú trùng với địa chỉ hiện tại
             </div>
+            {showPermanentAddress && 
+              <>
+                <div className="form-group">
+                  <Controller as={TextField} name="currentAddLine1" type="text" fullWidth variant="outlined" label="Địa chỉ hiện tại" control={control} />
+                  {errors.currentAddLine1 &&
+                  errors.currentAddLine1 && (
+                    <span className="formError">
+                      {errors.currentAddLine1.message}
+                    </span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <Controller
+                    name="currentProvince"
+                    control={control}
+                    render={({ value, onChange }) => (
+                      <Autocomplete
+                        style={{ width: '90vw' }}
+                        options={provinces.map(province => ({
+                          value: province.code,
+                          label: province.name
+                        }))}
+                        classes={{
+                          option: classes.option,
+                        }}
+                        autoHighlight
+                        onChange={(event, newValue) => {
+                          changeCurrentProvince(newValue);
+                          onChange(newValue.value);
+                        }}
+                        getOptionLabel={(option) => option.label}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Thành phố"
+                            variant="outlined"
+                            inputProps={{
+                              ...params.inputProps,
+                              autoComplete: 'new-password', // disable autocomplete and autofill
+                            }}
+                          />
+                        )}
+                      />
+                    )}
+                  />
+                  {errors.permanentAddress && errors.permanentAddress.province && (
+                    <span className="formError">
+                      {errors.permanentAddress.province.message}
+                    </span>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <Controller
+                    name="currentDistrict"
+                    control={control}
+                    render={({ value, onChange }) => (
+                      <Autocomplete
+                        style={{ width: '90vw' }}
+                        options={currentDistrict && currentDistrict.map(dis => ({
+                          value: dis.code,
+                          label: dis.name,
+                        }))}
+                        classes={{
+                          option: classes.option,
+                        }}
+                        onChange={(event, newValue) => {
+                          onChange(newValue.value);
+                        }}
+                        autoHighlight
+                        getOptionLabel={(option) => option.label}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Quận"
+                            variant="outlined"
+                            inputProps={{
+                              ...params.inputProps,
+                              autoComplete: 'new-password', // disable autocomplete and autofill
+                            }}
+                          />
+                        )}
+                      />
+                    )}
+                  />
+                  {errors.permanentAddress && errors.permanentAddress.district && (
+                    <span className="formError">
+                      {errors.permanentAddress.district.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            }
             <button type="submit" className={classes.action}>
             Tiếp tục
             </button>
