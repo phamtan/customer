@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
@@ -425,7 +425,7 @@ export default function Round1(props) {
   const [district, setDistrict] = useState([]);
   const [currentDistrict, setCurrentDistrict] = useState([]);
   const [showPermanentAddress, setShowPermaneAddress] = useState(false);
-  const { handleSubmit, errors, control } = useForm({
+  const { handleSubmit, errors, control, reset } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -452,6 +452,12 @@ export default function Round1(props) {
     },
     resolver: yupResolver(schema),
   });
+
+  useEffect(() => {
+    if (jarvisCustomer) {
+      reset(jarvisCustomer);
+    }
+  }, [jarvisCustomer]);
 
   function changeProvince(e) {
     let district = [...district];
@@ -482,7 +488,7 @@ export default function Round1(props) {
     return new Promise((resolve, reject) => {
     props.dispatch(Actions.checkLosRound1(values, resolve, reject));
     }).then(() => {
-      props.setStep(9);
+      props.setStep(23);
     }).catch(() => {
       props.handleShoMessage({
         message: 'Có lỗi xảy ra',

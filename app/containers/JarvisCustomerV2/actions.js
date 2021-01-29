@@ -19,7 +19,11 @@ import {
   CHECK_LOS_ROUND1,
   SAVE_RAW_DATA,
   UPLOAD_VIDEO_PENDING,
-  REQUEST_SELECTION_SUCCESS
+  REQUEST_SELECTION_SUCCESS,
+  CHECK_LOS_RESULT_ROUND1,
+  CHECK_LOS_ROUND2,
+  CHECK_LOS_RESULT_ROUND2,
+  SAVE_DATA_APP,
 } from './constants';
 
 export function defaultAction() {
@@ -136,4 +140,31 @@ export function uploadLiveNess(data) {
     type: UPLOAD_VIDEO_PENDING,
     payload: data,
   }
+}
+
+export function checkLosResult(data, resolve, reject) {
+  return {
+    type: CHECK_LOS_RESULT_ROUND1,
+    payload: data,
+    resolve,
+    reject,
+  }
+}
+
+export function checkLosRound2(data, resolve, reject) {
+  return {
+    type: CHECK_LOS_ROUND2,
+    payload: data,
+    resolve,
+    reject,
+  }
+}
+
+export function saveDataApp(form, resolve, reject) {
+  return {
+    type: SAVE_DATA_APP,
+    payload: form,
+    resolve,
+    reject,
+  };
 }

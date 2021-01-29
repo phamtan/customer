@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   titleHeader: {
-    fontSize: '24px',
+    fontSize: '16px',
     width: '100%',
     textAlign: 'center',
     marginTop: '16px',
@@ -55,9 +55,11 @@ const useStyles = makeStyles(() => ({
   cardContainer: {
     width: '100%',
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     fontSize: '16px',
     marginBottom: '24px',
+    alignItems: 'center',
   },
   dividerStyle: {
     color: '#117f8a',
@@ -89,16 +91,32 @@ const useStyles = makeStyles(() => ({
     marginTop: '7px',
   },
   action: {
-    width: '382px',
+    width: '100%',
     height: '46px',
-    margin: '28px 16px 28px',
-    padding: '15px 159.4px 15px 105.6px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: '4px',
     backgroundColor: '#028547',
     color: 'white',
     fontSize: '14px',
     border: 'none',
     textTransform: 'uppercase',
+    marginTop: '86px',
+  },
+  actionDisabled: {
+    width: '100%',
+    height: '46px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '4px',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    color: 'white',
+    fontSize: '14px',
+    border: 'none',
+    textTransform: 'uppercase',
+    marginTop: '86px',
   },
   cardTitle: {
     fontSize: '14px',
@@ -108,50 +126,56 @@ const useStyles = makeStyles(() => ({
   limitText: {
     fontSize: '16px',
     color: '#117f8a',
+  },
+  ovalShape: {
+    width: '160px',
+    height: '160px',
+    borderRadius: '50%',
+    backgroundColor: '#18b7c7',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    fontSize: '30px',
   }
 }));
 
-export default function ChooseLimit(props) {
+export default function WaitingCheckLos(props) {
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
-  const { cards } = dataCard;
   const classes = useStyles();
-  const [amount, setAmount] = useState(card ? Number(card.maxLimit) * 0.5 : 30);
-  const card = cards.filter(
-    card => card.id_int === jarvisCustomer.selectedCard,
-  )[0];
+  const [time, setTime] = useState(jarvisCustomer && jarvisCustomer.waitRoundOne ? Number(jarvisCustomer.waitRoundOne) : 30);
+  const [check, setCheck] = useState(false);
+  const [allowNext, setAllowNext] = useState(false);
 
   useEffect(() => {
-    if (card) {
-      setAmount(Number(card.maxLimit) * 0.5)
+    const timer = setTimeout(() => {
+      if (time > 0) {
+        setTime(time - 1);
+      } 
+    }, 1000);
+    return () => clearTimeout(timer);
+  });
+
+  useEffect(() => {
+    if (time === 0 && !check) {
+      setCheck(true);
+      checkLosResult();
     }
-  }, [card]);
+  }), [time];
 
-  function chooseThisBenefit() {
-    const values = {};
-    values.requestLimit = amount * 1000000;
-    props.dispatch(Actions.saveRawData(values));
-    props.setStep(0);
-  }
+  function checkLosResult() {
+    return new Promise((resolve, reject) => {
+      props.dispatch(Actions.checkLosResult({
+        appId: jarvisCustomer.id,
+        round: 'Check_1',
+      }, resolve, reject));
+    }).then(response => {
+      if (response.status === "PASS") {
+        setAllowNext(true);
+      }
+    }).catch((error) => {
 
-  function valueLabelFormat(value) {
-    return value;
-  }
-
-  function updateLimit(value) {
-    setAmount(value);
-  }
-
-  function getMarks() {
-    const minLimit = card.minLimit;
-    const maxLimit = card.maxLimit;
-    let marks = [];
-    marks.push({value: Number(minLimit), label: minLimit});
-    marks.push({value: Number(maxLimit) * 0.25, label: Number(maxLimit) * 0.25});
-    marks.push({value: Number(maxLimit) * 0.5, label: Number(maxLimit) * 0.5});
-    marks.push({value: Number(maxLimit) * 0.75, label: Number(maxLimit) * 0.75});
-    marks.push({value: Number(maxLimit), label: maxLimit});
-    
-    return marks;
+    })
   }
 
   return (
@@ -160,12 +184,17 @@ export default function ChooseLimit(props) {
       <Card className={classes.cardStyle}>
         <CardContent className={classes.cardStyle}>
           <div className={classes.cardContainer}>
-          <div className={classes.limitText}>Hạn mức bạn chọn là: {amount} triệu VNĐ</div>
+            <div className={classes.titleHeader}>
+              Hệ thống đã ghi nhận thông tin, xin quý khách chờ trong giây lát
+            </div>
+
+            <div className={classes.ovalShape}>{time}</div>
           </div>
           <button
             type="button"
-            onClick={() => chooseThisBenefit()}
-            className={classes.action}
+            disabled={!allowNext}
+            onClick={() => props.setStep(9)}
+            className={allowNext ? classes.action : classes.actionDisabled}
           >
             Tiếp tục
           </button>

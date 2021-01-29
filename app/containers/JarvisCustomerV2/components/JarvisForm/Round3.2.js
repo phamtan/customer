@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, {useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
@@ -92,7 +92,7 @@ export default function Round3(props) {
   const classes = useStyles();
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
   const selections = _.get(props, 'jarvisCustomerV2.selections', []);
-  const { register, handleSubmit, errors, control } = useForm({
+  const { register, handleSubmit, errors, control, setValue } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -103,6 +103,7 @@ export default function Round3(props) {
     },
     resolver: yupResolver(schema),
   });
+  const [maritalStatus, setMaritalStatus] = useState(null);
 
   function onSubmitForm(values) {
     props.dispatch(Actions.saveData(values));
@@ -120,6 +121,68 @@ export default function Round3(props) {
       <div className={classes.titleHeader}>Thông tin khác</div>
       <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
         <div className="formWrapper">
+          <div className="form-group">
+            <Controller 
+              as={TextField} 
+              name="fullNameRefTwo" 
+              fullWidth 
+              variant="outlined" 
+              label={maritalStatus && maritalStatus === "MARRIED" ? "Họ tên người tham chiếu 1" : "Họ tên người tham chiếu 2"}
+              control={control} />
+            {errors.fullNameRefTwo && (
+              <span className="formError">
+                {errors.fullNameRefTwo.message}
+              </span>
+            )}
+          </div>
+          <div className="form-group">
+            <Controller
+                name="relationRefTwo"
+                control={control}
+                render={({ value, onChange }) => (
+                  <Autocomplete
+                    id="country-select-demo"
+                    style={{ width: '90vw' }}
+                    options={selections && selections.filter(selection => selection.category === 'RELATIONSHIP').map(selection => ({
+                      value: selection.code,
+                      label: selection.nameVi,
+                    }))}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    onChange={(event, newValue) => {
+                      onChange(newValue.label);
+                    }}
+                    autoHighlight
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Mối quan hệ với chủ thẻ"
+                        variant="outlined"
+                        inputProps={{
+                          ...params.inputProps,
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              />
+            {errors.relationRefTwo && (
+              <span className="formError">
+                {errors.relationRefTwo.message}
+              </span>
+            )}
+          </div>
+
+          <div className="form-group">
+            <Controller as={TextField} name="mobileNumberRefTwo" fullWidth variant="outlined" label="Số điện thoại" control={control} />
+            {errors.mobileNumberRefTwo && (
+              <span className="formError">
+                {errors.mobileNumberRefTwo.message}
+              </span>
+            )}
+          </div>
           <div className="form-group">
            <Controller
                 name="permanentProvince"

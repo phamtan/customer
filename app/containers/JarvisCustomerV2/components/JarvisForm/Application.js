@@ -53,7 +53,7 @@ function Alert(props) {
 export default function Application(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [step, setStep] = useState(15);
+  const [step, setStep] = useState(0);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -111,7 +111,8 @@ export default function Application(props) {
       {step === 1000 && <ChooseLimit setStep={setStep} {...props} />}
       {step === 997 && <ChooseCard setStep={setStep} {...props} />}
       {step === 996 && <RegisLimitInfo setStep={setStep} {...props} />}
-      {step === 0 && <Round1 setStep={setStep} {...props} />}
+      {step === 0 && <Round1 handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
       {step === 1 && <Otp handleShoMessage={handleShoMessage}
           handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
       {step === 2 && <Round2OCRGuide setStep={setStep} {...props} />}

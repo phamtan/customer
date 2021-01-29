@@ -1,7 +1,7 @@
 import { takeEvery, call, put, all } from 'redux-saga/effects';
 import * as Api from 'utils/request';
 import { REQUEST_COUNTRIES, REQUEST_OTP, SAVE_DATA, VERIFY_OTP, CHECK_LOS_ROUND1, SAVE_RAW_DATA,
-UPLOAD_VIDEO_PENDING } from './constants';
+UPLOAD_VIDEO_PENDING, CHECK_LOS_RESULT_ROUND1, CHECK_LOS_ROUND2, SAVE_DATA_APP } from './constants';
 import {callapiSuccess, callapiErorr, getProvincesSuccess, createApplication, requestOtp, createApplicationSuccess, getSelectionSuccess} from './actions'
 
 function* fetchCountriesSaga() {
@@ -46,6 +46,23 @@ function* saveApplicationSaga(action) {
     yield put(requestOtp({
       phoneOrEmail: response.mobileNumber
     }));
+  } catch (error) {
+    yield put(callapiErorr());
+    action.reject(error);
+  }
+}
+
+function* saveDataApplicationSaga(action) {
+  const payload = {
+    url: '/customer/save',
+    params: null,
+    data: action.payload,
+  };
+  try {
+    const response = yield call(Api.post, payload);
+
+    yield put(createApplicationSuccess(response));
+    action.resolve(response);
   } catch (error) {
     yield put(callapiErorr());
     action.reject(error);
@@ -98,6 +115,22 @@ function* checkLosRound1(action) {
   }
 }
 
+function* checkLosRound2(action) {
+  const payload = {
+    url: '/c-flow/check-round-two',
+    data: action.payload,
+  };
+  try {
+    const response = yield call(Api.post, payload);
+    // yield put(callapiSuccess(countries));
+    // yield put(getProvincesSuccess(provinces));
+    action.resolve(response);
+  } catch (error) {
+    yield put(callapiErorr());
+    action.reject(error);
+  }
+}
+
 function* uploadLiveness(action) {
   const formData = new FormData();
   formData.append("video", action.payload.video);
@@ -129,6 +162,24 @@ function* saveRawDataSaga(action) {
   }
 }
 
+function* checkLosResult(action) {
+  const payload = {
+    url: `/c-flow/check-result-los/${action.payload.appId}`,
+    params: {
+      step: action.payload.round
+    },
+  }
+
+  try {
+    const response = yield call(Api.post, payload);
+    action.resolve(response);
+    // yield put(callapiSuccess(countries));
+    // yield put(getProvincesSuccess(provinces));
+  } catch (error) {
+    yield put(callapiErorr());
+  }
+}
+
 export default function* jarvisCustomerV2Saga() {
   yield all([
     takeEvery(REQUEST_COUNTRIES, fetchCountriesSaga),
@@ -138,5 +189,8 @@ export default function* jarvisCustomerV2Saga() {
     takeEvery(CHECK_LOS_ROUND1, checkLosRound1),
     takeEvery(UPLOAD_VIDEO_PENDING, uploadLiveness),
     takeEvery(SAVE_RAW_DATA, saveRawDataSaga),
+    takeEvery(CHECK_LOS_RESULT_ROUND1, checkLosResult),
+    takeEvery(CHECK_LOS_ROUND2, checkLosRound2),
+    takeEvery(SAVE_DATA_APP, saveDataApplicationSaga),
   ]);
 }

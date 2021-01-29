@@ -197,7 +197,7 @@ export default function LandingCard(props) {
     values.card = cardId.id;
     values.selectedCard = cardId;
     values.limitType = '1';
-    props.dispatch(Actions.saveData(values));
+    props.dispatch(Actions.saveRawData(values));
     props.setStep(1000);
   }
 

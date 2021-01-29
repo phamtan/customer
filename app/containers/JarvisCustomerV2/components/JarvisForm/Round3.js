@@ -7,6 +7,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from '@date-io/moment';
 import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import JarvisFormStyle from './JarvisFormStyle';
@@ -95,13 +97,27 @@ export default function Round3(props) {
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
-    defaultValues: jarvisCustomer,
+    defaultValues: {
+      ...jarvisCustomer,
+    },
     resolver: yupResolver(schema),
   });
 
   function onSubmitForm(values) {
-    props.dispatch(Actions.saveData(values));
-    props.setStep(9);
+    console.log(values)
+    values.id = jarvisCustomer.id;
+    values.docIssuedDate = moment(values.docIssuedDate).format('DD/MM/YYYY')
+    values.dob = moment(values.dob).format('YYYY-MM-DDTHH:mm:ss.SSS')
+    return new Promise((resolve, reject) => {
+    props.dispatch(Actions.checkLosRound2(values, resolve, reject));
+    }).then(() => {
+      props.setStep(23);
+    }).catch(() => {
+      props.handleShoMessage({
+        message: 'Có lỗi xảy ra',
+        severity: 'error',
+      });
+    });
   }
 
   function changeProvince(e) {
@@ -119,7 +135,7 @@ export default function Round3(props) {
         <div className="formWrapper">
           <div className="form-group">
             <Controller
-                name="companyName"
+                name="nameOfEmployer"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
@@ -131,7 +147,7 @@ export default function Round3(props) {
                     }}
                     onChange={(event, newValue) => {
                       onChange(newValue.value);
-                      setMaritalStatus(newValue.value);
+                      // setMaritalStatus(newValue.value);
                     }}
                     autoHighlight
                     getOptionLabel={(option) => option.label}
@@ -148,41 +164,29 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.company && (
-              <span className="formError">{errors.company.message}</span>
-            )}
-          </div>
-          <div className="form-group">
-            <Controller 
-              as={TextField} 
-              name="taxNumber" 
-              fullWidth 
-              variant="outlined" 
-              label="Mã số thuế"
-              control={control} />
-            {errors.taxNumber && (
-              <span className="formError">{errors.taxNumber.message}</span>
+            {errors.nameOfEmployer && (
+              <span className="formError">{errors.nameOfEmployer.message}</span>
             )}
           </div>
 
           <div className="form-group">
             <Controller 
               as={TextField} 
-              name="companyAddressDetail" 
+              name="employerAddressLine" 
               fullWidth 
               variant="outlined" 
               label="Địa chỉ công ty"
               control={control} />
-            {errors.companyAddressDetail && (
+            {errors.employerAddressLine && (
               <span className="formError">
-                {errors.companyAddressDetail.message}
+                {errors.employerAddressLine.message}
               </span>
             )}
           </div>
 
           <div className="form-group">
               <Controller
-                name="permanentProvince"
+                name="employerProvince"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
@@ -223,7 +227,7 @@ export default function Round3(props) {
 
           <div className="form-group">
               <Controller
-                name="permanentDistrict"
+                name="employerDistrict"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
@@ -260,7 +264,8 @@ export default function Round3(props) {
                 </span>
               )}
             </div>
-          <div className="form-group">
+
+            <div className="form-group">
             <Controller 
               as={TextField} 
               name="companyPhone" 
@@ -292,12 +297,12 @@ export default function Round3(props) {
 
           <div className="form-group">
               <Controller
-                name="permanentProvince"
+                name="typeCompany"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === "INDUSTRY").map(selection => ({
+                    options={selections && selections.filter(selection => selection.category === "TYPEOFCOMPANY").map(selection => ({
                       value: selection.code,
                       label: selection.nameVi
                     }))}
@@ -312,7 +317,43 @@ export default function Round3(props) {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="Lĩnh vực công việc"
+                        label="Loại hình công ty"
+                        variant="outlined"
+                        inputProps={{
+                          ...params.inputProps,
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              />
+            {errors.industry && (
+              <span className="formError">{errors.industry.message}</span>
+            )}
+          </div>
+          <div className="form-group">
+              <Controller
+                name="position"
+                control={control}
+                render={({ value, onChange }) => (
+                  <Autocomplete
+                    style={{ width: '90vw' }}
+                    options={selections && selections.filter(selection => selection.category === "OCCUPATION").map(selection => ({
+                      value: selection.code,
+                      label: selection.nameVi
+                    }))}
+                    classes={{
+                      option: classes.option,
+                    }}
+                    autoHighlight
+                    onChange={(event, newValue) => {
+                      onChange(newValue.value);
+                    }}
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Vị trí hiện tại"
                         variant="outlined"
                         inputProps={{
                           ...params.inputProps,
