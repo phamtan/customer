@@ -27,13 +27,13 @@ const useStyles = makeStyles(theme => ({
   },
   waitingTitle: {
     textTransform: 'uppercase',
-    fontFamily: 'Montserrat',
+    fontFamily: 'Roboto',
     fontSize: '24px',
     marginTop: '10px',
   },
   waitingText: {
     width: '90%',
-    fontFamily: 'Montserrat',
+    fontFamily: 'Roboto',
     fontSize: '13px',
     marginTop: '20px',
     textAlign: 'center',

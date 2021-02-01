@@ -53,7 +53,7 @@ function Alert(props) {
 export default function Application(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(15);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -61,8 +61,6 @@ export default function Application(props) {
     message: '',
     severity: 'success',
   });
-
-
 
   const { vertical, horizontal, open, message, severity } = state;
 
@@ -86,8 +84,14 @@ export default function Application(props) {
       )}
       {step === 16 && <AllCards setStep={setStep} {...props} />}
       {step === 17 && <LivenessGuiline setStep={setStep} {...props} />}
-      {step === 18 && <Liveness  handleShoMessage={handleShoMessage}
-          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
+      {step === 18 && (
+        <Liveness
+          handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage}
+          setStep={setStep}
+          {...props}
+        />
+      )}
       {step === 19 && <ChooseDocument setStep={setStep} {...props} />}
       {step === 20 && <Round2OCR setStep={setStep} {...props} />}
       {step === 21 && <Round2OCRBack setStep={setStep} {...props} />}
@@ -111,16 +115,34 @@ export default function Application(props) {
       {step === 1000 && <ChooseLimit setStep={setStep} {...props} />}
       {step === 997 && <ChooseCard setStep={setStep} {...props} />}
       {step === 996 && <RegisLimitInfo setStep={setStep} {...props} />}
-      {step === 0 && <Round1 handleShoMessage={handleShoMessage}
-          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
-      {step === 1 && <Otp handleShoMessage={handleShoMessage}
-          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
+      {step === 0 && (
+        <Round1
+          handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage}
+          setStep={setStep}
+          {...props}
+        />
+      )}
+      {step === 1 && (
+        <Otp
+          handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage}
+          setStep={setStep}
+          {...props}
+        />
+      )}
       {step === 2 && <Round2OCRGuide setStep={setStep} {...props} />}
       {step === 3 && <Round2OCR setStep={setStep} {...props} />}
       {step === 991 && <Round2OCRBack setStep={setStep} {...props} />}
       {step === 4 && <Round2Liveness setStep={setStep} {...props} />}
-      {step === 5 && <Roun1FillInfo handleShoMessage={handleShoMessage}
-          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
+      {step === 5 && (
+        <Roun1FillInfo
+          handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage}
+          setStep={setStep}
+          {...props}
+        />
+      )}
       {step === 6 && <Round2Confirm setStep={setStep} {...props} />}
       {step === 7 && <Round2CheckLimit setStep={setStep} {...props} />}
       {step === 999 && <CheckSuccess setStep={setStep} {...props} />}

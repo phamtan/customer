@@ -6,7 +6,7 @@ const JarvisFormStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Roboto', sans-serif;
   .header {
     width: 90%;
     display: flex;
@@ -456,14 +456,14 @@ const JarvisFormStyle = styled.div`
       margin-left: 5px;
     }
     .benefitPercent {
-      font-family: Montserrat;
+      font-family: Roboto;
       font-size: 40px;
       font-weight: bold;
       text-align: center;
       color: #00ae52;
     }
     .cardBenefitDescription {
-      font-family: Montserrat;
+      font-family: Roboto;
       font-size: 12px;
       color: #0b0b0b;
       width: 95%;
@@ -484,14 +484,14 @@ const JarvisFormStyle = styled.div`
       margin-left: 5px;
     }
     .benefitPercent {
-      font-family: Montserrat;
+      font-family: Roboto;
       font-size: 40px;
       font-weight: bold;
       text-align: center;
       color: #00ae52;
     }
     .cardBenefitDescription {
-      font-family: Montserrat;
+      font-family: Roboto;
       font-size: 12px;
       color: #0b0b0b;
       width: 95%;
@@ -526,7 +526,7 @@ const JarvisFormStyle = styled.div`
     margin-bottom: 15px;
   }
   .titleOther {
-    font-family: Montserrat;
+    font-family: Roboto;
     font-size: 14px;
     font-weight: bold;
     line-height: 1.43;

@@ -7,11 +7,11 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     width: 100%;
     line-height: 1.5;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto', sans-serif;
   }
 
   body {
-    font-family: 'Montserrat', 'Avenir Next', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Roboto', 'Avenir Next', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   #app {
@@ -472,14 +472,14 @@ const GlobalStyle = createGlobalStyle`
       display:flex;
       flex-wrap:wrap;
       .benefitPercent {
-        font-family: Montserrat;
+        font-family: Roboto;
         font-size: 40px;
         font-weight: bold;
         text-align: center;
         color: #00ae52;
       }
       .cardBenefitDescription {
-        font-family: Montserrat;
+        font-family: Roboto;
         font-size: 12px;
         color: #0b0b0b;
         width: 95%;
@@ -506,6 +506,7 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     flex-direction: column;
     background-color: #ddd;
+    pointer-events:none;
   }
 
   .slick-slide:hover {
@@ -514,7 +515,15 @@ const GlobalStyle = createGlobalStyle`
     }
     .floatAction {
       display: flex;
+      pointer-events:auto;
     }
+    img {
+      width: 198px;
+      height: 145px;
+    }
+  }
+  .slick-track {
+    display: flex !important;
   }
 `;
 

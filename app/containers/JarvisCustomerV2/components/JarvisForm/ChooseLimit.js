@@ -107,10 +107,9 @@ const useStyles = makeStyles(() => ({
     marginTop: '7px',
   },
   action: {
-    width: '382px',
+    width: '90%',
     height: '46px',
-    margin: '28px 16px 28px',
-    padding: '15px 159.4px 15px 105.6px',
+    textAlign: 'center',
     borderRadius: '4px',
     backgroundColor: '#028547',
     color: 'white',
@@ -126,7 +125,7 @@ const useStyles = makeStyles(() => ({
   limitText: {
     fontSize: '16px',
     color: '#117f8a',
-  }
+  },
 }));
 
 export default function ChooseLimit(props) {
@@ -140,7 +139,7 @@ export default function ChooseLimit(props) {
 
   useEffect(() => {
     if (card) {
-      setAmount(Number(card.maxLimit) * 0.5)
+      setAmount(Number(card.maxLimit) * 0.5);
     }
   }, [card]);
 
@@ -155,20 +154,30 @@ export default function ChooseLimit(props) {
     return value;
   }
 
-  function updateLimit(value) {
-    setAmount(value);
+  function updateLimit(event, newValue) {
+    console.log(newValue);
+    setAmount(newValue);
   }
 
   function getMarks() {
-    const minLimit = card.minLimit;
-    const maxLimit = card.maxLimit;
-    let marks = [];
-    marks.push({value: Number(minLimit), label: minLimit});
-    marks.push({value: Number(maxLimit) * 0.25, label: Number(maxLimit) * 0.25});
-    marks.push({value: Number(maxLimit) * 0.5, label: Number(maxLimit) * 0.5});
-    marks.push({value: Number(maxLimit) * 0.75, label: Number(maxLimit) * 0.75});
-    marks.push({value: Number(maxLimit), label: maxLimit});
-    
+    const { minLimit } = card;
+    const { maxLimit } = card;
+    const marks = [];
+    marks.push({ value: Number(minLimit), label: minLimit });
+    marks.push({
+      value: Number(maxLimit) * 0.25,
+      label: Number(maxLimit) * 0.25,
+    });
+    marks.push({
+      value: Number(maxLimit) * 0.5,
+      label: Number(maxLimit) * 0.5,
+    });
+    marks.push({
+      value: Number(maxLimit) * 0.75,
+      label: Number(maxLimit) * 0.75,
+    });
+    marks.push({ value: Number(maxLimit), label: maxLimit });
+
     return marks;
   }
 
@@ -202,9 +211,11 @@ export default function ChooseLimit(props) {
             min={card ? Number(card.minLimit) : 10}
             max={card ? Number(card.maxLimit) : 100}
             step={10}
-            onChange={e => updateLimit(e.target.innerText)}
+            onChange={updateLimit}
           />
-          <div className={classes.limitText}>Hạn mức bạn chọn là: {amount} triệu VNĐ</div>
+          <div className={classes.limitText}>
+            Hạn mức bạn chọn là: {amount} triệu VNĐ
+          </div>
         </CardContent>
       </Card>
       <button

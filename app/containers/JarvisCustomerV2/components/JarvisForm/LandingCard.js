@@ -4,6 +4,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import TabList from '@material-ui/lab/TabList';
+import TabContext from '@material-ui/lab/TabContext';
+import TabPanel from '@material-ui/lab/TabPanel';
 import Slider from 'react-slick';
 import cashbackIcon from 'images/benefit/cashbackicon.svg';
 import loyaltyIcon from 'images/benefit/loyaltyicon.svg';
@@ -31,23 +36,13 @@ import JarvisFormStyle from './JarvisFormStyle';
 const useStyles = makeStyles(() => ({
   sliderStyle: {
     width: '100%',
-  },
-  sliderItem: {
-    // height: '80px',
+    paddingLeft: '16px',
   },
   pageHeader: {
     width: '100%',
     padding: '24px 24px 16px 16px',
     fontSize: '24px',
-    '& .floatAction': {
-      display: 'none',
-    },
-    '&:hover .floatAction': {
-      display: 'flex',
-    },
-    '&:hover': {
-      display: 'none !important',
-    },
+    pointerEvents: 'none',
   },
   sectionTilte: {
     width: '100%',
@@ -62,7 +57,7 @@ const useStyles = makeStyles(() => ({
     color: '#02743e',
     textTransform: 'uppercase',
     marginBottom: '24px',
-    marginLeft: '16px',
+    paddingLeft: '16px',
   },
   openCardBtn: {
     width: '90%',
@@ -71,7 +66,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#028547',
     border: 'none',
     color: 'white',
-    marginLeft: '8px',
+    paddingLeft: '8px',
   },
   compareCardBtn: {
     width: '90%',
@@ -83,20 +78,49 @@ const useStyles = makeStyles(() => ({
     marginLeft: '8px',
     marginTop: '4px',
   },
+  sliderItem: {
+    width: '190px !important',
+    margin: '16px 3px 36px 0',
+  },
+  imageSlide: {
+    width: '198px',
+    height: '145px',
+  },
+  tabStyle: {
+    width: '100%',
+    height: '48px',
+    backgroundColor: '#028547',
+    color: 'white',
+    paddingLeft: '24px',
+  },
+  indicator: {
+    backgroundColor: 'white',
+  },
+  tabItem: {
+    width: '152px',
+  },
 }));
 
 const settings = {
   dots: false,
-  infinite: false,
+  infinite: true,
   speed: 500,
-  slidesToShow: 3,
+  slidesToShow: 2,
   slidesToScroll: 1,
   lazyLoad: true,
-  variableWidth: false,
+  centerMode: false,
+  variableWidth: true,
+  arrows: false,
 };
 
 export default function LandingCard(props) {
   const classes = useStyles();
+
+  const [tab, setTab] = React.useState(1);
+
+  const handleChange = (event, newValue) => {
+    setTab(newValue);
+  };
 
   function chooseThisCard(cardId) {
     const values = {};
@@ -107,175 +131,208 @@ export default function LandingCard(props) {
       props.dispatch(Actions.saveRawData(values, resolve, reject));
     }).then(() => {
       props.setStep(1000);
-    })
-    
+    });
   }
 
   return (
     <JarvisFormStyle>
       <Header className="header" />
-      <div className={classes.pageHeader}>Chọn sản phẩm phù hợp</div>
-      <div className={classes.sectionTilte}>
-        Chọn loại thẻ theo lợi ích {'>'}
-      </div>
-      <Slider {...settings} className={classes.sliderStyle}>
-        <div className={classes.sliderItem} width={170}>
-          <img src={cashbackIcon} alt="cashback" />
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <img src={loyaltyIcon} alt="loyalty" />
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <img src={healthIcon} alt="health" />
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <img src={travelIcon} alt="travel" />
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <img src={shopeeIcon} alt="shopee" />
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <img src={mobifoneIcon} alt="mobifone" />
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <img src={withdrawIcon} alt="withdraw" />
-        </div>
-      </Slider>
-      <div className={classes.sectionTilte}>Thẻ được đăng ký nhiều {'>'}</div>
-      <Slider {...settings} className={classes.sliderStyle}>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={shopeesuper} alt="cashback" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(18)}
-              className={classes.openCardBtn}
+      <TabContext value={tab}>
+        <TabList
+          className={classes.tabStyle}
+          onChange={handleChange}
+          classes={{
+            indicator: classes.indicator,
+          }}
+        >
+          <Tab className={classes.tabItem} label="THẺ" value={1} />
+          <Tab className={classes.tabItem} label="VAY" value={2} />
+          <Tab className={classes.tabItem} label="XE HƠI" value={3} />
+        </TabList>
+        {tab === 1 && (
+          <>
+            <div className={classes.pageHeader}>Chọn sản phẩm phù hợp</div>
+            <div className={classes.sectionTilte}>
+              Chọn loại thẻ theo lợi ích {'>'}
+            </div>
+            <Slider {...settings} className={classes.sliderStyle}>
+              <div width={170}>
+                <img src={cashbackIcon} alt="cashback" />
+              </div>
+              <div width={170}>
+                <img src={loyaltyIcon} alt="loyalty" />
+              </div>
+              <div width={170}>
+                <img src={healthIcon} alt="health" />
+              </div>
+              <div width={170}>
+                <img src={travelIcon} alt="travel" />
+              </div>
+              <div width={170}>
+                <img src={shopeeIcon} alt="shopee" />
+              </div>
+              <div width={170}>
+                <img src={mobifoneIcon} alt="mobifone" />
+              </div>
+              <div width={170}>
+                <img src={withdrawIcon} alt="withdraw" />
+              </div>
+            </Slider>
+            <div className={classes.sectionTilte}>
+              Thẻ được đăng ký nhiều {'>'}
+            </div>
+            <Slider {...settings} className={classes.sliderStyle}>
+              <div className={classes.sliderItem}>
+                <div className="imageSlide">
+                  <img
+                    className={classes.imageSlide}
+                    src={shopeesuper}
+                    alt="cashback"
+                  />
+                </div>
+                <div className="floatAction">
+                  <button
+                    type="button"
+                    onClick={() => chooseThisCard(18)}
+                    className={classes.openCardBtn}
+                  >
+                    Mở thẻ
+                  </button>
+                  <button
+                    type="button"
+                    // onClick={() => props.setStep(17)}
+                    className={classes.compareCardBtn}
+                  >
+                    So sánh
+                  </button>
+                </div>
+              </div>
+              <div className={classes.sliderItem}>
+                <div className="imageSlide">
+                  <img
+                    className={classes.imageSlide}
+                    src={stepupCard}
+                    alt="loyalty"
+                  />
+                </div>
+                <div className="floatAction">
+                  <button
+                    type="button"
+                    onClick={() => chooseThisCard(3)}
+                    className={classes.openCardBtn}
+                  >
+                    Mở thẻ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => props.setStep(17)}
+                    className={classes.compareCardBtn}
+                  >
+                    So sánh
+                  </button>
+                </div>
+              </div>
+              <div className={classes.sliderItem}>
+                <div className="imageSlide">
+                  <img
+                    className={classes.imageSlide}
+                    src={ladyCard}
+                    alt="health"
+                  />
+                </div>
+                <div className="floatAction">
+                  <button
+                    type="button"
+                    onClick={() => chooseThisCard(2)}
+                    className={classes.openCardBtn}
+                  >
+                    Mở thẻ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => props.setStep(17)}
+                    className={classes.compareCardBtn}
+                  >
+                    So sánh
+                  </button>
+                </div>
+              </div>
+            </Slider>
+            <div className={classes.sectionTilte}>Thẻ mới phát hành {'>'}</div>
+            <Slider {...settings} className={classes.sliderStyle}>
+              <div className={classes.sliderItem} width={170}>
+                <div className="imageSlide">
+                  <img src={shopeesuper} alt="cashback" />
+                </div>
+                <div className="floatAction">
+                  <button
+                    type="button"
+                    onClick={() => chooseThisCard(18)}
+                    className={classes.openCardBtn}
+                  >
+                    Mở thẻ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => props.setStep(17)}
+                    className={classes.compareCardBtn}
+                  >
+                    So sánh
+                  </button>
+                </div>
+              </div>
+              <div className={classes.sliderItem} width={170}>
+                <div className="imageSlide">
+                  <img src={theshopee} alt="loyalty" />
+                </div>
+                <div className="floatAction">
+                  <button
+                    type="button"
+                    onClick={() => chooseThisCard(17)}
+                    className={classes.openCardBtn}
+                  >
+                    Mở thẻ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => props.setStep(17)}
+                    className={classes.compareCardBtn}
+                  >
+                    So sánh
+                  </button>
+                </div>
+              </div>
+              <div className={classes.sliderItem} width={170}>
+                <div className="imageSlide">
+                  <img src={platinumTravel} alt="health" />
+                </div>
+                <div className="floatAction">
+                  <button
+                    type="button"
+                    onClick={() => chooseThisCard(11)}
+                    className={classes.openCardBtn}
+                  >
+                    Mở thẻ
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => props.setStep(17)}
+                    className={classes.compareCardBtn}
+                  >
+                    So sánh
+                  </button>
+                </div>
+              </div>
+            </Slider>
+            <div
+              className={classes.showAllCard}
+              onClick={() => props.setStep(16)}
             >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              // onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={stepupCard} alt="loyalty" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(3)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={ladyCard} alt="health" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(2)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-      </Slider>
-      <div className={classes.sectionTilte}>Thẻ mới phát hành {'>'}</div>
-      <Slider {...settings} className={classes.sliderStyle}>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={shopeesuper} alt="cashback" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(18)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={theshopee} alt="loyalty" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(17)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-        <div className={classes.sliderItem} width={170}>
-          <div className="imageSlide">
-            <img src={platinumTravel} alt="health" />
-          </div>
-          <div className="floatAction">
-            <button
-              type="button"
-              onClick={() => chooseThisCard(11)}
-              className={classes.openCardBtn}
-            >
-              Mở thẻ
-            </button>
-            <button
-              type="button"
-              onClick={() => props.setStep(17)}
-              className={classes.compareCardBtn}
-            >
-              So sánh
-            </button>
-          </div>
-        </div>
-      </Slider>
-      <div className={classes.showAllCard} onClick={() => props.setStep(16)}>
-        Xem tất cả các thẻ tín dụng VPBank
-      </div>
+              Xem tất cả các thẻ tín dụng VPBank
+            </div>
+          </>
+        )}
+      </TabContext>
     </JarvisFormStyle>
   );
 }

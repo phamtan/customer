@@ -286,7 +286,7 @@ const countries = [
   { code: 'MP', label: 'Northern Mariana Islands', phone: '1-670' },
   { code: 'MQ', label: 'Martinique', phone: '596' },
   { code: 'MR', label: 'Mauritania', phone: '222' },
-  { code: 'MS', label: 'Montserrat', phone: '1-664' },
+  { code: 'MS', label: 'Roboto', phone: '1-664' },
   { code: 'MT', label: 'Malta', phone: '356' },
   { code: 'MU', label: 'Mauritius', phone: '230' },
   { code: 'MV', label: 'Maldives', phone: '960' },
