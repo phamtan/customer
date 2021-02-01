@@ -107,7 +107,7 @@ const useStyles = makeStyles(() => ({
     marginTop: '7px',
   },
   action: {
-    width: '90%',
+    width: '95%',
     height: '46px',
     textAlign: 'center',
     borderRadius: '4px',

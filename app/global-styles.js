@@ -509,7 +509,7 @@ const GlobalStyle = createGlobalStyle`
     pointer-events:none;
   }
 
-  .slick-slide:hover {
+  .card .slick-slide:hover {
     .imageSlide {
       display:none;
     }

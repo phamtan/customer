@@ -58,7 +58,6 @@
       "git add --force"
     ]
   },
-  "pre-commit": "lint:staged",
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
   },
@@ -112,6 +111,7 @@
     "sanitize.css": "8.0.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "4.2.0",
+    "xregexp": "^4.4.1",
     "yup": "^0.29.3"
   },
   "devDependencies": {

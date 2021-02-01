@@ -9,6 +9,7 @@ import * as yup from 'yup';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import * as Actions from '../../actions';
+import XRegExp from 'xregexp';
 
 const useStyles = makeStyles(() => ({
   formContainer: {
@@ -70,10 +71,12 @@ const useStyles = makeStyles(() => ({
     marginTop: '7px',
   },
   action: {
-    width: '382px',
+    width: '100%',
+    margin: 'auto',
     height: '46px',
-    margin: '28px 6px 28px',
-    padding: '15px 159.4px 15px 105.6px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: '4px',
     backgroundColor: '#028547',
     color: 'white',
@@ -87,7 +90,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 const schema = yup.object().shape({
-  fullName: yup.string().required('Bạn chưa nhập họ tên'),
+  fullName: yup.string().required('Bạn chưa nhập họ tên')
+  .matches(XRegExp("^[\\pL\\s]+$"), "Tên không chứa ký tự đặc biệt"),
   mobileNumber: yup.string().required('Bạn chưa nhập số điện thoại'),
   email: yup
     .string()
@@ -158,8 +162,8 @@ export default function Round1(props) {
                   root: classes.inputStyle,
                 }}
               />
-              {errors.phone && (
-                <span className="formError">{errors.phone.message}</span>
+              {errors.mobileNumber && (
+                <span className="formError">{errors.mobileNumber.message}</span>
               )}
             </div>
 

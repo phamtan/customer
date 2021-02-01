@@ -10,6 +10,7 @@ import TabList from '@material-ui/lab/TabList';
 import TabContext from '@material-ui/lab/TabContext';
 import TabPanel from '@material-ui/lab/TabPanel';
 import Slider from 'react-slick';
+import clsx from 'clsx';
 import cashbackIcon from 'images/benefit/cashbackicon.svg';
 import loyaltyIcon from 'images/benefit/loyaltyicon.svg';
 import healthIcon from 'images/benefit/health.svg';
@@ -17,18 +18,28 @@ import shopeeIcon from 'images/benefit/shopee.svg';
 import mobifoneIcon from 'images/benefit/mobifone.svg';
 import travelIcon from 'images/benefit/travel.svg';
 import withdrawIcon from 'images/benefit/withdraw.svg';
-import shopeesuper from 'images/cards/shopeesuper.png';
+import platinumCashbackCard from 'images/cards/platinum-cashback.png';
 import stepupCard from 'images/cards/step-up-card.png';
 import ladyCard from 'images/cards/lady-card.png';
-import theshopee from 'images/cards/theshopee.png';
-import platinumTravel from 'images/cards/platinum-travel.png';
-import platinumCashbackCard from 'images/cards/platinum-cashback.png';
-import platinumTravelCard from 'images/cards/platinum-travel.png';
+import mobiClassicCard from 'images/cards/mobi-classic.png';
+import mobiPlatinumCard from 'images/cards/mobi-platinum-card.png';
+import mobiTitaniumCard from 'images/cards/mobi-titanium-card.png';
 import californiacenturyon from 'images/cards/californiacenturyonhorizon.png';
-import no1 from 'images/cards/no1-card.png';
+import californiaplatinum from 'images/cards/californiaplatinum.png';
+import platinumTravel from 'images/cards/platinum-travel.png';
+import shopeesuper from 'images/cards/shopeesuper.png';
+import signatureTravel from 'images/cards/signature-travel.png';
+import theshopee from 'images/cards/theshopee.png';
+import titaniumcashback from 'images/cards/titanium-cashback.png';
+import travelgold from 'images/cards/travelgold.png';
+import no1Card from 'images/cards/no1-card.png';
+import mc2Card from 'images/cards/mc2-card.png';
+import vnaCard from 'images/cards/vna-card.png';
+import platinumCard from 'images/cards/platinum-card.png';
 import Header from './Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import dataCard from 'images/data.json';
 import * as Actions from '../../actions';
 
 import JarvisFormStyle from './JarvisFormStyle';
@@ -37,6 +48,8 @@ const useStyles = makeStyles(() => ({
   sliderStyle: {
     width: '100%',
     paddingLeft: '16px',
+    backgroundColor: 'transparent',
+    border: 'none',
   },
   pageHeader: {
     width: '100%',
@@ -57,33 +70,38 @@ const useStyles = makeStyles(() => ({
     color: '#02743e',
     textTransform: 'uppercase',
     marginBottom: '24px',
-    paddingLeft: '16px',
+    paddingLeft: '24px',
+    marginTop: '16px',
   },
   openCardBtn: {
     width: '90%',
     height: '38px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: '4px',
     backgroundColor: '#028547',
     border: 'none',
     color: 'white',
-    paddingLeft: '8px',
   },
   compareCardBtn: {
     width: '90%',
     height: '38px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: '4px',
     backgroundColor: '#018786',
     border: 'none',
     color: 'white',
-    marginLeft: '8px',
     marginTop: '4px',
   },
   sliderItem: {
     width: '190px !important',
-    margin: '16px 3px 36px 0',
+    marginBottom: '16px',
   },
   imageSlide: {
-    width: '198px',
+    width: '198px !important',
     height: '145px',
   },
   tabStyle: {
@@ -98,6 +116,28 @@ const useStyles = makeStyles(() => ({
   },
   tabItem: {
     width: '152px',
+  },
+  cardTitle: {
+    width: '100%',
+    fontSize: '16px',
+    textAlign: 'left',
+    paddingLeft: '16px',
+    textTransform: 'uppercase',
+    fontWeight: 'normal',
+    marginBottom: '4px',
+    marginTop: '-10px',
+  },
+  cardbenefit: {
+    width: '90%',
+    maxWidth: '84px',
+    height: '24px',
+    borderRadius: '4px',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    fontSize: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: '16px',
   },
 }));
 
@@ -115,6 +155,9 @@ const settings = {
 
 export default function LandingCard(props) {
   const classes = useStyles();
+  const allCard = dataCard.cards;
+  const mostRegisCards = allCard.filter(card => card.mostRegis);
+  const newCards = allCard.filter(card => card.newCard);
 
   const [tab, setTab] = React.useState(1);
 
@@ -132,6 +175,83 @@ export default function LandingCard(props) {
     }).then(() => {
       props.setStep(1000);
     });
+  }
+
+  function getCardImage(id) {
+    if (id === 1) {
+      return mc2Card;
+    }
+    if (id === 2) {
+      return ladyCard;
+    }
+    if (id === 3) {
+      return stepupCard;
+    }
+    if (id === 4) {
+      return platinumCard;
+    }
+    if (id === 5) {
+      return vnaCard;
+    }
+    if (id === 6) {
+      return mobiClassicCard;
+    }
+    if (id === 7) {
+      return mobiPlatinumCard;
+    }
+    if (id === 8) {
+      return mobiTitaniumCard;
+    }
+    if (id === 9) {
+      return no1Card;
+    }
+    if (id === 10) {
+      return platinumCashbackCard;
+    }
+    if (id === 11) {
+      return platinumTravel;
+    }
+    if (id === 12) {
+      return titaniumcashback;
+    }
+    if (id === 13) {
+      return californiaplatinum;
+    }
+    if (id === 14) {
+      return californiacenturyon;
+    }
+    if (id === 15) {
+      return travelgold;
+    }
+    if (id === 16) {
+      return signatureTravel;
+    }
+    if (id === 17) {
+      return theshopee;
+    }
+    if (id === 18) {
+      return shopeesuper;
+    }
+    return vnaCard;
+  }
+
+  function getCardBenefit(id) {
+    if (id === 1) {
+      return 'Điểm thưởng';
+    }
+    if (id === 0) {
+      return 'Hoàn tiền';
+    }
+
+    if (id === 2) {
+      return 'Du lịch';
+    }
+
+    if (id === 6) {
+      return 'Shopee';
+    }
+
+    return '';
   }
 
   return (
@@ -153,9 +273,9 @@ export default function LandingCard(props) {
           <>
             <div className={classes.pageHeader}>Chọn sản phẩm phù hợp</div>
             <div className={classes.sectionTilte}>
-              Chọn loại thẻ theo lợi ích {'>'}
+             Danh mục thẻ theo lợi ích {'>'}
             </div>
-            <Slider {...settings} className={classes.sliderStyle}>
+            <Slider {...settings} className={clsx("benefit", classes.sliderStyle)}>
               <div width={170}>
                 <img src={cashbackIcon} alt="cashback" />
               </div>
@@ -181,148 +301,68 @@ export default function LandingCard(props) {
             <div className={classes.sectionTilte}>
               Thẻ được đăng ký nhiều {'>'}
             </div>
-            <Slider {...settings} className={classes.sliderStyle}>
-              <div className={classes.sliderItem}>
-                <div className="imageSlide">
-                  <img
-                    className={classes.imageSlide}
-                    src={shopeesuper}
-                    alt="cashback"
-                  />
-                </div>
-                <div className="floatAction">
-                  <button
-                    type="button"
-                    onClick={() => chooseThisCard(18)}
-                    className={classes.openCardBtn}
-                  >
-                    Mở thẻ
-                  </button>
-                  <button
-                    type="button"
-                    // onClick={() => props.setStep(17)}
-                    className={classes.compareCardBtn}
-                  >
-                    So sánh
-                  </button>
-                </div>
+            <Slider {...settings} className={clsx("card", classes.sliderStyle)}>
+              {mostRegisCards && mostRegisCards.map(card => (
+                <div className={classes.sliderItem}>
+                  <div className="imageSlide">
+                    <img
+                      className={classes.imageSlide}
+                      src={getCardImage(card.id_int)}
+                      alt="cashback"
+                    />
+                    <div className={classes.cardTitle}>{card.name}</div>
+                    <div className={classes.cardbenefit}>{getCardBenefit(card.benefit_id)}</div>
+                  </div>
+                  <div className="floatAction">
+                    <button
+                      type="button"
+                      onClick={() => chooseThisCard(card.id_int)}
+                      className={classes.openCardBtn}
+                    >
+                      Mở thẻ
+                    </button>
+                    <button
+                      type="button"
+                      // onClick={() => props.setStep(17)}
+                      className={classes.compareCardBtn}
+                    >
+                      So sánh
+                    </button>
+                  </div>
               </div>
-              <div className={classes.sliderItem}>
-                <div className="imageSlide">
-                  <img
-                    className={classes.imageSlide}
-                    src={stepupCard}
-                    alt="loyalty"
-                  />
-                </div>
-                <div className="floatAction">
-                  <button
-                    type="button"
-                    onClick={() => chooseThisCard(3)}
-                    className={classes.openCardBtn}
-                  >
-                    Mở thẻ
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => props.setStep(17)}
-                    className={classes.compareCardBtn}
-                  >
-                    So sánh
-                  </button>
-                </div>
-              </div>
-              <div className={classes.sliderItem}>
-                <div className="imageSlide">
-                  <img
-                    className={classes.imageSlide}
-                    src={ladyCard}
-                    alt="health"
-                  />
-                </div>
-                <div className="floatAction">
-                  <button
-                    type="button"
-                    onClick={() => chooseThisCard(2)}
-                    className={classes.openCardBtn}
-                  >
-                    Mở thẻ
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => props.setStep(17)}
-                    className={classes.compareCardBtn}
-                  >
-                    So sánh
-                  </button>
-                </div>
-              </div>
+            ))}
             </Slider>
             <div className={classes.sectionTilte}>Thẻ mới phát hành {'>'}</div>
-            <Slider {...settings} className={classes.sliderStyle}>
-              <div className={classes.sliderItem} width={170}>
-                <div className="imageSlide">
-                  <img src={shopeesuper} alt="cashback" />
-                </div>
-                <div className="floatAction">
-                  <button
-                    type="button"
-                    onClick={() => chooseThisCard(18)}
-                    className={classes.openCardBtn}
-                  >
-                    Mở thẻ
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => props.setStep(17)}
-                    className={classes.compareCardBtn}
-                  >
-                    So sánh
-                  </button>
-                </div>
+            <Slider {...settings} className={clsx("card", classes.sliderStyle)}>
+              {newCards && newCards.map(card => (
+                <div className={classes.sliderItem}>
+                  <div className="imageSlide">
+                    <img
+                      className={classes.imageSlide}
+                      src={getCardImage(card.id_int)}
+                      alt="cashback"
+                    />
+                    <div className={classes.cardTitle}>{card.name}</div>
+                    <div className={classes.cardbenefit}>{getCardBenefit(card.benefit_id)}</div>
+                  </div>
+                  <div className="floatAction">
+                    <button
+                      type="button"
+                      onClick={() => chooseThisCard(card.id_int)}
+                      className={classes.openCardBtn}
+                    >
+                      Mở thẻ
+                    </button>
+                    <button
+                      type="button"
+                      // onClick={() => props.setStep(17)}
+                      className={classes.compareCardBtn}
+                    >
+                      So sánh
+                    </button>
+                  </div>
               </div>
-              <div className={classes.sliderItem} width={170}>
-                <div className="imageSlide">
-                  <img src={theshopee} alt="loyalty" />
-                </div>
-                <div className="floatAction">
-                  <button
-                    type="button"
-                    onClick={() => chooseThisCard(17)}
-                    className={classes.openCardBtn}
-                  >
-                    Mở thẻ
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => props.setStep(17)}
-                    className={classes.compareCardBtn}
-                  >
-                    So sánh
-                  </button>
-                </div>
-              </div>
-              <div className={classes.sliderItem} width={170}>
-                <div className="imageSlide">
-                  <img src={platinumTravel} alt="health" />
-                </div>
-                <div className="floatAction">
-                  <button
-                    type="button"
-                    onClick={() => chooseThisCard(11)}
-                    className={classes.openCardBtn}
-                  >
-                    Mở thẻ
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => props.setStep(17)}
-                    className={classes.compareCardBtn}
-                  >
-                    So sánh
-                  </button>
-                </div>
-              </div>
+            ))}
             </Slider>
             <div
               className={classes.showAllCard}

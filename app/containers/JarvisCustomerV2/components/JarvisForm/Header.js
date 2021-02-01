@@ -16,6 +16,10 @@ const useStyles = makeStyles(theme => ({
     height: '38px',
     marginLeft: '0px',
     marginTop: '16px',
+    [theme.breakpoints.down('xs')]: {
+      padding: '0px',
+    },
+    
   },
   backButton: {
     marginRight: theme.spacing(1),
@@ -41,6 +45,15 @@ const useStyles = makeStyles(theme => ({
   labelContainer: {
     '&$alternativeLabel': {
       marginTop: 0,
+    },
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '12px',
+    },
+  },
+  labelStyle: {
+    fontSize: '12px',
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '10px',
     },
   },
 }));
@@ -71,6 +84,7 @@ export default function Header(props) {
                 classes={{
                   alternativeLabel: classes.alternativeLabel,
                   labelContainer: classes.labelContainer,
+                  label: classes.labelStyle,
                 }}
                 StepIconProps={{
                   classes: {

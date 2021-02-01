@@ -29,7 +29,7 @@
                     <path fill="#0A575F" d="M180.305 64.273c-8.781-6.352-16.289-15.012-26.344-19.055-22.089-8.88-18.817 12.799-12.241 20.948 7.362 9.122 15.681 17.427 23.522 26.141" mask="url(#10tedvd0fc)" opacity=".3"/>
                     <path fill="#0A575F" d="M216.816 23.011c-16.154-11.622-29.964-27.467-48.462-34.865-40.632-16.25-34.615 23.418-22.517 38.33 13.542 16.69 28.846 31.887 43.27 47.831" mask="url(#10tedvd0fc)" opacity=".3"/>
                 </g>
-                <text fill="#FFF" fill-opacity=".87" font-family="Roboto-Medium, Roboto" font-size="18" font-weight="400" letter-spacing=".129" transform="translate(-8 -297) translate(16 301)">
+                <text fill="#FFF" fill-opacity=".87" font-family="Sans,Arial;" font-size="18" font-weight="400" letter-spacing=".129" transform="translate(-8 -297) translate(16 301)">
                     <tspan x="45" y="45">Hoàn tiền</tspan>
                 </text>
             </g>

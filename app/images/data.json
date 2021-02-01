@@ -278,6 +278,7 @@
       "name": "Thẻ Step Up",
       "benefit_id": 0,
       "have_small_detail": true,
+      "mostRegis": true,
       "minLimit": "20",
       "maxLimit": "500",
       "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
@@ -349,6 +350,7 @@
       "name": "Thẻ VPLady",
       "benefit_id": 0,
       "have_small_detail": true,
+      "mostRegis": true,
       "minLimit": "20",
       "maxLimit": "500",
       "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
@@ -423,6 +425,7 @@
       "minLimit": "40",
       "maxLimit": "1000",
       "have_small_detail": true,
+      "newCard": true,
       "small_detail": "Miễn phí thường niên khi có 3 lần chi tiêu trong vòng 30 ngày đầu mở thẻ (mỗi lần từ 300.000 VNĐ)",
       "comparison": {
         "table_1": {
@@ -1150,6 +1153,7 @@
       "minLimit": "10",
       "maxLimit": "100",
       "have_small_detail": false,
+      "newCard": true,
       "small_detail": "",
       "comparison": {
         "table_1": {
@@ -1242,6 +1246,8 @@
       "maxLimit": "100",
       "have_small_detail": false,
       "small_detail": "",
+      "mostRegis": true,
+      "newCard": true,
       "comparison": {
         "table_1": {
           "type": "Super Platinum",
