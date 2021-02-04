@@ -4,11 +4,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import TabList from '@material-ui/lab/TabList';
 import TabContext from '@material-ui/lab/TabContext';
-import TabPanel from '@material-ui/lab/TabPanel';
 import Slider from 'react-slick';
 import clsx from 'clsx';
 import cashbackIcon from 'images/benefit/cashbackicon.svg';
@@ -36,15 +34,22 @@ import no1Card from 'images/cards/no1-card.png';
 import mc2Card from 'images/cards/mc2-card.png';
 import vnaCard from 'images/cards/vna-card.png';
 import platinumCard from 'images/cards/platinum-card.png';
+import dataCard from 'images/data.json';
 import Header from './Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import dataCard from 'images/data.json';
 import * as Actions from '../../actions';
 
 import JarvisFormStyle from './JarvisFormStyle';
 
 const useStyles = makeStyles(() => ({
+  pageContainer: {
+    width: '100%',
+    maxWidth: '500px',
+    backgroundColor: 'white',
+    marginTop: '24px',
+    borderRadius: 4,
+  },
   sliderStyle: {
     width: '100%',
     paddingLeft: '16px',
@@ -256,123 +261,142 @@ export default function LandingCard(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" />
-      <TabContext value={tab}>
-        <TabList
-          className={classes.tabStyle}
-          onChange={handleChange}
-          classes={{
-            indicator: classes.indicator,
-          }}
-        >
-          <Tab className={classes.tabItem} label="THẺ" value={1} />
-          <Tab className={classes.tabItem} label="VAY" value={2} />
-          <Tab className={classes.tabItem} label="XE HƠI" value={3} />
-        </TabList>
-        {tab === 1 && (
-          <>
-            <div className={classes.pageHeader}>Chọn sản phẩm phù hợp</div>
-            <div className={classes.sectionTilte}>
-             Danh mục thẻ theo lợi ích {'>'}
-            </div>
-            <Slider {...settings} className={clsx("benefit", classes.sliderStyle)}>
-              <div width={170}>
-                <img src={cashbackIcon} alt="cashback" />
+      <div className={classes.pageContainer}>
+        <Header className="header" />
+        <TabContext value={tab}>
+          <TabList
+            className={classes.tabStyle}
+            onChange={handleChange}
+            classes={{
+              indicator: classes.indicator,
+            }}
+          >
+            <Tab className={classes.tabItem} label="THẺ" value={1} />
+            <Tab className={classes.tabItem} label="VAY" value={2} />
+            <Tab className={classes.tabItem} label="XE HƠI" value={3} />
+          </TabList>
+          {tab === 1 && (
+            <>
+              <div className={classes.pageHeader}>Chọn sản phẩm phù hợp</div>
+              <div className={classes.sectionTilte}>
+                Danh mục thẻ theo lợi ích {'>'}
               </div>
-              <div width={170}>
-                <img src={loyaltyIcon} alt="loyalty" />
+              <Slider
+                {...settings}
+                className={clsx('benefit', classes.sliderStyle)}
+              >
+                <div width={170}>
+                  <img src={cashbackIcon} alt="cashback" />
+                </div>
+                <div width={170}>
+                  <img src={loyaltyIcon} alt="loyalty" />
+                </div>
+                <div width={170}>
+                  <img src={healthIcon} alt="health" />
+                </div>
+                <div width={170}>
+                  <img src={travelIcon} alt="travel" />
+                </div>
+                <div width={170}>
+                  <img src={shopeeIcon} alt="shopee" />
+                </div>
+                <div width={170}>
+                  <img src={mobifoneIcon} alt="mobifone" />
+                </div>
+                <div width={170}>
+                  <img src={withdrawIcon} alt="withdraw" />
+                </div>
+              </Slider>
+              <div className={classes.sectionTilte}>
+                Thẻ được đăng ký nhiều {'>'}
               </div>
-              <div width={170}>
-                <img src={healthIcon} alt="health" />
+              <Slider
+                {...settings}
+                className={clsx('card', classes.sliderStyle)}
+              >
+                {mostRegisCards &&
+                  mostRegisCards.map(card => (
+                    <div className={classes.sliderItem}>
+                      <div className="imageSlide">
+                        <img
+                          className={classes.imageSlide}
+                          src={getCardImage(card.id_int)}
+                          alt="cashback"
+                        />
+                        <div className={classes.cardTitle}>{card.name}</div>
+                        <div className={classes.cardbenefit}>
+                          {getCardBenefit(card.benefit_id)}
+                        </div>
+                      </div>
+                      <div className="floatAction">
+                        <button
+                          type="button"
+                          onClick={() => chooseThisCard(card.id_int)}
+                          className={classes.openCardBtn}
+                        >
+                          Mở thẻ
+                        </button>
+                        <button
+                          type="button"
+                          // onClick={() => props.setStep(17)}
+                          className={classes.compareCardBtn}
+                        >
+                          So sánh
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </Slider>
+              <div className={classes.sectionTilte}>
+                Thẻ mới phát hành {'>'}
               </div>
-              <div width={170}>
-                <img src={travelIcon} alt="travel" />
+              <Slider
+                {...settings}
+                className={clsx('card', classes.sliderStyle)}
+              >
+                {newCards &&
+                  newCards.map(card => (
+                    <div className={classes.sliderItem}>
+                      <div className="imageSlide">
+                        <img
+                          className={classes.imageSlide}
+                          src={getCardImage(card.id_int)}
+                          alt="cashback"
+                        />
+                        <div className={classes.cardTitle}>{card.name}</div>
+                        <div className={classes.cardbenefit}>
+                          {getCardBenefit(card.benefit_id)}
+                        </div>
+                      </div>
+                      <div className="floatAction">
+                        <button
+                          type="button"
+                          onClick={() => chooseThisCard(card.id_int)}
+                          className={classes.openCardBtn}
+                        >
+                          Mở thẻ
+                        </button>
+                        <button
+                          type="button"
+                          // onClick={() => props.setStep(17)}
+                          className={classes.compareCardBtn}
+                        >
+                          So sánh
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </Slider>
+              <div
+                className={classes.showAllCard}
+                onClick={() => props.setStep(16)}
+              >
+                Xem tất cả các thẻ tín dụng VPBank
               </div>
-              <div width={170}>
-                <img src={shopeeIcon} alt="shopee" />
-              </div>
-              <div width={170}>
-                <img src={mobifoneIcon} alt="mobifone" />
-              </div>
-              <div width={170}>
-                <img src={withdrawIcon} alt="withdraw" />
-              </div>
-            </Slider>
-            <div className={classes.sectionTilte}>
-              Thẻ được đăng ký nhiều {'>'}
-            </div>
-            <Slider {...settings} className={clsx("card", classes.sliderStyle)}>
-              {mostRegisCards && mostRegisCards.map(card => (
-                <div className={classes.sliderItem}>
-                  <div className="imageSlide">
-                    <img
-                      className={classes.imageSlide}
-                      src={getCardImage(card.id_int)}
-                      alt="cashback"
-                    />
-                    <div className={classes.cardTitle}>{card.name}</div>
-                    <div className={classes.cardbenefit}>{getCardBenefit(card.benefit_id)}</div>
-                  </div>
-                  <div className="floatAction">
-                    <button
-                      type="button"
-                      onClick={() => chooseThisCard(card.id_int)}
-                      className={classes.openCardBtn}
-                    >
-                      Mở thẻ
-                    </button>
-                    <button
-                      type="button"
-                      // onClick={() => props.setStep(17)}
-                      className={classes.compareCardBtn}
-                    >
-                      So sánh
-                    </button>
-                  </div>
-              </div>
-            ))}
-            </Slider>
-            <div className={classes.sectionTilte}>Thẻ mới phát hành {'>'}</div>
-            <Slider {...settings} className={clsx("card", classes.sliderStyle)}>
-              {newCards && newCards.map(card => (
-                <div className={classes.sliderItem}>
-                  <div className="imageSlide">
-                    <img
-                      className={classes.imageSlide}
-                      src={getCardImage(card.id_int)}
-                      alt="cashback"
-                    />
-                    <div className={classes.cardTitle}>{card.name}</div>
-                    <div className={classes.cardbenefit}>{getCardBenefit(card.benefit_id)}</div>
-                  </div>
-                  <div className="floatAction">
-                    <button
-                      type="button"
-                      onClick={() => chooseThisCard(card.id_int)}
-                      className={classes.openCardBtn}
-                    >
-                      Mở thẻ
-                    </button>
-                    <button
-                      type="button"
-                      // onClick={() => props.setStep(17)}
-                      className={classes.compareCardBtn}
-                    >
-                      So sánh
-                    </button>
-                  </div>
-              </div>
-            ))}
-            </Slider>
-            <div
-              className={classes.showAllCard}
-              onClick={() => props.setStep(16)}
-            >
-              Xem tất cả các thẻ tín dụng VPBank
-            </div>
-          </>
-        )}
-      </TabContext>
+            </>
+          )}
+        </TabContext>
+      </div>
     </JarvisFormStyle>
   );
 }

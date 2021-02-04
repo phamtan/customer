@@ -1,14 +1,21 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-redeclare */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 // import Camera from 'react-html5-camera-photo';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { Camera, Preview } from 'camera-component/camera-document';
-import ocrframe from 'images/ocrframe.png';
+import { Camera } from 'camera-component/camera-document';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import _ from "lodash";
 import JarvisFormStyle from './JarvisFormStyle';
-import Header from './Header';
 import 'react-html5-camera-photo/build/css/index.css';
+import * as Actions from '../../actions';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -93,53 +100,84 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const styles = theme => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)((props) => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles((theme) => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
 const CAPTURE_OPTIONS = {
   audio: false,
   video: { facingMode: 'environment' },
 };
 export default function Round2OCRGuide(props) {
-  const [allowCamera, setAllowCamera] = useState(false);
-  const [mediaStream, setMediaStream] = useState(null);
-  const [isCameraOpen, setIsCameraOpen] = useState(true);
-  const [cardImage, setCardImage] = useState();
   const classes = useStyles();
   const cameraRef = useRef();
-
-  useEffect(() => {
-    async function enableVideoStream() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia(
-          CAPTURE_OPTIONS,
-        );
-        setMediaStream(stream);
-        setAllowCamera(stream.active);
-      } catch (err) {
-        // Handle the error
-      }
-    }
-
-    if (!mediaStream) {
-      enableVideoStream();
-    } else {
-      return function cleanup() {
-        mediaStream.getTracks().forEach(track => {
-          track.stop();
-        });
-      };
-    }
-  }, [mediaStream, CAPTURE_OPTIONS]);
+  const [isCameraOpen, setIsCameraOpen] = useState(true);
+  const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
+  const [open, setOpen] = React.useState(false);
 
   function handleTakePhoto(blob) {
     // Do stuff with the photo...
-    setCardImage(blob);
-    props.setStep(21);
+    // setCardImage(blob);
+    return new Promise((resolve, reject) => {
+      props.dispatch(Actions.uploadOCRFront({
+        imgFront: blob,
+        customerId: jarvisCustomer.id,
+      }, resolve, reject))
+    }).then((res) => {
+      const response = JSON.parse(res.body);
+      if (res.statusCodeValue === 200) {
+        props.setStep(21);
+        // turnOffCamera();
+      } else {
+        setOpen(true);
+      }
+    }).catch(() => {
+      props.handleShoMessage({
+        message: 'Có lỗi xảy ra vui lòng thử lại',
+        severity: 'error',
+      });
+    })
   }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   return (
     <JarvisFormStyle>
       <div className={classes.container}>
         <div>
-          <ArrowBackIosIcon className={classes.backIcon} />
+          <ArrowBackIosIcon className={classes.backIcon}  onClick={() => props.setStep(19)} />
         </div>
         {isCameraOpen && (
           <div className={classes.cameraContainer}>
@@ -152,6 +190,17 @@ export default function Round2OCRGuide(props) {
           </div>
         )}
       </div>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Thông báo hình ảnh cần khắc phục
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography gutterBottom>
+            Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được gương mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và chụp lại.
+          </Typography>
+          
+        </DialogContent>
+      </Dialog>
     </JarvisFormStyle>
   );
 }

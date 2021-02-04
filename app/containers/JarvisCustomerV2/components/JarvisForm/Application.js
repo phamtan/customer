@@ -93,8 +93,10 @@ export default function Application(props) {
         />
       )}
       {step === 19 && <ChooseDocument setStep={setStep} {...props} />}
-      {step === 20 && <Round2OCR setStep={setStep} {...props} />}
-      {step === 21 && <Round2OCRBack setStep={setStep} {...props} />}
+      {step === 20 && <Round2OCR handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
+      {step === 21 && <Round2OCRBack handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
       {step === 22 && (
         <CompareCard
           handleShoMessage={handleShoMessage}

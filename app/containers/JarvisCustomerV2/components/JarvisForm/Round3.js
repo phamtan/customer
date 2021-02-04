@@ -109,7 +109,7 @@ export default function Round3(props) {
     values.docIssuedDate = moment(values.docIssuedDate).format('DD/MM/YYYY')
     values.dob = moment(values.dob).format('YYYY-MM-DDTHH:mm:ss.SSS')
     return new Promise((resolve, reject) => {
-    props.dispatch(Actions.checkLosRound2(values, resolve, reject));
+    props.dispatch(Actions.saveDataApp(values, resolve, reject));
     }).then(() => {
       props.setStep(23);
     }).catch(() => {

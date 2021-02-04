@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /*
  *
  * JarvisCustomerV2 reducer
@@ -21,7 +22,7 @@ export const initialState = {};
 
 /* eslint-disable default-case, no-param-reassign */
 const jarvisCustomerV2Reducer = (state = initialState, action) =>
-  produce(state, (/* draft */) => {
+  produce(state, () => {
     switch (action.type) {
       case DEFAULT_ACTION:
         break;
@@ -40,7 +41,7 @@ const jarvisCustomerV2Reducer = (state = initialState, action) =>
             ...state.jarvisCustomer,
             ...action.payload,
           },
-        };  
+        };
       case REQUEST_COUNTRIES:
         return { ...state, fetching: true, error: null };
       case REQUEST_COUNTRIES_SUCCESS:
@@ -53,15 +54,14 @@ const jarvisCustomerV2Reducer = (state = initialState, action) =>
         return { ...state, selections: action.payload };
       case REQUEST_PROVINCES_FAILURE:
         return { ...state, provinces: [] };
-      case SAVE_DATA_SUCCESS: 
+      case SAVE_DATA_SUCCESS:
         return {
           ...state,
           jarvisCustomer: {
             ...state.jarvisCustomer,
             ...action.payload,
           },
-        }
-        
+        };
     }
   });
 

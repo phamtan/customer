@@ -3,11 +3,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import { yupResolver } from '@hookform/resolvers';
-import * as yup from 'yup';
 import chooseDocument from 'images/chooseDocument.svg';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
@@ -47,7 +43,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
   },
   guiline: {
-    width: '315px',
+    width: '100%',
     height: '16px',
     fontSize: '14px',
     fontWeight: '500',
@@ -56,7 +52,7 @@ const useStyles = makeStyles(() => ({
     textTransform: 'uppercase',
   },
   action: {
-    width: '382px',
+    width: '100%',
     height: '46px',
     margin: '28px 6px 28px',
     padding: '15px 159.4px 15px 105.6px',
@@ -71,38 +67,19 @@ const useStyles = makeStyles(() => ({
     fontSize: '16px',
   },
   selectDocumentType: {
-    width: '382px',
+    width: '90%',
     height: '70px',
-    margin: '18px 16px 16px',
+    margin: 'auto',
+    marginTop: '16px',
+    marginBottom: '16px',
     padding: '23px 16px',
     borderRadius: '8px',
     backgroundColor: '#e4e4e4',
   },
 }));
 
-const schema = yup.object().shape({
-  fullName: yup.string().required('Bạn chưa nhập họ tên'),
-  phone: yup.string().required('Bạn chưa nhập số điện thoại'),
-  email: yup
-    .string()
-    .required('Bạn chưa nhập email')
-    .email('Email không đúng định dạng'),
-});
-
 export default function Round1(props) {
-  const { register, handleSubmit, errors } = useForm({
-    reValidateMode: 'onChange',
-    shouldFocusError: true,
-    shouldUnregister: true,
-    defaultValues: {},
-    resolver: yupResolver(schema),
-  });
   const classes = useStyles();
-
-  function onSubmitForm(values) {
-    props.dispatch(Actions.saveData(values));
-    props.setStep(1);
-  }
 
   return (
     <JarvisFormStyle>

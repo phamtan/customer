@@ -7,12 +7,20 @@
 /* eslint-disable react/no-this-in-sfc */
 import React, { useState, useEffect } from 'react';
 // import Camera from 'react-html5-camera-photo';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import FlipCameraIosOutlinedIcon from '@material-ui/icons/FlipCameraIosOutlined';
 import RecordRTC from 'recordrtc';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+import Slider from '@material-ui/core/Slider';
+import _ from 'lodash';
 import captureBtn from 'images/capture.svg';
-import ocrframe from 'images/livenessframe.png';
 import * as Actions from '../../actions';
 
 const useStyles = makeStyles(theme => ({
@@ -110,10 +118,116 @@ const useStyles = makeStyles(theme => ({
       width: '20vw',
       height: '30vw',
     },
-  }
+  },
+  root: {
+    margin: 0,
+    padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+  dialogPaper: {
+    margin: '16px',
+  },
 }));
 
+const styles = theme => ({
+  root: {
+    margin: 0,
+    // padding: theme.spacing(2),
+  },
+  closeButton: {
+    position: 'absolute',
+    right: theme.spacing(1),
+    top: theme.spacing(1),
+    color: theme.palette.grey[500],
+  },
+});
+
+const DialogTitle = withStyles(styles)(props => {
+  const { children, classes, onClose, ...other } = props;
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </MuiDialogTitle>
+  );
+});
+
+const DialogContent = withStyles(theme => ({
+  root: {
+    padding: theme.spacing(2),
+  },
+}))(MuiDialogContent);
+
+const PrettoSlider = withStyles({
+  root: {
+    width: '90%',
+    margin: 'auto',
+    color: '#52af77',
+    height: 36,
+  },
+  thumb: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 36,
+    width: 48,
+    backgroundColor: '#fff',
+    border: '2px solid #979797',
+    marginTop: 0,
+    marginLeft: 0,
+    '&:focus, &:hover, &$active': {
+      boxShadow: 'inherit',
+    },
+    '& .arrow': {
+      // display: inline-block !important;
+      height: 24,
+      width: 24,
+      color: 'black',
+      // backgroundColor: '#000000',
+      marginLeft: 1,
+      marginRight: 1,
+    },
+    borderRadius: 0,
+  },
+  active: {
+    height: 36,
+  },
+  valueLabel: {
+    left: 'calc(-50% + 4px)',
+  },
+  track: {
+    height: 36,
+    borderRadius: 2,
+  },
+  rail: {
+    height: 36,
+    borderRadius: 2,
+  },
+})(Slider);
+
+function CustomThumbComponent(props) {
+  return (
+    <span {...props}>
+      <AccessAlarmIcon className="arrow" />
+    </span>
+  );
+}
+
 export default function VideoKYC(props) {
+  const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
   const classes = useStyles();
   const [isMobile] = useState(
     /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -128,6 +242,7 @@ export default function VideoKYC(props) {
   const [useFrontCamera, setUseFrontCamera] = useState(null);
   const [recording, setRecording] = useState(false);
   const [process, setProcess] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     openCamera();
@@ -216,27 +331,55 @@ export default function VideoKYC(props) {
   async function recordVideo() {
     const constraints = {
       video: { width: 360, height: 240 },
-      audio: true,
+      type: 'video',
     };
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then(async function(stream) {
-        const recorder = RecordRTC(stream, constraints);
-        recorder.startRecording();
-        setRecording(true);
-        const sleep = m => new Promise(r => setTimeout(r, m));
-        await sleep(7000);
+    const stream = localMediaStream;
+    const recorder = RecordRTC(stream, constraints);
+    recorder.startRecording();
+    setRecording(true);
+    const sleep = m => new Promise(r => setTimeout(r, m));
+    await sleep(7000);
 
-        recorder.stopRecording(function() {
-          setRecording(false);
-          setProcess(true);
-          const blob = recorder.getBlob();
-          props.dispatch(Actions.uploadLiveNess({
-            video: blob,
-            customerId: 29,
-          }))
+    recorder.stopRecording(function() {
+      setRecording(false);
+      setProcess(true);
+      const blob = recorder.getBlob();
+      // eslint-disable-next-line no-unused-vars
+      const callLiveness = new Promise((resolve, reject) => {
+        props.dispatch(
+          Actions.uploadLiveNess(
+            {
+              video: blob,
+              customerId: jarvisCustomer.id,
+            },
+            resolve,
+            reject,
+          ),
+        );
+      })
+        .then(res => {
+          // props.setStep(19);
+          const response = JSON.parse(res.body);
+          if (
+            res &&
+            res.body &&
+            response.is_live &&
+            !response.is_deepfake &&
+            res.statusCodeValue === 200
+          ) {
+            props.setStep(19);
+            turnOffCamera();
+          } else {
+            setOpen(true);
+          }
+        })
+        .catch(() => {
+          props.handleShoMessage({
+            message: 'Có lỗi xảy ra vui lòng thử lại',
+            severity: 'error',
+          });
         });
-      });
+    });
   }
 
   function restartCamera() {
@@ -253,12 +396,19 @@ export default function VideoKYC(props) {
     restartCamera();
   }
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div className={classes.container}>
       <div className={classes.cameraContainer}>
-        <video id="myVideo" className={classes.video} />
+        <video id="myVideo" className={classes.video} playsinline />
       </div>
-      <ArrowBackIosIcon className={classes.backIcon} />
+      <ArrowBackIosIcon
+        className={classes.backIcon}
+        onClick={() => props.setStep(17)}
+      />
       {isMobile && (
         <FlipCameraIosOutlinedIcon
           onClick={() => changeCamera()}
@@ -281,6 +431,35 @@ export default function VideoKYC(props) {
         />
       )}
       <canvas style={{ display: 'none' }} />
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+        classes={{
+          paper: classes.dialogPaper,
+        }}
+      >
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          Thông báo hình ảnh cần khắc phục
+        </DialogTitle>
+        <DialogContent dividers>
+          <Typography gutterBottom>
+            Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được gương
+            mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và chụp lại.
+            <div>
+              <div>Tôi đồng ý</div>
+              <PrettoSlider
+                valueLabelDisplay="none"
+                aria-label="pretto slider"
+                defaultValue={0}
+                min={0}
+                max={100}
+                ThumbComponent={CustomThumbComponent}
+              />
+            </div>
+          </Typography>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

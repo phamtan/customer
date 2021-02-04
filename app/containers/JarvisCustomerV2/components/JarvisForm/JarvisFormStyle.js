@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import backGround from 'images/background.png';
 
 const JarvisFormStyle = styled.div`
   width: 100%;
@@ -9,15 +10,14 @@ const JarvisFormStyle = styled.div`
   font-family: Roboto, 'Roboto', sans-serif;
   background-color: #ebebeb;
   min-height: 100vh;
+  // background: url(${backGround});
   .header {
     width: 100%;
     height: 68px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 16px;
     padding-left: 16px;
-    margin-right: 20px;
     background-color: white;
   }
   .btnBack {

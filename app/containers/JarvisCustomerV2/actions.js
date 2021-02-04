@@ -24,6 +24,9 @@ import {
   CHECK_LOS_ROUND2,
   CHECK_LOS_RESULT_ROUND2,
   SAVE_DATA_APP,
+  UPLOAD_OCR_FRONT,
+  UPLOAD_OCR_BACK,
+  FACE_MATCHING,
 } from './constants';
 
 export function defaultAction() {
@@ -135,10 +138,30 @@ export function checkLosRound1(data, resolve, reject) {
   }
 }
 
-export function uploadLiveNess(data) {
+export function uploadLiveNess(data, resolve, reject) {
   return {
     type: UPLOAD_VIDEO_PENDING,
     payload: data,
+    resolve,
+    reject,
+  }
+}
+
+export function uploadOCRFront(data, resolve, reject) {
+  return {
+    type: UPLOAD_OCR_FRONT,
+    payload: data,
+    resolve,
+    reject,
+  }
+}
+
+export function uploadOCRBack(data, resolve, reject) {
+  return {
+    type: UPLOAD_OCR_BACK,
+    payload: data,
+    resolve,
+    reject,
   }
 }
 
@@ -164,6 +187,15 @@ export function saveDataApp(form, resolve, reject) {
   return {
     type: SAVE_DATA_APP,
     payload: form,
+    resolve,
+    reject,
+  };
+}
+
+export function faceMatching(data, resolve, reject) {
+  return {
+    type: FACE_MATCHING,
+    payload: data,
     resolve,
     reject,
   };

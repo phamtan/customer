@@ -14,6 +14,9 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     backgroundColor: 'white',
     minHeight: '100vh',
+    display:'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   guilineImg: {
     width: '100%',
@@ -24,15 +27,16 @@ const useStyles = makeStyles(() => ({
     fontSize: '24px',
     width: '100%',
     textAlign: 'left',
-    marginLeft: '16px',
+    paddingLeft: '16px',
     marginTop: '16px',
     marginBottom: '24px',
   },
   secondHeader: {
+    width: '100%',
     fontSize: '16px',
     width: '100%',
     textAlign: 'left',
-    marginLeft: '8px',
+    paddingLeft: '16px',
     paddingRight: '16px',
   },
   dividerStyle: {
@@ -54,9 +58,9 @@ const useStyles = makeStyles(() => ({
     textTransform: 'uppercase',
   },
   action: {
-    width: '382px',
+    width: '93%',
     height: '46px',
-    margin: '16px 16px 16px 16px',
+    marginTop: '30px',
     borderRadius: '4px',
     backgroundColor: '#028547',
     color: 'white',
@@ -68,6 +72,7 @@ const useStyles = makeStyles(() => ({
     fontSize: '16px',
   },
   guilineRow: {
+    width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -99,7 +104,7 @@ export default function LivenessGuiline(props) {
         <Divider className={classes.dividerStyle} />
         <div className={classes.guilineRow}>
           <AccountCircleOutlinedIcon className={classes.guilineIcon} />
-          <div className={classes.secondHeader}>Hãy nhìn thẳng vào camera</div>
+          <div className={classes.secondHeader} onClick={() => props.setStep(5)}>Hãy nhìn thẳng vào camera</div>
         </div>
         <div className={classes.guilineRow}>
           <EmojiEmotionsOutlinedIcon className={classes.guilineIcon} />

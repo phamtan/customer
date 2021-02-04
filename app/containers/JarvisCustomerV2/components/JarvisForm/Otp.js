@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import { makeStyles } from '@material-ui/core/styles';
@@ -11,7 +11,7 @@ import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import * as Actions from '../../actions';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
     backgroundColor: 'white',
@@ -53,6 +53,9 @@ const useStyles = makeStyles(() => ({
     margin: '4px',
     border: 'none',
     textAlign: 'center',
+    [theme.breakpoints.up('sm')]: {
+      width: '50px',
+    },
   },
   otpContainer: {
     display: 'flex',
@@ -90,14 +93,23 @@ export default function OTP(props) {
   
   // Define state otpValues = array with <length> items with default value = ""
   const [otpValues, setOTPValues] = useState(Array(6).fill(""));
+  const inputRef = useRef(Array(6).fill(""));
   
 
   const classes = useStyles();
 
   function handleOtpChange(value, index) {
-    let currentOtp = [...otpValues];
-    currentOtp[index] = value;
-    setOTPValues(currentOtp);
+    if (value) {
+      let currentOtp = [...otpValues];
+      currentOtp[index] = value;
+      setOTPValues(currentOtp);
+      const nextSibling = document.querySelector(
+        `input[name=otp-${index + 1}]`
+      );
+      if (nextSibling !== null) {
+        nextSibling.focus();
+      }
+    }
   }
 
   function onSubmitForm() {
@@ -107,7 +119,7 @@ export default function OTP(props) {
         otpNumber: otpValues.join(""),
       }, resolve, reject))
     }).then(() => {
-      props.setStep(5);  
+      props.setStep(17);  
     }).catch(() => {
       props.handleShoMessage({
         message: 'Lỗi xác thực OTP',
@@ -115,6 +127,10 @@ export default function OTP(props) {
       });
     });
     
+  }
+
+  const resetInput = (e) => {
+    e.target.value = "";
   }
 
   return (
@@ -133,16 +149,18 @@ export default function OTP(props) {
                 .map((_, index) => (
                   <TextField
                     key={`otp-${index}`}
-                    name="otp"
-                    ref={register}
+                    name={`otp-${index}`}
+                    ref={inputRef[index]}
+                    onFocus={(e) => e.target.value = ""}
+                    // ref={register}
                     type="number"
                     variant="outlined"
                     InputProps={{
                       className: classes.otpItem,
                     }}
-                    onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,1)
-                    }}
+                    // onInput={(e)=>{ 
+                    //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(1,1)
+                    // }}
                     onChange={(e) => handleOtpChange(e.target.value, index)}
                   />
                 ))}
@@ -152,16 +170,18 @@ export default function OTP(props) {
                 .map((_, index) => (
                   <TextField
                     key={`otp-${index+3}`}
-                    name="otp"
-                    ref={register}
+                    name={`otp-${index+3}`}
+                    onFocus={(e) => e.target.value = ""}
+                    // ref={register}
+                    ref={inputRef[index+3]}
                     type="number"
                     variant="outlined"
                     InputProps={{
                       className: classes.otpItem,
                     }}
-                    onInput={(e)=>{ 
-                        e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,1)
-                    }}
+                    // onInput={(e)=>{ 
+                    //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(1,1)
+                    // }}
                     onChange={(e) => handleOtpChange(e.target.value, index+3)}
                   />
                 ))}

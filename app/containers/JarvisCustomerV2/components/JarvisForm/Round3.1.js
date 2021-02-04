@@ -264,7 +264,7 @@ export default function Round3(props) {
                       getSelectedValue('RELATIONSHIP', value)
                     }
                     onChange={(event, newValue) => {
-                      onChange(newValue.label);
+                      onChange(newValue.value);
                     }}
                     autoHighlight
                     getOptionLabel={(option) => option.label}
@@ -313,7 +313,7 @@ export default function Round3(props) {
                       option: classes.option,
                     }}
                     onChange={(event, newValue) => {
-                      onChange(newValue.label);
+                      onChange(newValue.value);
                     }}
                     autoHighlight
                     getOptionLabel={(option) => option.label}
@@ -353,7 +353,7 @@ export default function Round3(props) {
                       option: classes.option,
                     }}
                     onChange={(event, newValue) => {
-                      onChange(newValue.label);
+                      onChange(newValue.value);
                     }}
                     autoHighlight
                     getOptionLabel={(option) => option.label}
