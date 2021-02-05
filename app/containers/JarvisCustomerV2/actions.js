@@ -22,11 +22,12 @@ import {
   REQUEST_SELECTION_SUCCESS,
   CHECK_LOS_RESULT_ROUND1,
   CHECK_LOS_ROUND2,
-  CHECK_LOS_RESULT_ROUND2,
+  REQUEST_COMPANIES_SUCCESS,
   SAVE_DATA_APP,
   UPLOAD_OCR_FRONT,
   UPLOAD_OCR_BACK,
   FACE_MATCHING,
+  REQUEST_COMPANIES_SEARCH,
 } from './constants';
 
 export function defaultAction() {
@@ -59,7 +60,6 @@ export function createApplication(form) {
     payload: form,
   };
 }
-
 
 export function callapi() {
   return {
@@ -106,6 +106,20 @@ export function getProvincesError() {
   };
 }
 
+export function getCompaniesSuccess(data) {
+  return {
+    type: REQUEST_COMPANIES_SUCCESS,
+    payload: data,
+  };
+}
+
+export function getCompaniesSearch(data) {
+  return {
+    type: REQUEST_COMPANIES_SEARCH,
+    payload: data,
+  };
+}
+
 export function createApplicationSuccess(data) {
   return {
     type: SAVE_DATA_SUCCESS,
@@ -125,7 +139,7 @@ export function verifyOtp(data, resolve, reject) {
     type: VERIFY_OTP,
     payload: data,
     resolve,
-    reject
+    reject,
   };
 }
 
@@ -135,7 +149,7 @@ export function checkLosRound1(data, resolve, reject) {
     payload: data,
     resolve,
     reject,
-  }
+  };
 }
 
 export function uploadLiveNess(data, resolve, reject) {
@@ -144,7 +158,7 @@ export function uploadLiveNess(data, resolve, reject) {
     payload: data,
     resolve,
     reject,
-  }
+  };
 }
 
 export function uploadOCRFront(data, resolve, reject) {
@@ -153,7 +167,7 @@ export function uploadOCRFront(data, resolve, reject) {
     payload: data,
     resolve,
     reject,
-  }
+  };
 }
 
 export function uploadOCRBack(data, resolve, reject) {
@@ -162,7 +176,7 @@ export function uploadOCRBack(data, resolve, reject) {
     payload: data,
     resolve,
     reject,
-  }
+  };
 }
 
 export function checkLosResult(data, resolve, reject) {
@@ -171,7 +185,7 @@ export function checkLosResult(data, resolve, reject) {
     payload: data,
     resolve,
     reject,
-  }
+  };
 }
 
 export function checkLosRound2(data, resolve, reject) {
@@ -180,7 +194,7 @@ export function checkLosRound2(data, resolve, reject) {
     payload: data,
     resolve,
     reject,
-  }
+  };
 }
 
 export function saveDataApp(form, resolve, reject) {

@@ -1,14 +1,17 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import { makeStyles } from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import * as yup from 'yup';
 import JarvisFormStyle from './JarvisFormStyle';
@@ -87,6 +90,7 @@ export default function Round3(props) {
   const classes = useStyles();
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
   const selections = _.get(props, 'jarvisCustomerV2.selections', []);
+  const companies = _.get(props, 'jarvisCustomerV2.companies', []);
   const [maritalStatus, setMaritalStatus] = useState(null);
   const { register, handleSubmit, errors, control, setValue } = useForm({
     reValidateMode: 'onChange',
@@ -99,43 +103,52 @@ export default function Round3(props) {
   function onSubmitForm(values) {
     return new Promise((resolve, reject) => {
       props.dispatch(Actions.saveDataApp(values, resolve, reject));
-    }).then(() => {
-      props.setStep(8);
-    }).catch(() => {
-      props.handleShoMessage({
-        message: 'Có lỗi xảy ra vui lòng thử lại',
-        severity: 'error',
-      });
     })
+      .then(() => {
+        props.setStep(8);
+      })
+      .catch(() => {
+        props.handleShoMessage({
+          message: 'Có lỗi xảy ra vui lòng thử lại',
+          severity: 'error',
+        });
+      });
   }
 
   function getSelectedValue(category, value) {
-    const item = selections.find((opt)=>{
+    const item = selections.find(opt => {
       if (opt.category === category && opt.code === value)
-        return {value: opt.code, label: opt.nameVi};
-    })
-    return {value: item && item.code, label: item && item.nameVi} || {};
+        return { value: opt.code, label: opt.nameVi };
+    });
+    return { value: item && item.code, label: item && item.nameVi } || {};
   }
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={3} showStep/>
+      <Header className="header" step={3} showStep />
       <div className={classes.formContainer}>
-      <div className={classes.titleHeader}>Thông tin cá nhân</div>
-      <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
-        <div className="formWrapper">
-          <div className="form-group">
-            <Controller
+        <div className={classes.titleHeader}>Thông tin cá nhân</div>
+        <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
+          <div className="formWrapper">
+            <div className="form-group">
+              <Controller
                 name="maritalStatus"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === 'MARITALSTATUS').map(selection => ({
-                      value: selection.code,
-                      label: selection.nameVi,
-                    }))}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection => selection.category === 'MARITALSTATUS',
+                        )
+                        .map(selection => ({
+                          value: selection.code,
+                          label: selection.nameVi,
+                        }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -144,11 +157,11 @@ export default function Round3(props) {
                       setMaritalStatus(newValue.value);
                       if (newValue.value === 'MARRIED') {
                         setValue('relationRefOne', 'S');
-                      }                      
+                      }
                     }}
                     autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Tình trạng kết hôn"
@@ -161,114 +174,138 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.maritalStatus && (
-              <span className="formError">{errors.maritalStatus.message}</span>
-            )}
-          </div>
-          <div className="form-group">
-            <Controller 
-              as={TextField} 
-              name="fullNameRefOne" 
-              fullWidth 
-              variant="outlined" 
-              label={maritalStatus && maritalStatus === "MARRIED" ? "Họ tên Vợ/Chồng" : "Họ tên người tham chiếu 1"}
-              control={control} />
-            {errors.fullNameRefOne && (
-              <span className="formError">
-                {errors.fullNameRefOne.message}
-              </span>
-            )}
-          </div>
-          {maritalStatus && maritalStatus === 'MARRIED' && 
-            <>
-              <div className="form-group">
-                <Controller
-                  name="birthDateSpouse"
-                  control={control}
-                  render={({ value, onChange }) => (
-                    <MuiPickersUtilsProvider utils={MomentUtils}>
-                      <KeyboardDatePicker
-                        autoOk
-                        variant="inline"
-                        inputVariant="outlined"
-                        label="Ngày sinh"
-                        format="DD/MM/YYYY"
-                        value={value}
-                        InputAdornmentProps={{ position: "end" }}
-                        onChange={date => onChange(date)}
-                        fullWidth
-                      />
-                    </MuiPickersUtilsProvider>
-                  )}
-                />
-              </div> 
-              <div className="form-group">
+              {errors.maritalStatus && (
+                <span className="formError">
+                  {errors.maritalStatus.message}
+                </span>
+              )}
+            </div>
+            <div className="form-group">
               <Controller
-                name="documentTypeSpouse"
+                as={TextField}
+                name="fullNameRefOne"
+                fullWidth
+                variant="outlined"
+                label={
+                  maritalStatus && maritalStatus === 'MARRIED'
+                    ? 'Họ tên Vợ/Chồng'
+                    : 'Họ tên người tham chiếu 1'
+                }
                 control={control}
-                render={({ value, onChange }) => (
-                  <Autocomplete
-                    style={{ width: '90vw' }}
-                    options={DOCUMENT_TYPE}
-                    classes={{
-                      option: classes.option,
-                    }}
-                    onChange={(event, newValue) => {
-                      onChange(newValue.value);
-                    }}
-                    autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Loại giấy tờ"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
+              />
+              {errors.fullNameRefOne && (
+                <span className="formError">
+                  {errors.fullNameRefOne.message}
+                </span>
+              )}
+            </div>
+            {maritalStatus && maritalStatus === 'MARRIED' && (
+              <>
+                <div className="form-group">
+                  <Controller
+                    name="birthDateSpouse"
+                    control={control}
+                    render={({ value, onChange }) => (
+                      <MuiPickersUtilsProvider utils={MomentUtils}>
+                        <KeyboardDatePicker
+                          autoOk
+                          variant="inline"
+                          inputVariant="outlined"
+                          label="Ngày sinh"
+                          format="DD/MM/YYYY"
+                          value={value}
+                          InputAdornmentProps={{ position: 'end' }}
+                          onChange={date => onChange(date)}
+                          fullWidth
+                        />
+                      </MuiPickersUtilsProvider>
+                    )}
+                  />
+                </div>
+                <div className="form-group">
+                  <Controller
+                    name="documentTypeSpouse"
+                    control={control}
+                    render={({ value, onChange }) => (
+                      <Autocomplete
+                        style={{ width: '90vw' }}
+                        options={DOCUMENT_TYPE}
+                        classes={{
+                          option: classes.option,
                         }}
+                        onChange={(event, newValue) => {
+                          onChange(newValue.value);
+                        }}
+                        autoHighlight
+                        getOptionLabel={option => option.label}
+                        renderInput={params => (
+                          <TextField
+                            {...params}
+                            label="Loại giấy tờ"
+                            variant="outlined"
+                            inputProps={{
+                              ...params.inputProps,
+                              autoComplete: 'new-password', // disable autocomplete and autofill
+                            }}
+                          />
+                        )}
                       />
                     )}
                   />
-                )}
-              />
-              {errors.documentTypeSpouse && (
-                <span className="formError">{errors.documentTypeSpouse.message}</span>
-              )}
-            </div>
+                  {errors.documentTypeSpouse && (
+                    <span className="formError">
+                      {errors.documentTypeSpouse.message}
+                    </span>
+                  )}
+                </div>
 
+                <div className="form-group">
+                  <Controller
+                    as={TextField}
+                    name="documentNumberSpouse"
+                    type="number"
+                    fullWidth
+                    variant="outlined"
+                    label="Số CMND"
+                    control={control}
+                  />
+                  {errors.documentNumberSpouse && (
+                    <span className="formError">
+                      {errors.documentNumberSpouse.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
             <div className="form-group">
-              <Controller as={TextField} name="documentNumberSpouse" type="number" fullWidth variant="outlined" label="Số CMND" control={control} />
-              {errors.documentNumberSpouse && (
-                <span className="formError">{errors.documentNumberSpouse.message}</span>
-              )}
-            </div>
-            </>
-          }
-          <div className="form-group">
-            <Controller
+              <Controller
                 name="relationRefOne"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === 'RELATIONSHIP').map(selection => ({
-                      value: selection.code,
-                      label: selection.nameVi,
-                    }))}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection => selection.category === 'RELATIONSHIP',
+                        )
+                        .map(selection => ({
+                          value: selection.code,
+                          label: selection.nameVi,
+                        }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
-                    value={
-                      getSelectedValue('RELATIONSHIP', value)
-                    }
+                    value={getSelectedValue('RELATIONSHIP', value)}
                     onChange={(event, newValue) => {
                       onChange(newValue.value);
                     }}
                     autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Mối quan hệ với chủ thẻ"
@@ -281,34 +318,49 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.relationRefOne && (
-              <span className="formError">
-                {errors.relationRefOne.message}
-              </span>
-            )}
-          </div>
+              {errors.relationRefOne && (
+                <span className="formError">
+                  {errors.relationRefOne.message}
+                </span>
+              )}
+            </div>
 
-          <div className="form-group">
-            <Controller as={TextField} name="mobileNumberRefOne" fullWidth variant="outlined" label="Số điện thoại" control={control} />
-            {errors.mobileNumberRefOne && (
-              <span className="formError">
-                {errors.mobileNumberRefOne.message}
-              </span>
-            )}
-          </div>
+            <div className="form-group">
+              <Controller
+                as={TextField}
+                name="mobileNumberRefOne"
+                fullWidth
+                variant="outlined"
+                label="Số điện thoại"
+                control={control}
+              />
+              {errors.mobileNumberRefOne && (
+                <span className="formError">
+                  {errors.mobileNumberRefOne.message}
+                </span>
+              )}
+            </div>
 
-          <div className="form-group">
-            <Controller
+            <div className="form-group">
+              <Controller
                 name="employmentStatus"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === 'EMPLOYMENTSTATUS').map(selection => ({
-                      value: selection.code,
-                      label: selection.nameVi,
-                    }))}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection =>
+                            selection.category === 'EMPLOYMENTSTATUS',
+                        )
+                        .map(selection => ({
+                          value: selection.code,
+                          label: selection.nameVi,
+                        }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -316,8 +368,8 @@ export default function Round3(props) {
                       onChange(newValue.value);
                     }}
                     autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Tình trạng công việc hiện tại"
@@ -330,25 +382,32 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.employmentStatus && (
-              <span className="formError">
-                {errors.employmentStatus.message}
-              </span>
-            )}
-          </div>
+              {errors.employmentStatus && (
+                <span className="formError">
+                  {errors.employmentStatus.message}
+                </span>
+              )}
+            </div>
 
-          <div className="form-group">
-            <Controller
-                name="incomeType"
+            <div className="form-group">
+              <Controller
+                name="mainIncomeType"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === 'MAININCOME').map(selection => ({
-                      value: selection.code,
-                      label: selection.nameVi,
-                    }))}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection => selection.category === 'MAININCOME',
+                        )
+                        .map(selection => ({
+                          value: selection.code,
+                          label: selection.nameVi,
+                        }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -356,8 +415,8 @@ export default function Round3(props) {
                       onChange(newValue.value);
                     }}
                     autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Hình thức nhận lương"
@@ -370,27 +429,32 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.incomeType && (
-              <span className="formError">
-                {errors.incomeType.message}
-              </span>
-            )}
-          </div>
+              {errors.incomeType && (
+                <span className="formError">{errors.incomeType.message}</span>
+              )}
+            </div>
 
-          <div className="form-group">
-            <Controller as={TextField} name="monthlyIncome" fullWidth variant="outlined" label="Thu nhập hàng tháng" control={control} />
-            {errors.monthlyIncome && (
-              <span className="formError">
-                {errors.monthlyIncome.message}
-              </span>
-            )}
-          </div>
+            <div className="form-group">
+              <Controller
+                as={TextField}
+                name="monthlyIncome"
+                fullWidth
+                variant="outlined"
+                label="Thu nhập hàng tháng"
+                control={control}
+              />
+              {errors.monthlyIncome && (
+                <span className="formError">
+                  {errors.monthlyIncome.message}
+                </span>
+              )}
+            </div>
 
-          <button type="submit" className={classes.action}>
-            Tiếp tục
-          </button>
-        </div>
-      </form>
+            <button type="submit" className={classes.action}>
+              Tiếp tục
+            </button>
+          </div>
+        </form>
       </div>
     </JarvisFormStyle>
   );

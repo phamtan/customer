@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
@@ -71,7 +71,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-
 const QUESTION = [
   { value: 'htm', label: 'Họ tên mẹ' },
   { value: 'mg', label: 'Nơi sinh ra của mẹ' },
@@ -99,7 +98,10 @@ export default function Round3(props) {
     defaultValues: {
       ...jarvisCustomer,
       id: jarvisCustomer.id,
-      haveGreenCard: jarvisCustomer && jarvisCustomer.haveGreenCard ? jarvisCustomer.haveGreenCard : "0"
+      haveGreenCard:
+        jarvisCustomer && jarvisCustomer.haveGreenCard
+          ? jarvisCustomer.haveGreenCard
+          : '0',
     },
     resolver: yupResolver(schema),
   });
@@ -118,35 +120,47 @@ export default function Round3(props) {
     <JarvisFormStyle>
       <Header className="header" step={3} showStep />
       <div className={classes.formContainer}>
-      <div className={classes.titleHeader}>Thông tin khác</div>
-      <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
-        <div className="formWrapper">
-          <div className="form-group">
-            <Controller 
-              as={TextField} 
-              name="fullNameRefTwo" 
-              fullWidth 
-              variant="outlined" 
-              label={maritalStatus && maritalStatus === "MARRIED" ? "Họ tên người tham chiếu 1" : "Họ tên người tham chiếu 2"}
-              control={control} />
-            {errors.fullNameRefTwo && (
-              <span className="formError">
-                {errors.fullNameRefTwo.message}
-              </span>
-            )}
-          </div>
-          <div className="form-group">
-            <Controller
+        <div className={classes.titleHeader}>Thông tin khác</div>
+        <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
+          <div className="formWrapper">
+            <div className="form-group">
+              <Controller
+                as={TextField}
+                name="fullNameRefTwo"
+                fullWidth
+                variant="outlined"
+                label={
+                  maritalStatus && maritalStatus === 'MARRIED'
+                    ? 'Họ tên người tham chiếu 1'
+                    : 'Họ tên người tham chiếu 2'
+                }
+                control={control}
+              />
+              {errors.fullNameRefTwo && (
+                <span className="formError">
+                  {errors.fullNameRefTwo.message}
+                </span>
+              )}
+            </div>
+            <div className="form-group">
+              <Controller
                 name="relationRefTwo"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === 'RELATIONSHIP').map(selection => ({
-                      value: selection.code,
-                      label: selection.nameVi,
-                    }))}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection => selection.category === 'RELATIONSHIP',
+                        )
+                        .map(selection => ({
+                          value: selection.code,
+                          label: selection.nameVi,
+                        }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -154,8 +168,8 @@ export default function Round3(props) {
                       onChange(newValue.label);
                     }}
                     autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Mối quan hệ với chủ thẻ"
@@ -168,32 +182,47 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.relationRefTwo && (
-              <span className="formError">
-                {errors.relationRefTwo.message}
-              </span>
-            )}
-          </div>
+              {errors.relationRefTwo && (
+                <span className="formError">
+                  {errors.relationRefTwo.message}
+                </span>
+              )}
+            </div>
 
-          <div className="form-group">
-            <Controller as={TextField} name="mobileNumberRefTwo" fullWidth variant="outlined" label="Số điện thoại" control={control} />
-            {errors.mobileNumberRefTwo && (
-              <span className="formError">
-                {errors.mobileNumberRefTwo.message}
-              </span>
-            )}
-          </div>
-          <div className="form-group">
-           <Controller
+            <div className="form-group">
+              <Controller
+                as={TextField}
+                name="mobileNumberRefTwo"
+                fullWidth
+                variant="outlined"
+                label="Số điện thoại"
+                control={control}
+              />
+              {errors.mobileNumberRefTwo && (
+                <span className="formError">
+                  {errors.mobileNumberRefTwo.message}
+                </span>
+              )}
+            </div>
+            <div className="form-group">
+              <Controller
                 name="permanentProvince"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === "SECURITYQUESTION").map(selection => ({
-                      value: selection.code,
-                      label: selection.nameVi
-                    }))}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection =>
+                            selection.category === 'SECURITYQUESTION',
+                        )
+                        .map(selection => ({
+                          value: selection.code,
+                          label: selection.nameVi,
+                        }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -201,8 +230,8 @@ export default function Round3(props) {
                     onChange={(event, newValue) => {
                       onChange(newValue.value);
                     }}
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Câu hỏi bảo mật"
@@ -215,49 +244,73 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.securityQuestion && (
-              <span className="formError">
-                {errors.securityQuestion.message}
-              </span>
-            )}
-          </div>
-          <div className="form-group">
-            <Controller 
-              as={TextField} 
-              name="securityAnswer" 
-              fullWidth 
-              variant="outlined" 
-              label="Trả lời câu hỏi bảo mật"
-              control={control} />
-            {errors.securityAnswer && (
-              <span className="formError">{errors.securityAnswer.message}</span>
-            )}
-          </div>
-          <div className="form-group">
-            <Controller
+              {errors.securityQuestion && (
+                <span className="formError">
+                  {errors.securityQuestion.message}
+                </span>
+              )}
+            </div>
+            <div className="form-group">
+              <Controller
+                as={TextField}
+                name="securityAnswer"
+                fullWidth
+                variant="outlined"
+                label="Trả lời câu hỏi bảo mật"
+                control={control}
+              />
+              {errors.securityAnswer && (
+                <span className="formError">
+                  {errors.securityAnswer.message}
+                </span>
+              )}
+            </div>
+            <div className="form-group">
+              <Controller
                 name="haveGreenCard"
                 control={control}
                 render={({ value, onChange }) => (
                   <FormControl component="fieldset">
-                    <FormLabel component="legend" className={classes.labelStyle}>Bạn có thuộc một trong các điều kiện sau không: là công dân Hoa
-              Kỳ, có thẻ thường trú nhân tại Hoa Kỳ (Thẻ Xanh) hoặc là cá nhân
-              cư trú tại Hoa Kỳ?</FormLabel>
-                    <RadioGroup aria-label="haveGreenCard" name="haveGreenCard" value={value} onChange={(e) => onChange(e.target.value)} className={classes.genderContainer}>
-                      <FormControlLabel value="1" control={<Radio />} label="Có" />
-                      <FormControlLabel value="0" control={<Radio />} label="Không" />
+                    <FormLabel
+                      component="legend"
+                      className={classes.labelStyle}
+                    >
+                      Bạn có thuộc một trong các điều kiện sau không: là công
+                      dân Hoa Kỳ, có thẻ thường trú nhân tại Hoa Kỳ (Thẻ Xanh)
+                      hoặc là cá nhân cư trú tại Hoa Kỳ?
+                    </FormLabel>
+                    <RadioGroup
+                      aria-label="haveGreenCard"
+                      name="haveGreenCard"
+                      value={value}
+                      onChange={e => onChange(e.target.value)}
+                      className={classes.genderContainer}
+                    >
+                      <FormControlLabel
+                        value="1"
+                        control={<Radio />}
+                        label="Có"
+                      />
+                      <FormControlLabel
+                        value="0"
+                        control={<Radio />}
+                        label="Không"
+                      />
                     </RadioGroup>
                   </FormControl>
                 )}
               />
-            {errors.haveGreenCard && (
-              <span className="formError">{errors.haveGreenCard.message}</span>
-            )}
+              {errors.haveGreenCard && (
+                <span className="formError">
+                  {errors.haveGreenCard.message}
+                </span>
+              )}
+            </div>
+            <button type="submit" className="btn btnSubmit">
+              Tiếp tục
+            </button>
           </div>
-          <button type="submit" className="btn btnSubmit">
-            Tiếp tục
-          </button>
-        </div>
-      </form>
+        </form>
       </div>
     </JarvisFormStyle>
   );

@@ -15,6 +15,7 @@ import {
   UPLOAD_OCR_FRONT,
   UPLOAD_OCR_BACK,
   FACE_MATCHING,
+  REQUEST_COMPANIES_SEARCH,
 } from './constants';
 import {
   callapiSuccess,
@@ -24,6 +25,7 @@ import {
   requestOtp,
   createApplicationSuccess,
   getSelectionSuccess,
+  getCompaniesSuccess,
 } from './actions';
 
 function* fetchCountriesSaga() {
@@ -39,15 +41,23 @@ function* fetchCountriesSaga() {
     url: '/selection-list-all',
     params: null,
   };
+  const payloadCompanies = {
+    url: '/companies',
+    params: {
+      searchKey: '',
+    },
+  };
   try {
-    const [countries, provinces, selections] = yield all([
+    const [countries, provinces, selections, companies] = yield all([
       call(Api.get, payload),
       call(Api.get, payloadProvinces),
       call(Api.get, payloadSelection),
+      call(Api.get, payloadCompanies),
     ]);
     yield put(callapiSuccess(countries));
     yield put(getProvincesSuccess(provinces));
     yield put(getSelectionSuccess(selections));
+    yield put(getCompaniesSuccess(companies));
   } catch (error) {
     yield put(callapiErorr());
   }
@@ -248,6 +258,21 @@ function* faceMatchingSaga(action) {
   }
 }
 
+function* fetchCompaniesSearchSaga(action) {
+  const payloadCompanies = {
+    url: '/companies',
+    params: {
+      searchKey: action.payload,
+    },
+  };
+  try {
+    const companies = yield call(Api.get, payloadCompanies);
+    yield put(getCompaniesSuccess(companies));
+  } catch (error) {
+    yield put(callapiErorr());
+  }
+}
+
 export default function* jarvisCustomerV2Saga() {
   yield all([
     takeEvery(REQUEST_COUNTRIES, fetchCountriesSaga),
@@ -263,5 +288,6 @@ export default function* jarvisCustomerV2Saga() {
     takeEvery(UPLOAD_OCR_BACK, uploadOCRBackSaga),
     takeEvery(UPLOAD_OCR_FRONT, uploadOCRFrontSaga),
     takeEvery(FACE_MATCHING, faceMatchingSaga),
+    takeEvery(REQUEST_COMPANIES_SEARCH, fetchCompaniesSearchSaga),
   ]);
 }

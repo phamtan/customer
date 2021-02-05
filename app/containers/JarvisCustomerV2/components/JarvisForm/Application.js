@@ -1,9 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
 import Round1 from './Round1';
 import Roun1FillInfo from './Roun1FillInfo';
 import Round2OCR from './Round2OCR';
@@ -21,39 +19,24 @@ import Round31 from './Round3.1';
 import Round32 from './Round3.2';
 import Round2Confirm from './Round2Confirm';
 import UploadDocument from './UploadDocument';
-import ChooseBenefit from './ChooseBenefit-v2';
 import ChooseCard from './ChooseCard';
 import ChooseLimit from './ChooseLimit';
 import Otp from './Otp';
 import WaitingCheck from './WaitingCheck';
 import LandingCard from './LandingCard';
-import CardDetail from './CardDetail';
-import ListCardByBenefit from './ListCardByBenefit';
 import ChooseDocument from './ChooseDocument';
 import LivenessGuiline from './LivenessGuiline';
 import Liveness from './Liveness';
 import CompareCard from './CompareCard';
-import UploadDocumentSuccess from './UploadDocumentSuccess';
 import WaitingCheckLos from './WaitingCheckLos';
 import AllCards from './AllCards';
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 export default function Application(props) {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const [step, setStep] = useState(15);
+  const [step, setStep] = useState(8);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -93,10 +76,22 @@ export default function Application(props) {
         />
       )}
       {step === 19 && <ChooseDocument setStep={setStep} {...props} />}
-      {step === 20 && <Round2OCR handleShoMessage={handleShoMessage}
-          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
-      {step === 21 && <Round2OCRBack handleShoMessage={handleShoMessage}
-          handleCloseMessage={handleCloseMessage} setStep={setStep} {...props} />}
+      {step === 20 && (
+        <Round2OCR
+          handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage}
+          setStep={setStep}
+          {...props}
+        />
+      )}
+      {step === 21 && (
+        <Round2OCRBack
+          handleShoMessage={handleShoMessage}
+          handleCloseMessage={handleCloseMessage}
+          setStep={setStep}
+          {...props}
+        />
+      )}
       {step === 22 && (
         <CompareCard
           handleShoMessage={handleShoMessage}

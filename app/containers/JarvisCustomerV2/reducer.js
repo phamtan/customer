@@ -16,6 +16,7 @@ import {
   SAVE_DATA_SUCCESS,
   SAVE_RAW_DATA,
   REQUEST_SELECTION_SUCCESS,
+  REQUEST_COMPANIES_SUCCESS,
 } from './constants';
 
 export const initialState = {};
@@ -54,6 +55,8 @@ const jarvisCustomerV2Reducer = (state = initialState, action) =>
         return { ...state, selections: action.payload };
       case REQUEST_PROVINCES_FAILURE:
         return { ...state, provinces: [] };
+      case REQUEST_COMPANIES_SUCCESS:
+        return { ...state, companies: action.payload };
       case SAVE_DATA_SUCCESS:
         return {
           ...state,

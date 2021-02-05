@@ -1,14 +1,12 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import MomentUtils from '@date-io/moment';
 import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import JarvisFormStyle from './JarvisFormStyle';
@@ -92,8 +90,9 @@ export default function Round3(props) {
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
   const provinces = _.get(props, 'jarvisCustomerV2.provinces', []);
   const selections = _.get(props, 'jarvisCustomerV2.selections', []);
+  const companies = _.get(props, 'jarvisCustomerV2.companies', []);
   const [district, setDistrict] = useState([]);
-  const { register, handleSubmit, errors, control } = useForm({
+  const { handleSubmit, errors, control } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -104,54 +103,67 @@ export default function Round3(props) {
   });
 
   function onSubmitForm(values) {
-    console.log(values)
-    values.id = jarvisCustomer.id;
-    values.docIssuedDate = moment(values.docIssuedDate).format('DD/MM/YYYY')
-    values.dob = moment(values.dob).format('YYYY-MM-DDTHH:mm:ss.SSS')
+    const valuesSubmit = [...values];
+    valuesSubmit.docIssuedDate = moment(values.docIssuedDate).format(
+      'DD/MM/YYYY',
+    );
+    valuesSubmit.dob = moment(values.dob).format('YYYY-MM-DDTHH:mm:ss.SSS');
     return new Promise((resolve, reject) => {
-    props.dispatch(Actions.saveDataApp(values, resolve, reject));
-    }).then(() => {
-      props.setStep(23);
-    }).catch(() => {
-      props.handleShoMessage({
-        message: 'Có lỗi xảy ra',
-        severity: 'error',
+      props.dispatch(Actions.saveDataApp(valuesSubmit, resolve, reject));
+    })
+      .then(() => {
+        props.setStep(23);
+      })
+      .catch(() => {
+        props.handleShoMessage({
+          message: 'Có lỗi xảy ra',
+          severity: 'error',
+        });
       });
-    });
   }
 
   function changeProvince(e) {
-    let district = [...district];
     const province = provinces.filter(province => province.code === e.value)[0];
-    console.log(province)
     setDistrict(province.districts);
   }
+
+  function loadCompanies(val) {
+    props.dispatch(Actions.getCompaniesSearch(val));
+  }
+
   return (
     <JarvisFormStyle>
       <Header className="header" step={3} showStep />
       <div className={classes.formContainer}>
-      <div className={classes.titleHeader}>Thông tin công việc</div>
-      <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
-        <div className="formWrapper">
-          <div className="form-group">
-            <Controller
+        <div className={classes.titleHeader}>Thông tin công việc</div>
+        <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
+          <div className="formWrapper">
+            <div className="form-group">
+              <Controller
                 name="nameOfEmployer"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
                     style={{ width: '90vw' }}
-                    options={company}
+                    options={
+                      companies &&
+                      companies.map(company => ({
+                        value: company.code,
+                        label: company.name,
+                      }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
-                    onChange={(event, newValue) => {
-                      onChange(newValue.value);
-                      // setMaritalStatus(newValue.value);
+                    onChange={(_event, newValue) => {
+                      if (newValue) {
+                        onChange(newValue.value);
+                      }
                     }}
                     autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Công ty đang công tác"
@@ -159,32 +171,45 @@ export default function Round3(props) {
                         inputProps={{
                           ...params.inputProps,
                         }}
+                        onChange={ev => {
+                          if (
+                            ev.target.value !== '' ||
+                            ev.target.value !== null
+                          ) {
+                            // _.debounce(() => {
+                            loadCompanies(ev.target.value);
+                            // }, 1000);
+                          }
+                        }}
                       />
                     )}
                   />
                 )}
               />
-            {errors.nameOfEmployer && (
-              <span className="formError">{errors.nameOfEmployer.message}</span>
-            )}
-          </div>
+              {errors.nameOfEmployer && (
+                <span className="formError">
+                  {errors.nameOfEmployer.message}
+                </span>
+              )}
+            </div>
 
-          <div className="form-group">
-            <Controller 
-              as={TextField} 
-              name="employerAddressLine" 
-              fullWidth 
-              variant="outlined" 
-              label="Địa chỉ công ty"
-              control={control} />
-            {errors.employerAddressLine && (
-              <span className="formError">
-                {errors.employerAddressLine.message}
-              </span>
-            )}
-          </div>
+            <div className="form-group">
+              <Controller
+                as={TextField}
+                name="employerAddressLine"
+                fullWidth
+                variant="outlined"
+                label="Địa chỉ công ty"
+                control={control}
+              />
+              {errors.employerAddressLine && (
+                <span className="formError">
+                  {errors.employerAddressLine.message}
+                </span>
+              )}
+            </div>
 
-          <div className="form-group">
+            <div className="form-group">
               <Controller
                 name="employerProvince"
                 control={control}
@@ -193,18 +218,18 @@ export default function Round3(props) {
                     style={{ width: '90vw' }}
                     options={provinces.map(province => ({
                       value: province.code,
-                      label: province.name
+                      label: province.name,
                     }))}
                     classes={{
                       option: classes.option,
                     }}
                     autoHighlight
-                    onChange={(event, newValue) => {
+                    onChange={(_event, newValue) => {
                       changeProvince(newValue);
                       onChange(newValue.value);
                     }}
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Thành phố"
@@ -218,33 +243,36 @@ export default function Round3(props) {
                   />
                 )}
               />
-              {errors.permanentProvince &&  (
+              {errors.permanentProvince && (
                 <span className="formError">
                   {errors.permanentProvince.message}
                 </span>
               )}
             </div>
 
-          <div className="form-group">
+            <div className="form-group">
               <Controller
                 name="employerDistrict"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     style={{ width: '90vw' }}
-                    options={district && district.map(dis => ({
-                      value: dis.code,
-                      label: dis.name,
-                    }))}
+                    options={
+                      district &&
+                      district.map(dis => ({
+                        value: dis.code,
+                        label: dis.name,
+                      }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
-                    onChange={(event, newValue) => {
+                    onChange={(_event, newValue) => {
                       onChange(newValue.value);
                     }}
                     autoHighlight
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Quận"
@@ -266,55 +294,60 @@ export default function Round3(props) {
             </div>
 
             <div className="form-group">
-            <Controller 
-              as={TextField} 
-              name="companyPhone" 
-              fullWidth 
-              variant="outlined" 
-              label="Số Điện thoại cố định"
-              control={control} />
-            {errors.companyPhone && (
-              <span className="formError">
-                {errors.companyPhone.message}
-              </span>
-            )}
-          </div>  
+              <Controller
+                as={TextField}
+                name="companyPhone"
+                fullWidth
+                variant="outlined"
+                label="Số Điện thoại cố định"
+                control={control}
+              />
+              {errors.companyPhone && (
+                <span className="formError">{errors.companyPhone.message}</span>
+              )}
+            </div>
 
-          <div className="form-group">
-            <Controller 
-              as={TextField} 
-              name="companyPhone" 
-              fullWidth 
-              variant="outlined" 
-              label="Số máy lẻ"
-              control={control} />
-            {errors.ext && (
-              <span className="formError">
-                {errors.ext.message}
-              </span>
-            )}
-          </div>
+            <div className="form-group">
+              <Controller
+                as={TextField}
+                name="companyPhone"
+                fullWidth
+                variant="outlined"
+                label="Số máy lẻ"
+                control={control}
+              />
+              {errors.ext && (
+                <span className="formError">{errors.ext.message}</span>
+              )}
+            </div>
 
-          <div className="form-group">
+            <div className="form-group">
               <Controller
                 name="typeCompany"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === "TYPEOFCOMPANY").map(selection => ({
-                      value: selection.code,
-                      label: selection.nameVi
-                    }))}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection => selection.category === 'TYPEOFCOMPANY',
+                        )
+                        .map(selection => ({
+                          value: selection.code,
+                          label: selection.nameVi,
+                        }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
                     autoHighlight
-                    onChange={(event, newValue) => {
+                    onChange={(_event, newValue) => {
                       onChange(newValue.value);
                     }}
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Loại hình công ty"
@@ -327,30 +360,37 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.industry && (
-              <span className="formError">{errors.industry.message}</span>
-            )}
-          </div>
-          <div className="form-group">
+              {errors.industry && (
+                <span className="formError">{errors.industry.message}</span>
+              )}
+            </div>
+            <div className="form-group">
               <Controller
                 name="position"
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
                     style={{ width: '90vw' }}
-                    options={selections && selections.filter(selection => selection.category === "OCCUPATION").map(selection => ({
-                      value: selection.code,
-                      label: selection.nameVi
-                    }))}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection => selection.category === 'OCCUPATION',
+                        )
+                        .map(selection => ({
+                          value: selection.code,
+                          label: selection.nameVi,
+                        }))
+                    }
                     classes={{
                       option: classes.option,
                     }}
                     autoHighlight
-                    onChange={(event, newValue) => {
+                    onChange={(_event, newValue) => {
                       onChange(newValue.value);
                     }}
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
                       <TextField
                         {...params}
                         label="Vị trí hiện tại"
@@ -363,15 +403,15 @@ export default function Round3(props) {
                   />
                 )}
               />
-            {errors.industry && (
-              <span className="formError">{errors.industry.message}</span>
-            )}
+              {errors.industry && (
+                <span className="formError">{errors.industry.message}</span>
+              )}
+            </div>
+            <button type="submit" className="btn btnSubmit">
+              Tiếp tục
+            </button>
           </div>
-          <button type="submit" className="btn btnSubmit">
-            Tiếp tục
-          </button>
-        </div>
-      </form>
+        </form>
       </div>
     </JarvisFormStyle>
   );
