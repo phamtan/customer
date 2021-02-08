@@ -343,8 +343,7 @@ const JarvisFormStyle = styled.div`
     width: 98%;
     margin-top: 20px;
     .uploadItem {
-      margin-left: 20px;
-      margin-bottom: 30px;
+      margin-left: 16px;
       display: flex;
     }
     .uploadButton {

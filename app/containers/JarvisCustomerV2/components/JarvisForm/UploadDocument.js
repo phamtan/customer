@@ -3,16 +3,38 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import EmailIcon from '@material-ui/icons/Email';
-import documentIcon from 'images/uploadfile.svg';
-import uploadIcon from 'images/icons-upload.svg';
 import Modal from 'react-bootstrap/Modal';
 import registerSuccess from 'images/register-success.svg';
+import CameraAltIcon from '@material-ui/icons/CameraAlt';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import Divider from '@material-ui/core/Divider';
 import { makeStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import Header from './Header';
 import JarvisFormStyle from './JarvisFormStyle';
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    width: '100%',
+    minHeight: '100vh',
+    backgroundColor: 'white',
+    marginTop: '16px',
+  },
+  pageTitle: {
+    width: '100%',
+    paddingLeft: '16px',
+    fontSize: '24',
+    fontWeight: 'normal',
+    marginTop: '16px',
+    color: 'rgba(0, 0, 0, 0.87)',
+    lineHeight: '1.33',
+  },
+  secondHeader: {
+    width: '100%',
+    paddingLeft: '16px',
+    fontSize: '16px',
+    marginTop: '16px',
+  },
   root: {
     width: '100%',
     boxShadow: 'none',
@@ -45,6 +67,53 @@ const useStyles = makeStyles(theme => ({
   linkEmail: {
     color: '#1598cc !important',
     textDecoration: 'none',
+  },
+  uploadItem: {
+    width: '120px',
+    height: '120px',
+    borderRadius: '1px',
+    border: '2px dashed #979797',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconCamera: {
+    color: '#979797',
+    width: '40px',
+    height: '36px',
+  },
+  documentTitle: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '16px',
+  },
+  arrowIcon: {
+    color: '#128d9a',
+    width: '16px',
+    height: '16px',
+    marginRight: '12px',
+  },
+  divider: {
+    width: '90%',
+    color: '#d8d8d8',
+    margin: 'auto',
+    marginTop: '16px',
+    marginBottom: '16px',
+  },
+  action: {
+    width: '95%',
+    margin: 'auto',
+    marginTop: '16px',
+    marginBottom: '32px',
+    height: '46px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#028547',
+    color: 'white',
+    fontSize: '14px',
+    border: 'none',
+    textTransform: 'uppercase',
   },
 }));
 
@@ -87,162 +156,164 @@ export default function ConfirmDocument(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={5} />
-      <div className="roundTitle">BƯỚC 5:</div>
-      <div className="roundName">NỘP HỒ SƠ</div>
-      <div className="confirmTitle">
-        Hồ sơ của bạn cần bổ sung các giấy tờ bản cứng, bạn muốn sử dụng hình
-        thức nào dưới đây để thực hiện?
+      <Header className="header" step={5} showStep />
+      <div className={classes.container}>
+        <div className={classes.pageTitle}>NỘP HỒ SƠ</div>
+        <div className={classes.secondHeader}>
+          Hồ sơ của bạn cần <b>bổ sung</b> các <b>giấy tờ bản cứng</b>, bạn cần{' '}
+          <b>tải lên</b> các
+          <b> giấy tờ dưới đây</b>
+        </div>
+        <Divider className={classes.divider} />
+        <form className="documentWrapper" onSubmit={handleSubmit(onSubmitForm)}>
+          <div className="uploadItem">
+            <div>
+              <div className={classes.documentTitle}>
+                <ArrowForwardIcon className={classes.arrowIcon} />
+                Đề nghị mở thẻ
+              </div>
+              <div className="uploadImg">
+                <input
+                  type="file"
+                  id="appformfile"
+                  onChange={e => upload(e, 'appform')}
+                  style={{ display: 'none' }}
+                />
+                <label className={classes.uploadItem} htmlFor="appformfile">
+                  <CameraAltIcon className={classes.iconCamera} />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src={appform} />
+          </div>
+          <div className="uploadItem">
+            <div>
+              <div className={classes.documentTitle}>
+                <ArrowForwardIcon className={classes.arrowIcon} />
+                Chứng minh thông tin cá nhân *
+              </div>
+              <div className="uploadImg">
+                <input
+                  type="file"
+                  id="idProoffile"
+                  onChange={e => upload(e, 'idProof')}
+                  style={{ display: 'none' }}
+                />
+                <label className={classes.uploadItem} htmlFor="idProoffile">
+                  <CameraAltIcon className={classes.iconCamera} />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src={idProof} />
+          </div>
+
+          <div className="uploadItem">
+            <div>
+              <div className={classes.documentTitle}>
+                <ArrowForwardIcon className={classes.arrowIcon} />
+                Chứng minh nơi ở hiện tại
+              </div>
+              <div className="uploadImg">
+                <input
+                  type="file"
+                  id="addProoffile"
+                  onChange={e => upload(e, 'addProof')}
+                  style={{ display: 'none' }}
+                />
+                <label className={classes.uploadItem} htmlFor="addProoffile">
+                  <CameraAltIcon className={classes.iconCamera} />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src={addProof} />
+          </div>
+
+          <div className="uploadItem">
+            <div>
+              <div className={classes.documentTitle}>
+                <ArrowForwardIcon className={classes.arrowIcon} />
+                Chứng minh tài chính
+              </div>
+              <div className="uploadImg">
+                <input
+                  type="file"
+                  id="financeProoffile"
+                  onChange={e => upload(e, 'financeProof')}
+                  style={{ display: 'none' }}
+                />
+                <label
+                  className={classes.uploadItem}
+                  htmlFor="financeProoffile"
+                >
+                  <CameraAltIcon className={classes.iconCamera} />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src={financeProof} />
+          </div>
+
+          <div className="uploadItem">
+            <div>
+              <div className={classes.documentTitle}>
+                <ArrowForwardIcon className={classes.arrowIcon} />
+                Chứng minh công việc
+              </div>
+              <div className="uploadImg">
+                <input
+                  type="file"
+                  id="employmentProoffile"
+                  onChange={e => upload(e, 'employmentProof')}
+                  style={{ display: 'none' }}
+                />
+                <label
+                  className={classes.uploadItem}
+                  htmlFor="employmentProoffile"
+                >
+                  <CameraAltIcon className={classes.iconCamera} />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src={employmentProof} />
+          </div>
+
+          <div className="uploadItem">
+            <div>
+              <div className={classes.documentTitle}>
+                <ArrowForwardIcon className={classes.arrowIcon} />
+                Chữ ký
+              </div>
+              <div className="uploadImg">
+                <input
+                  type="file"
+                  id="signaturefile"
+                  onChange={e => upload(e, 'signature')}
+                  style={{ display: 'none' }}
+                />
+                <label className={classes.uploadItem} htmlFor="signature">
+                  <CameraAltIcon className={classes.iconCamera} />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src={signature} />
+          </div>
+
+          <button type="button" onClick={handleShow} className={classes.action}>
+            Tiếp tục
+          </button>
+        </form>
       </div>
-      <form className="documentWrapper" onSubmit={handleSubmit(onSubmitForm)}>
-        <div className="uploadItem">
-          <div>
-            <img src={documentIcon} />
-          </div>
-          <div>
-            <div>Đề nghị mở thẻ</div>
-            <div className="uploadImg">
-              <img src={uploadIcon} />
-              <input
-                type="file"
-                id="appformfile"
-                onChange={e => upload(e, 'appform')}
-                style={{ display: 'none' }}
-              />
-              <label className="uploadButton" htmlFor="appformfile">
-                Upload
-              </label>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src={appform} />
-        </div>
-
-        <div className="uploadItem">
-          <div>
-            <img src={documentIcon} />
-          </div>
-          <div>
-            <div>Chứng minh thông tin cá nhân *</div>
-            <div className="uploadImg">
-              <img src={uploadIcon} />
-              <input
-                type="file"
-                id="idProoffile"
-                onChange={e => upload(e, 'idProof')}
-                style={{ display: 'none' }}
-              />
-              <label className="uploadButton" htmlFor="idProoffile">
-                Upload
-              </label>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src={idProof} />
-        </div>
-
-        <div className="uploadItem">
-          <div>
-            <img src={documentIcon} />
-          </div>
-          <div>
-            <div>Chứng minh nơi ở hiện tại</div>
-            <div className="uploadImg">
-              <img src={uploadIcon} />
-              <input
-                type="file"
-                id="addProoffile"
-                onChange={e => upload(e, 'addProof')}
-                style={{ display: 'none' }}
-              />
-              <label className="uploadButton" htmlFor="addProoffile">
-                Upload
-              </label>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src={addProof} />
-        </div>
-
-        <div className="uploadItem">
-          <div>
-            <img src={documentIcon} />
-          </div>
-          <div>
-            <div>Chứng minh tài chính</div>
-            <div className="uploadImg">
-              <img src={uploadIcon} />
-              <input
-                type="file"
-                id="financeProoffile"
-                onChange={e => upload(e, 'financeProof')}
-                style={{ display: 'none' }}
-              />
-              <label className="uploadButton" htmlFor="financeProoffile">
-                Upload
-              </label>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src={financeProof} />
-        </div>
-
-        <div className="uploadItem">
-          <div>
-            <img src={documentIcon} />
-          </div>
-          <div>
-            <div>Chứng minh công việc</div>
-            <div className="uploadImg">
-              <img src={uploadIcon} />
-              <input
-                type="file"
-                id="employmentProoffile"
-                onChange={e => upload(e, 'employmentProof')}
-                style={{ display: 'none' }}
-              />
-              <label className="uploadButton" htmlFor="employmentProofile">
-                Upload
-              </label>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src={employmentProof} />
-        </div>
-
-        <div className="uploadItem">
-          <div>
-            <img src={documentIcon} />
-          </div>
-          <div>
-            <div>Chữ ký</div>
-            <div className="uploadImg">
-              <img src={uploadIcon} />
-              <input
-                type="file"
-                id="signaturefile"
-                onChange={e => upload(e, 'signature')}
-                style={{ display: 'none' }}
-              />
-              <label className="uploadButton" htmlFor="signaturefile">
-                Upload
-              </label>
-            </div>
-          </div>
-        </div>
-        <div>
-          <img src={signature} />
-        </div>
-
-        <button type="button" onClick={handleShow} className="btn btnSubmit">
-          Tiếp tục
-        </button>
-      </form>
       <Modal
         show={show}
         onHide={handleClose}
