@@ -6,10 +6,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
+import XRegExp from 'xregexp';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import * as Actions from '../../actions';
-import XRegExp from 'xregexp';
 
 const useStyles = makeStyles(() => ({
   formContainer: {
@@ -90,9 +90,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 const schema = yup.object().shape({
-  fullName: yup.string().required('Bạn chưa nhập họ tên')
-  .matches(XRegExp("^[\\pL\\s]+$"), "Tên không chứa ký tự đặc biệt"),
-  mobileNumber: yup.string().required('Bạn chưa nhập số điện thoại'),
+  fullName: yup
+    .string()
+    .required('Bạn chưa nhập họ tên')
+    .matches(XRegExp('^[\\pL\\s]+$'), 'Tên không chứa ký tự đặc biệt'),
+  mobileNumber: yup
+    .string()
+    .required('Bạn chưa nhập số điện thoại')
+    .length(10, 'số điện thoại gồm 10 số')
+    .matches(XRegExp('^[\\d]+$'), 'Số điện thoại chỉ bao gồm số'),
   email: yup
     .string()
     .required('Bạn chưa nhập email')
@@ -112,14 +118,16 @@ export default function Round1(props) {
   function onSubmitForm(values) {
     return new Promise((resolve, reject) => {
       props.dispatch(Actions.saveData(values, resolve, reject));
-    }).then(() => {
-      props.setStep(1);
-    }).catch(() => {
-      props.handleShoMessage({
-        message: 'Có lỗi xảy ra vui lòng thử lại',
-        severity: 'error',
-      });
     })
+      .then(() => {
+        props.setStep(1);
+      })
+      .catch(() => {
+        props.handleShoMessage({
+          message: 'Có lỗi xảy ra vui lòng thử lại',
+          severity: 'error',
+        });
+      });
   }
 
   return (

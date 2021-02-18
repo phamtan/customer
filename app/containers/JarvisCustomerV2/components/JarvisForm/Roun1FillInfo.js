@@ -17,6 +17,7 @@ import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from '@date-io/moment';
+import XRegExp from 'xregexp';
 import Header from './Header';
 import JarvisFormStyle from './JarvisFormStyle';
 import * as Actions from '../../actions';
@@ -80,26 +81,22 @@ const DOCUMENT_TYPE = [
 ];
 
 const schema = yup.object().shape({
-  fullName: yup.string().required('Full name is required'),
-  // national: yup
-  //   .object()
-  //   .nullable()
-  //   .required('Quốc tịch là bắt buộc'),
-  // gender: yup
-  //   .object()
-  //   .nullable()
-  //   .required('Bạn chưa chọn giới tính'),
-  // documentNumber: yup.string().required('Bạn chưa nhập số giấy tờ'),
-  // issueDate: yup.string().required('Bạn chưa nhập số giấy tờ'),
-  // permanentAddress: yup.object({
-  //   addressDetail: yup.string().required('Bạn chưa nhập địa chỉ chi tiết'),
-  //   district: yup.object().required('Bạn chưa chọn quận'),
-  //   province: yup.object().required('Bạn chưa chọn thành phố'),
-  // }),
-  // placeOfIssue: yup
-  //   .object()
-  //   .nullable()
-  //   .required('Bạn chưa chọn nơi cấp giấy tờ'),
+  fullName: yup
+    .string()
+    .required('Bạn chưa nhập họ tên')
+    .matches(XRegExp('^[\\pL\\s]+$'), 'Tên không chứa ký tự đặc biệt'),
+  mobileNumber: yup
+    .string()
+    .required('Bạn chưa nhập số điện thoại')
+    .length(10, 'số điện thoại gồm 10 số')
+    .matches(XRegExp('^[\\d]+$'), 'Số điện thoại chỉ bao gồm số'),
+  email: yup
+    .string()
+    .required('Bạn chưa nhập email')
+    .email('Email không đúng định dạng'),
+  dob: yup.string().required('Bạn chưa nhập ngày sinh'),
+  gender: yup.string().required('Bạn chưa nhập giới tính'),
+  nationality: yup.string().required('Bạn chưa nhập quốc tịch'),
 });
 
 function countryToFlag(isoCode) {
@@ -171,11 +168,13 @@ export default function Round1(props) {
   }
 
   function onSubmitForm(values) {
-    const valuesSubmit = [...values];
-    valuesSubmit.docIssuedDate = moment(values.docIssuedDate).format(
+    const valuesSubmit = values;
+    valuesSubmit.docIssuedDate = moment(valuesSubmit.docIssuedDate).format(
       'DD/MM/YYYY',
     );
-    valuesSubmit.dob = moment(values.dob).format('YYYY-MM-DDTHH:mm:ss.SSS');
+    valuesSubmit.dob = moment(valuesSubmit.dob).format(
+      'YYYY-MM-DDTHH:mm:ss.SSS',
+    );
     return new Promise((resolve, reject) => {
       props.dispatch(
         Actions.checkLosRound1(valuesSubmit, resolve, reject),
@@ -552,9 +551,12 @@ export default function Round1(props) {
                     value={
                       provinces &&
                       value &&
-                      provinces.filter(
-                        province => province.value === value,
-                      )[0]
+                      provinces
+                        .filter(province => province.code === value)
+                        .map(province => ({
+                          value: province.code,
+                          label: province.name,
+                        }))[0]
                     }
                     autoHighlight
                     onChange={(event, newValue) => {
@@ -600,7 +602,12 @@ export default function Round1(props) {
                     value={
                       district &&
                       value &&
-                      district.filter(distr => distr.value === value)[0]
+                      district
+                        .filter(distr => distr.code === value)
+                        .map(distr => ({
+                          value: distr.code,
+                          label: distr.name,
+                        }))[0]
                     }
                     classes={{
                       option: classes.option,
@@ -707,6 +714,7 @@ export default function Round1(props) {
                         }}
                         autoHighlight
                         onChange={(event, newValue) => {
+                          console.log(`province${  newValue.value}`);
                           changeCurrentProvince(newValue);
                           onChange(newValue.value);
                         }}

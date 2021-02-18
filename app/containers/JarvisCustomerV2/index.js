@@ -13,12 +13,16 @@ import { compose } from 'redux';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
+import { Route, Link } from 'react-router-dom';
 import makeSelectJarvisCustomerV2 from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 import * as Actions from './actions';
 import Application from './components/JarvisForm/Application';
+import LandingCard from './components/JarvisForm/LandingCard';
+import Round1 from './components/JarvisForm/Round1';
+import Liveness from './components/JarvisForm/Liveness';
 
 export function JarvisCustomerV2(props) {
   useInjectReducer({ key: 'jarvisCustomerV2', reducer });
@@ -30,7 +34,16 @@ export function JarvisCustomerV2(props) {
 
   return (
     <div>
-      <Application {...props} />
+      {/* <Application {...props} /> */}
+      <Route exact path="/v2">
+        <Application {...props} />
+      </Route>
+      <Route exact path="/v2/step1">
+        <LandingCard {...props} />
+      </Route>
+      <Route exact path="/v2/step2">
+        <Liveness {...props} />
+      </Route>
     </div>
   );
 }

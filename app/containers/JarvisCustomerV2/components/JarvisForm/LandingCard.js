@@ -164,7 +164,7 @@ export default function LandingCard(props) {
   const mostRegisCards = allCard.filter(card => card.mostRegis);
   const newCards = allCard.filter(card => card.newCard);
 
-  const [tab, setTab] = React.useState(1);
+  const [tab, setTab] = React.useState('1');
 
   const handleChange = (event, newValue) => {
     setTab(newValue);
@@ -271,11 +271,11 @@ export default function LandingCard(props) {
               indicator: classes.indicator,
             }}
           >
-            <Tab className={classes.tabItem} label="THẺ" value={1} />
-            <Tab className={classes.tabItem} label="VAY" value={2} />
-            <Tab className={classes.tabItem} label="XE HƠI" value={3} />
+            <Tab className={classes.tabItem} label="THẺ" value="1" />
+            <Tab className={classes.tabItem} label="VAY" value="2" />
+            <Tab className={classes.tabItem} label="XE HƠI" value="3" />
           </TabList>
-          {tab === 1 && (
+          {tab === '1' && (
             <>
               <div className={classes.pageHeader}>Chọn sản phẩm phù hợp</div>
               <div className={classes.sectionTilte}>
@@ -316,7 +316,10 @@ export default function LandingCard(props) {
               >
                 {mostRegisCards &&
                   mostRegisCards.map(card => (
-                    <div className={classes.sliderItem}>
+                    <div
+                      className={classes.sliderItem}
+                      key={`most-regis-${card.id_int}`}
+                    >
                       <div className="imageSlide">
                         <img
                           className={classes.imageSlide}
@@ -356,7 +359,10 @@ export default function LandingCard(props) {
               >
                 {newCards &&
                   newCards.map(card => (
-                    <div className={classes.sliderItem}>
+                    <div
+                      className={classes.sliderItem}
+                      key={`new-card-${card.id_int}`}
+                    >
                       <div className="imageSlide">
                         <img
                           className={classes.imageSlide}

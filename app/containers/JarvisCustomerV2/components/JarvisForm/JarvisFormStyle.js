@@ -10,7 +10,10 @@ const JarvisFormStyle = styled.div`
   font-family: Roboto, 'Roboto', sans-serif;
   background-color: #ebebeb;
   min-height: 100vh;
-  // background: url(${backGround});
+  background: url(${backGround});
+  @media (max-width: 425px) {
+    background: none;
+  }
   .header {
     width: 100%;
     height: 68px;

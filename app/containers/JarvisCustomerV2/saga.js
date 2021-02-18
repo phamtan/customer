@@ -80,7 +80,7 @@ function* saveApplicationSaga(action) {
       }),
     );
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
     action.reject(error);
   }
 }
@@ -114,7 +114,7 @@ function* saveDataApplicationSaga(action) {
     }
     action.resolve(response);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
     action.reject(error);
   }
 }
@@ -127,7 +127,7 @@ function* requestOtpSaga(action) {
   try {
     yield call(Api.post, payload);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
   }
 }
 
@@ -141,7 +141,7 @@ function* verifyOtpSaga(action) {
     action.resolve(response);
   } catch (error) {
     action.reject(error);
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
   }
 }
 
@@ -154,7 +154,7 @@ function* checkLosRound1(action) {
     const response = yield call(Api.post, payload);
     action.resolve(response);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
     action.reject(error);
   }
 }
@@ -168,7 +168,7 @@ function* checkLosRound2(action) {
     const response = yield call(Api.post, payload);
     action.resolve(response);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
     action.reject(error);
   }
 }
@@ -184,7 +184,7 @@ function* uploadLiveness(action) {
     const response = yield call(Api.post, payload);
     action.resolve(response);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
     action.reject(error);
   }
 }
@@ -193,7 +193,7 @@ function* saveRawDataSaga(action) {
   try {
     action.resolve(1);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
   }
 }
 
@@ -209,7 +209,7 @@ function* checkLosResultSaga(action) {
     const response = yield call(Api.post, payload);
     action.resolve(response);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
   }
 }
 
@@ -224,7 +224,7 @@ function* uploadOCRFrontSaga(action) {
     const response = yield call(Api.post, payload);
     action.resolve(response);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
     action.reject(error);
   }
 }
@@ -240,7 +240,7 @@ function* uploadOCRBackSaga(action) {
     const response = yield call(Api.post, payload);
     action.resolve(response);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
     action.reject(error);
   }
 }
@@ -253,7 +253,7 @@ function* faceMatchingSaga(action) {
     const response = yield call(Api.post, payload);
     action.resolve(response);
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
     action.reject(error);
   }
 }
@@ -269,7 +269,7 @@ function* fetchCompaniesSearchSaga(action) {
     const companies = yield call(Api.get, payloadCompanies);
     yield put(getCompaniesSuccess(companies));
   } catch (error) {
-    yield put(callapiErorr());
+    // yield put(callapiErorr());
   }
 }
 

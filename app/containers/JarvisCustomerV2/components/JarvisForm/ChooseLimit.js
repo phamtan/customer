@@ -8,6 +8,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Slider from '@material-ui/core/Slider';
 import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
 import logo from 'images/logo-vp.svg';
 import _ from 'lodash';
 import dataCard from 'images/data.json';
@@ -125,6 +126,13 @@ const useStyles = makeStyles(() => ({
   limitText: {
     fontSize: '16px',
     color: '#117f8a',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputLimit: {
+    width: '40px',
+    marginLeft: '6px',
   },
 }));
 
@@ -150,12 +158,7 @@ export default function ChooseLimit(props) {
     props.setStep(0);
   }
 
-  function valueLabelFormat(value) {
-    return value;
-  }
-
   function updateLimit(event, newValue) {
-    console.log(newValue);
     setAmount(newValue);
   }
 
@@ -207,14 +210,21 @@ export default function ChooseLimit(props) {
             aria-labelledby="discrete-slider-custom"
             valueLabelDisplay="on"
             marks={getMarks()}
-            // valueLabelFormat={valueLabelFormat}
             min={card ? Number(card.minLimit) : 10}
             max={card ? Number(card.maxLimit) : 100}
             step={10}
+            value={amount}
             onChange={updateLimit}
           />
           <div className={classes.limitText}>
-            Hạn mức bạn chọn là: {amount} triệu VNĐ
+            <span>Hạn mức bạn chọn là:</span>
+            <TextField
+              className={classes.inputLimit}
+              id="outlined-basic"
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+            />
+            <span>triệu VNĐ</span>
           </div>
         </CardContent>
       </Card>

@@ -333,53 +333,55 @@ export default function VideoKYC(props) {
       video: { width: 360, height: 240 },
       type: 'video',
     };
-    const stream = localMediaStream;
-    const recorder = RecordRTC(stream, constraints);
-    recorder.startRecording();
-    setRecording(true);
-    const sleep = m => new Promise(r => setTimeout(r, m));
-    await sleep(7000);
+    if (localMediaStream) {
+      const stream = localMediaStream;
+      const recorder = RecordRTC(stream, constraints);
+      recorder.startRecording();
+      setRecording(true);
+      const sleep = m => new Promise(r => setTimeout(r, m));
+      await sleep(7000);
 
-    recorder.stopRecording(function() {
-      setRecording(false);
-      setProcess(true);
-      const blob = recorder.getBlob();
-      // eslint-disable-next-line no-unused-vars
-      const callLiveness = new Promise((resolve, reject) => {
-        props.dispatch(
-          Actions.uploadLiveNess(
-            {
-              video: blob,
-              customerId: jarvisCustomer.id,
-            },
-            resolve,
-            reject,
-          ),
-        );
-      })
-        .then(res => {
-          // props.setStep(19);
-          const response = JSON.parse(res.body);
-          if (
-            res &&
-            res.body &&
-            response.is_live &&
-            !response.is_deepfake &&
-            res.statusCodeValue === 200
-          ) {
-            props.setStep(19);
-            turnOffCamera();
-          } else {
-            setOpen(true);
-          }
+      recorder.stopRecording(function() {
+        setRecording(false);
+        setProcess(true);
+        const blob = recorder.getBlob();
+        // eslint-disable-next-line no-unused-vars
+        const callLiveness = new Promise((resolve, reject) => {
+          props.dispatch(
+            Actions.uploadLiveNess(
+              {
+                video: blob,
+                customerId: jarvisCustomer.id,
+              },
+              resolve,
+              reject,
+            ),
+          );
         })
-        .catch(() => {
-          props.handleShoMessage({
-            message: 'Có lỗi xảy ra vui lòng thử lại',
-            severity: 'error',
+          .then(res => {
+            // props.setStep(19);
+            const response = JSON.parse(res.body);
+            if (
+              res &&
+              res.body &&
+              response.is_live &&
+              !response.is_deepfake &&
+              res.statusCodeValue === 200
+            ) {
+              props.setStep(19);
+              turnOffCamera();
+            } else {
+              setOpen(true);
+            }
+          })
+          .catch(() => {
+            props.handleShoMessage({
+              message: 'Có lỗi xảy ra vui lòng thử lại',
+              severity: 'error',
+            });
           });
-        });
-    });
+      });
+    }
   }
 
   function restartCamera() {
@@ -403,7 +405,7 @@ export default function VideoKYC(props) {
   return (
     <div className={classes.container}>
       <div className={classes.cameraContainer}>
-        <video id="myVideo" className={classes.video} playsinline />
+        <video id="myVideo" className={classes.video} playsInline />
       </div>
       <ArrowBackIosIcon
         className={classes.backIcon}
