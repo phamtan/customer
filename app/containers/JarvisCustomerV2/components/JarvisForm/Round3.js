@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import _ from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
@@ -9,6 +9,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
+import debounce from 'lodash.debounce';
+import moment from 'moment';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import * as Actions from '../../actions';
@@ -92,6 +94,7 @@ export default function Round3(props) {
   const selections = _.get(props, 'jarvisCustomerV2.selections', []);
   const companies = _.get(props, 'jarvisCustomerV2.companies', []);
   const [district, setDistrict] = useState([]);
+  const [searchCompany, setSearchCompany] = useState('');
   const { handleSubmit, errors, control } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
@@ -127,8 +130,17 @@ export default function Round3(props) {
     setDistrict(province.districts);
   }
 
+  const debouncedSearch = useCallback(
+    debounce(
+      nextValue => props.dispatch(Actions.getCompaniesSearch(nextValue)),
+      1000,
+    ),
+    [],
+  );
+
   function loadCompanies(val) {
-    props.dispatch(Actions.getCompaniesSearch(val));
+    setSearchCompany(val);
+    debouncedSearch(val);
   }
 
   return (
@@ -171,16 +183,7 @@ export default function Round3(props) {
                         inputProps={{
                           ...params.inputProps,
                         }}
-                        onChange={ev => {
-                          if (
-                            ev.target.value !== '' ||
-                            ev.target.value !== null
-                          ) {
-                            // _.debounce(() => {
-                            loadCompanies(ev.target.value);
-                            // }, 1000);
-                          }
-                        }}
+                        onChange={ev => loadCompanies(ev.target.value)}
                       />
                     )}
                   />

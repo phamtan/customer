@@ -94,9 +94,41 @@ const schema = yup.object().shape({
     .string()
     .required('Bạn chưa nhập email')
     .email('Email không đúng định dạng'),
-  dob: yup.string().required('Bạn chưa nhập ngày sinh'),
+  dob: yup
+    .string()
+    .required('Bạn chưa nhập ngày sinh')
+    .nullable(),
   gender: yup.string().required('Bạn chưa nhập giới tính'),
   nationality: yup.string().required('Bạn chưa nhập quốc tịch'),
+  documentType: yup.string().required('Bạn chưa chọn loại giấy tờ'),
+  documentNumber: yup.string().required('Bạn chưa nhập số giấy tờ'),
+  docIssuedDate: yup
+    .string()
+    .required('Bạn chưa nhập ngày cấp')
+    .nullable(),
+  docIssuedPlace: yup
+    .string()
+    .required('Bạn chưa chọn nơi cấp')
+    .nullable(),
+  permanentAddressLine1: yup
+    .string()
+    .required('Bạn chưa nhập địa chỉ thường trú'),
+  permanentProvince: yup
+    .string()
+    .required('Bạn chưa chọn Tỉnh thành phố thường trú'),
+  permanentDistrict: yup.string().required('Bạn chưa chọn quận huyện'),
+  currentAddLine1: yup.string().when('currentIsPermanent', {
+    is: '1',
+    otherwise: s => s.required('Bạn chưa nhập địa chỉ hiện tại'),
+  }),
+  currentProvince: yup.string().when('currentIsPermanent', {
+    is: '1',
+    otherwise: s => s.required('Bạn chưa nhập thành phố hiện tại'),
+  }),
+  currentDistrict: yup.string().when('currentIsPermanent', {
+    is: '1',
+    otherwise: s => s.required('Bạn chưa nhập quận huyện hiện tại'),
+  }),
 });
 
 function countryToFlag(isoCode) {
@@ -223,8 +255,10 @@ export default function Round1(props) {
                   root: classes.inputStyle,
                 }}
               />
-              {errors.phone && (
-                <span className="formError">{errors.phone.message}</span>
+              {errors.mobileNumber && (
+                <span className="formError">
+                  {errors.mobileNumber.message}
+                </span>
               )}
             </div>
 
@@ -364,8 +398,10 @@ export default function Round1(props) {
                   />
                 )}
               />
-              {errors.national && (
-                <span className="formError">{errors.national.message}</span>
+              {errors.nationality && (
+                <span className="formError">
+                  {errors.nationality.message}
+                </span>
               )}
             </div>
 
@@ -450,9 +486,11 @@ export default function Round1(props) {
                   </MuiPickersUtilsProvider>
                 )}
               />
-              {/* {errors.issueDate && (
-                <span className="formError">{errors.issueDate.message}</span>
-              )} */}
+              {errors.docIssuedDate && (
+                <span className="formError">
+                  {errors.docIssuedDate.message}
+                </span>
+              )}
             </div>
 
             <div className="form-group">
@@ -509,9 +547,9 @@ export default function Round1(props) {
                   />
                 )}
               />
-              {errors.placeOfIssue && (
+              {errors.docIssuedPlace && (
                 <span className="formError">
-                  {errors.placeOfIssue.message}
+                  {errors.docIssuedPlace.message}
                 </span>
               )}
             </div>
@@ -526,8 +564,7 @@ export default function Round1(props) {
                 label="Địa chỉ thường trú"
                 control={control}
               />
-              {errors.permanentAddressLine1 &&
-                errors.permanentAddressLine1 && (
+              {errors.permanentAddressLine1 && (
                 <span className="formError">
                   {errors.permanentAddressLine1.message}
                 </span>
@@ -714,7 +751,7 @@ export default function Round1(props) {
                         }}
                         autoHighlight
                         onChange={(event, newValue) => {
-                          console.log(`province${  newValue.value}`);
+                          console.log(`province${newValue.value}`);
                           changeCurrentProvince(newValue);
                           onChange(newValue.value);
                         }}
@@ -735,10 +772,9 @@ export default function Round1(props) {
                       />
                     )}
                   />
-                  {errors.permanentAddress &&
-                    errors.permanentAddress.province && (
+                  {errors.currentProvince && (
                     <span className="formError">
-                      {errors.permanentAddress.province.message}
+                      {errors.currentProvince.message}
                     </span>
                   )}
                 </div>
@@ -788,10 +824,9 @@ export default function Round1(props) {
                       />
                     )}
                   />
-                  {errors.permanentAddress &&
-                    errors.permanentAddress.district && (
+                  {errors.currentDistrict && (
                     <span className="formError">
-                      {errors.permanentAddress.district.message}
+                      {errors.currentDistrict.message}
                     </span>
                   )}
                 </div>
