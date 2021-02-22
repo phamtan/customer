@@ -8,18 +8,27 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import logo from 'images/logo-vp.svg';
 
 const useStyles = makeStyles(theme => ({
+  headerContainer: {
+    width: '100%',
+    backgroundColor: 'white',
+    margin: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   stepperRoot: {
     width: '100%',
+    maxWidth: '470px',
+    margin: 'auto',
     color: '#028547',
-    backgroundColor: '#f7f8f8',
+    backgroundColor: 'white',
     border: '1px solid white',
     height: '38px',
-    marginLeft: '0px',
     marginTop: '16px',
     [theme.breakpoints.down('xs')]: {
       padding: '0px',
     },
-    
   },
   backButton: {
     marginRight: theme.spacing(1),
@@ -40,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     color: '#028547',
   },
   stepperBackground: {
-    backgroundColor: '#f7f8f8',
+    backgroundColor: 'white',
   },
   labelContainer: {
     '&$alternativeLabel': {
@@ -66,7 +75,7 @@ export default function Header(props) {
     return ['Bắt đầu', 'Thông tin', 'Hoàn thành'];
   }
   return (
-    <>
+    <div className={classes.headerContainer}>
       <div className={props.className}>
         <img src={logo} alt="logo" />
       </div>
@@ -101,6 +110,6 @@ export default function Header(props) {
           ))}
         </Stepper>
       )}
-    </>
+    </div>
   );
 }

@@ -148,7 +148,7 @@ export default function Round1(props) {
   const [district, setDistrict] = useState([]);
   const [currentDistrict, setCurrentDistrict] = useState([]);
   const [showPermanentAddress, setShowPermaneAddress] = useState(false);
-  const { handleSubmit, errors, control, reset } = useForm({
+  const { handleSubmit, errors, control, reset, formState } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -832,7 +832,11 @@ export default function Round1(props) {
                 </div>
               </>
             )}
-            <button type="submit" className={classes.action}>
+            <button
+              type="submit"
+              className={classes.action}
+              disabled={formState.isSubmitting}
+            >
               Tiếp tục
             </button>
           </div>

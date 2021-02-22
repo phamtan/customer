@@ -95,7 +95,7 @@ export default function Round3(props) {
   const companies = _.get(props, 'jarvisCustomerV2.companies', []);
   const [district, setDistrict] = useState([]);
   const [searchCompany, setSearchCompany] = useState('');
-  const { handleSubmit, errors, control } = useForm({
+  const { handleSubmit, errors, control, formState } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -306,7 +306,9 @@ export default function Round3(props) {
                 control={control}
               />
               {errors.companyPhone && (
-                <span className="formError">{errors.companyPhone.message}</span>
+                <span className="formError">
+                  {errors.companyPhone.message}
+                </span>
               )}
             </div>
 
@@ -410,7 +412,11 @@ export default function Round3(props) {
                 <span className="formError">{errors.industry.message}</span>
               )}
             </div>
-            <button type="submit" className="btn btnSubmit">
+            <button
+              type="submit"
+              className="btn btnSubmit"
+              disabled={formState.isSubmitting}
+            >
               Tiếp tục
             </button>
           </div>

@@ -334,7 +334,10 @@ export default function LandingCard(props) {
                       <div className="floatAction">
                         <button
                           type="button"
-                          onClick={() => chooseThisCard(card.id_int)}
+                          onClick={e => {
+                            e.stopPropagation();
+                            chooseThisCard(card.id_int);
+                          }}
                           className={classes.openCardBtn}
                         >
                           Mở thẻ
@@ -377,7 +380,10 @@ export default function LandingCard(props) {
                       <div className="floatAction">
                         <button
                           type="button"
-                          onClick={() => chooseThisCard(card.id_int)}
+                          onClick={e => {
+                            e.stopPropagation();
+                            chooseThisCard(card.id_int);
+                          }}
                           className={classes.openCardBtn}
                         >
                           Mở thẻ

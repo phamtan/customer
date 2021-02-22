@@ -21,6 +21,7 @@ import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import Slider from '@material-ui/core/Slider';
 import _ from 'lodash';
 import captureBtn from 'images/capture.svg';
+import arrow from 'images/arrow.svg';
 import * as Actions from '../../actions';
 
 const useStyles = makeStyles(theme => ({
@@ -221,7 +222,7 @@ const PrettoSlider = withStyles({
 function CustomThumbComponent(props) {
   return (
     <span {...props}>
-      <AccessAlarmIcon className="arrow" />
+      <img src={arrow} alt="slide to close" />
     </span>
   );
 }
@@ -402,6 +403,12 @@ export default function VideoKYC(props) {
     setOpen(false);
   };
 
+  function slideToClose(e, newValue) {
+    if (newValue === 100) {
+      setOpen(false);
+    }
+  }
+
   return (
     <div className={classes.container}>
       <div className={classes.cameraContainer}>
@@ -457,6 +464,7 @@ export default function VideoKYC(props) {
                 min={0}
                 max={100}
                 ThumbComponent={CustomThumbComponent}
+                onChange={slideToClose}
               />
             </div>
           </Typography>

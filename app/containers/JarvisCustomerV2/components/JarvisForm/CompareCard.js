@@ -143,6 +143,17 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     width: '100%',
   },
+  pageContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    maxWidth: '470px',
+    margin: 'auto',
+    backgroundColor: 'white',
+    marginTop: '16px',
+    borderRadius: '4px',
+    marginBottom: '16px',
+  },
   dividerStyle: {
     height: '100%',
     minHeight: '100vh',
@@ -311,53 +322,55 @@ export default function LandingCard(props) {
   return (
     <JarvisFormStyle>
       <Header className="header" />
-      <div className={classes.pageHeader}>Thẻ tín dụng VPBank</div>
-      <div className={classes.compareContainer}>
-        <div className={classes.cardContainer}>
-          {allCard &&
-            allCard.map(card => (
-              <div
-                className={classes.cardItem}
-                // onClick={() => chooseThisCard(card.id_int)}
-              >
-                <img src={getCardImage(card.id_int)} alt="card" />
-                <span className={classes.cardTitle}>{card.name}</span>
+      <div className={classes.pageContainer}>
+        <div className={classes.pageHeader}>Thẻ tín dụng VPBank</div>
+        <div className={classes.compareContainer}>
+          <div className={classes.cardContainer}>
+            {allCard &&
+              allCard.map(card => (
                 <div
-                  className={classes.cardbenefit}
-                  onClick={() => addCardCompare(card)}
+                  className={classes.cardItem}
+                  // onClick={() => chooseThisCard(card.id_int)}
                 >
-                  <AddCircleOutlinedIcon className={classes.addIconStyle} />
+                  <img src={getCardImage(card.id_int)} alt="card" />
+                  <span className={classes.cardTitle}>{card.name}</span>
+                  <div
+                    className={classes.cardbenefit}
+                    onClick={() => addCardCompare(card)}
+                  >
+                    <AddCircleOutlinedIcon className={classes.addIconStyle} />
+                  </div>
                 </div>
-              </div>
-            ))}
-        </div>
-        <Divider className={classes.dividerStyle} orientation="vertical" />
-        <div>
-          {cardCompare &&
-            cardCompare.map(card => (
-              <div
-                className={classes.cardItem}
-                // onClick={() => chooseThisCard(card.id_int)}
-              >
-                <img src={getCardImage(card.id_int)} alt="card" />
-                <span className={classes.cardTitle}>{card.name}</span>
+              ))}
+          </div>
+          <Divider className={classes.dividerStyle} orientation="vertical" />
+          <div>
+            {cardCompare &&
+              cardCompare.map(card => (
                 <div
-                  className={classes.cardbenefit}
-                  onClick={() => removeCardCompare(card)}
+                  className={classes.cardItem}
+                  // onClick={() => chooseThisCard(card.id_int)}
                 >
-                  <RemoveCircleOutlinedIcon
-                    className={classes.removeIconStyle}
-                  />
+                  <img src={getCardImage(card.id_int)} alt="card" />
+                  <span className={classes.cardTitle}>{card.name}</span>
+                  <div
+                    className={classes.cardbenefit}
+                    onClick={() => removeCardCompare(card)}
+                  >
+                    <RemoveCircleOutlinedIcon
+                      className={classes.removeIconStyle}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          <button
-            type="button"
-            className={classes.buttonCompare}
-            onClick={() => handleClickOpen()}
-          >
-            So sánh
-          </button>
+              ))}
+            <button
+              type="button"
+              className={classes.buttonCompare}
+              onClick={() => handleClickOpen()}
+            >
+              So sánh
+            </button>
+          </div>
         </div>
       </div>
       <Dialog

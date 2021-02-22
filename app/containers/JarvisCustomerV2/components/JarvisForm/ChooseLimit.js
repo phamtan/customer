@@ -52,6 +52,18 @@ const PrettoSlider = withStyles({
 })(Slider);
 
 const useStyles = makeStyles(() => ({
+  pageContainer: {
+    width: '100%',
+    maxWidth: '470px',
+    margin: 'auto',
+    backgroundColor: 'white',
+    marginBottom: '16px',
+    borderRadius: '4px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   titleHeader: {
     fontSize: '24px',
     width: '100%',
@@ -117,6 +129,7 @@ const useStyles = makeStyles(() => ({
     fontSize: '14px',
     border: 'none',
     textTransform: 'uppercase',
+    marginBottom: '32px',
   },
   cardTitle: {
     fontSize: '14px',
@@ -187,54 +200,55 @@ export default function ChooseLimit(props) {
   return (
     <JarvisFormStyle>
       <Header className="header" />
+      <div className={classes.pageContainer}>
+        <div className={classes.titleHeader}>
+          <div>Chọn hạn mức phù hợp</div>
+        </div>
 
-      <div className={classes.titleHeader}>
-        <div>Chọn hạn mức phù hợp</div>
-      </div>
-
-      <Card className={classes.cardStyle}>
-        <CardContent className={classes.cardStyle}>
-          <div className={classes.cardContainer}>
-            <div className={classes.cardTitle}>{card ? card.name : ''}</div>
-            <div>{card ? card.comparison.table_1.creditLimit : ''}</div>
-          </div>
-          <Divider className={classes.dividerStyle} />
-          <div className={classes.cardName}>
-            <img src={logo} alt="vpbank" />
-            <div className={classes.nameStyle}>{card ? card.name : ''}</div>
-          </div>
-          <Divider className={classes.dividerStyle} />
-          <div className={classes.guiline}>Kéo để tăng giảm hạn mức</div>
-          <PrettoSlider
-            defaultValue={card ? Number(card.maxLimit) * 0.5 : 20}
-            aria-labelledby="discrete-slider-custom"
-            valueLabelDisplay="on"
-            marks={getMarks()}
-            min={card ? Number(card.minLimit) : 10}
-            max={card ? Number(card.maxLimit) : 100}
-            step={10}
-            value={amount}
-            onChange={updateLimit}
-          />
-          <div className={classes.limitText}>
-            <span>Hạn mức bạn chọn là:</span>
-            <TextField
-              className={classes.inputLimit}
-              id="outlined-basic"
+        <Card className={classes.cardStyle}>
+          <CardContent className={classes.cardStyle}>
+            <div className={classes.cardContainer}>
+              <div className={classes.cardTitle}>{card ? card.name : ''}</div>
+              <div>{card ? card.comparison.table_1.creditLimit : ''}</div>
+            </div>
+            <Divider className={classes.dividerStyle} />
+            <div className={classes.cardName}>
+              <img src={logo} alt="vpbank" />
+              <div className={classes.nameStyle}>{card ? card.name : ''}</div>
+            </div>
+            <Divider className={classes.dividerStyle} />
+            <div className={classes.guiline}>Kéo để tăng giảm hạn mức</div>
+            <PrettoSlider
+              defaultValue={card ? Number(card.maxLimit) * 0.5 : 20}
+              aria-labelledby="discrete-slider-custom"
+              valueLabelDisplay="on"
+              marks={getMarks()}
+              min={card ? Number(card.minLimit) : 10}
+              max={card ? Number(card.maxLimit) : 100}
+              step={10}
               value={amount}
-              onChange={e => setAmount(e.target.value)}
+              onChange={updateLimit}
             />
-            <span>triệu VNĐ</span>
-          </div>
-        </CardContent>
-      </Card>
-      <button
-        type="button"
-        onClick={() => chooseThisBenefit()}
-        className={classes.action}
-      >
-        Tiếp tục
-      </button>
+            <div className={classes.limitText}>
+              <span>Hạn mức bạn chọn là:</span>
+              <TextField
+                className={classes.inputLimit}
+                id="outlined-basic"
+                value={amount}
+                onChange={e => setAmount(e.target.value)}
+              />
+              <span>triệu VNĐ</span>
+            </div>
+          </CardContent>
+        </Card>
+        <button
+          type="button"
+          onClick={() => chooseThisBenefit()}
+          className={classes.action}
+        >
+          Tiếp tục
+        </button>
+      </div>
     </JarvisFormStyle>
   );
 }

@@ -92,7 +92,14 @@ export default function Round3(props) {
   const selections = _.get(props, 'jarvisCustomerV2.selections', []);
   const companies = _.get(props, 'jarvisCustomerV2.companies', []);
   const [maritalStatus, setMaritalStatus] = useState(null);
-  const { register, handleSubmit, errors, control, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    errors,
+    control,
+    setValue,
+    formState,
+  } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -450,7 +457,11 @@ export default function Round3(props) {
               )}
             </div>
 
-            <button type="submit" className={classes.action}>
+            <button
+              type="submit"
+              className={classes.action}
+              disabled={formState.isSubmitting}
+            >
               Tiếp tục
             </button>
           </div>

@@ -17,6 +17,10 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'white',
     marginTop: '18px',
     height: '100vh',
+    maxWidth: '470px',
+    margin: 'auto',
+    borderRadius: '4px',
+    marginBottom: '16px',
   },
   titleHeader: {
     fontSize: '24px',
@@ -106,7 +110,7 @@ const schema = yup.object().shape({
 });
 
 export default function Round1(props) {
-  const { handleSubmit, errors, control } = useForm({
+  const { handleSubmit, errors, control, formState } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -193,7 +197,11 @@ export default function Round1(props) {
               )}
             </div>
 
-            <button type="submit" className={classes.action}>
+            <button
+              type="submit"
+              className={classes.action}
+              disabled={formState.isSubmitting}
+            >
               Tiếp tục
             </button>
           </div>

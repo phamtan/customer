@@ -15,6 +15,7 @@ import { useInjectReducer } from 'utils/injectReducer';
 import CompanyLayout from 'layouts/CompanyLayout';
 import ApplicantLayout from 'layouts/ApplicantLayout';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import WorkList from 'containers/WorkList/Loadable';
 import Login from 'containers/Login/Loadable';
 import JarvisCustomer from 'containers/JarvisCustomer/Loadable';
 import JarvisCustomerV2 from 'containers/JarvisCustomerV2/Loadable';
@@ -41,6 +42,7 @@ export default function App() {
       <Switch>
         <Route path="/" exact component={JarvisCustomer} />
         <Route path="/v2" component={JarvisCustomerV2} />
+        <Route path="/worklist" exact component={WorkList} />
         {/* <Route path="/customer" component={JarvisCustomerV2} /> */}
         <Route path="/company" component={CompanyLayout} />
         <Route path="/applicant" component={ApplicantLayout} />
