@@ -3,18 +3,19 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useEffect } from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Slider from '@material-ui/core/Slider';
-import Divider from '@material-ui/core/Divider';
-import logo from 'images/logo-vp.svg';
 import _ from 'lodash';
-import dataCard from 'images/data.json';
 import backGroundGreen from 'images/backgroundgreen.png';
-import Header from './Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import {
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import RadialSeparators from './RadialSeperators';
 import * as Actions from '../../actions';
 
 import JarvisFormStyle from './JarvisFormStyle';
@@ -47,7 +48,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     marginBottom: '16px',
     marginTop: '24px',
-    minHeight: '85vh'
+    minHeight: '85vh',
   },
   titleCard: {
     marginBottom: '48px',
@@ -137,13 +138,17 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     color: 'white',
     fontSize: '30px',
-  }
+  },
 }));
 
 export default function WaitingCheckLos(props) {
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
   const classes = useStyles();
-  const [time, setTime] = useState(jarvisCustomer && jarvisCustomer.waitRoundOne ? Number(jarvisCustomer.waitRoundOne) : 30);
+  const [time, setTime] = useState(
+    jarvisCustomer && jarvisCustomer.waitRoundOne
+      ? Number(jarvisCustomer.waitRoundOne)
+      : 30,
+  );
   const [check, setCheck] = useState(false);
   const [allowNext, setAllowNext] = useState(false);
 
@@ -151,7 +156,7 @@ export default function WaitingCheckLos(props) {
     const timer = setTimeout(() => {
       if (time > 0) {
         setTime(time - 1);
-      } 
+      }
     }, 1000);
     return () => clearTimeout(timer);
   });
@@ -161,46 +166,79 @@ export default function WaitingCheckLos(props) {
       setCheck(true);
       checkLosResult();
     }
-  }), [time];
+  }),
+  [time];
 
   function checkLosResult() {
     return new Promise((resolve, reject) => {
-      props.dispatch(Actions.checkLosResult({
-        appId: jarvisCustomer.id,
-        round: 'Check_1',
-      }, resolve, reject));
-    }).then(response => {
-      if (response.status === "PASS") {
-        setAllowNext(true);
-      }
-    }).catch((error) => {
-
+      props.dispatch(
+        Actions.checkLosResult(
+          {
+            appId: jarvisCustomer.id,
+            round: 'Check_1',
+          },
+          resolve,
+          reject,
+        ),
+      );
     })
+      .then(response => {
+        if (response.status === 'PASS') {
+          setAllowNext(true);
+        }
+      })
+      .catch(error => {});
   }
 
   return (
     <JarvisFormStyle>
       <div className={classes.container}>
-      <Card className={classes.cardStyle}>
-        <CardContent className={classes.cardStyle}>
-          <div className={classes.cardContainer}>
-            <div className={classes.titleHeader}>
-              Hệ thống đã ghi nhận thông tin, xin quý khách chờ trong giây lát
+        <Card className={classes.cardStyle}>
+          <CardContent className={classes.cardStyle}>
+            <div className={classes.cardContainer}>
+              <div className={classes.titleHeader}>
+                Hệ thống đã ghi nhận thông tin, xin quý khách chờ trong giây lát
+              </div>
+              <div className={classes.progressCircle}>
+                <CircularProgressbarWithChildren
+                  value={time * 3.3}
+                  strokeWidth={5}
+                  styles={buildStyles({
+                    strokeLinecap: 'butt',
+                    pathColor: '#18b7c7',
+                    trailColor: 'white',
+                    transition: 'stroke-dashoffset 0.5s ease 0s',
+                    // Rotate the path
+                    transform: 'rotate(0.2turn)',
+                    transformOrigin: 'center center',
+                    trail: {
+                      transform: 'rotate(0.2turn)',
+                    },
+                  })}
+                >
+                  <RadialSeparators
+                    count={30}
+                    style={{
+                      background: '#fff',
+                      width: '25px',
+                      // This needs to be equal to props.strokeWidth
+                      height: `${10}%`,
+                    }}
+                  />
+                  <div className={classes.ovalShape}>{time}</div>
+                </CircularProgressbarWithChildren>
+              </div>
             </div>
-
-            <div className={classes.ovalShape}>{time}</div>
-          </div>
-          <button
-            type="button"
-            disabled={!allowNext}
-            onClick={() => props.setStep(9)}
-            className={allowNext ? classes.action : classes.actionDisabled}
-          >
-            Tiếp tục
-          </button>
-        </CardContent>
-      </Card>
-      
+            <button
+              type="button"
+              disabled={!allowNext}
+              onClick={() => props.setStep(9)}
+              className={allowNext ? classes.action : classes.actionDisabled}
+            >
+              Tiếp tục
+            </button>
+          </CardContent>
+        </Card>
       </div>
     </JarvisFormStyle>
   );

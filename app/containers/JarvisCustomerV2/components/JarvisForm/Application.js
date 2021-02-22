@@ -30,13 +30,16 @@ import Liveness from './Liveness';
 import CompareCard from './CompareCard';
 import WaitingCheckLos from './WaitingCheckLos';
 import AllCards from './AllCards';
+import RejectCard from './RejectCard';
+import RegisCardDone from './RegisCardDone';
+import CheckLimitDone from './CheckLimitDone';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 export default function Application(props) {
-  const [step, setStep] = useState(8);
+  const [step, setStep] = useState(22);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -108,6 +111,9 @@ export default function Application(props) {
           {...props}
         />
       )}
+      {step === 24 && <RejectCard setStep={setStep} {...props} />}
+      {step === 25 && <RegisCardDone setStep={setStep} {...props} />}
+      {step === 26 && <CheckLimitDone setStep={setStep} {...props} />}
       {step === 998 && <AllCards setStep={setStep} {...props} />}
       {step === 1000 && <ChooseLimit setStep={setStep} {...props} />}
       {step === 997 && <ChooseCard setStep={setStep} {...props} />}
