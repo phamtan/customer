@@ -267,6 +267,9 @@ function* fetchCompaniesSearchSaga(action) {
   };
   try {
     const companies = yield call(Api.get, payloadCompanies);
+    if (companies.length === 0) {
+      companies.push({ code: 'others', name: 'Khác' });
+    }
     yield put(getCompaniesSuccess(companies));
   } catch (error) {
     // yield put(callapiErorr());

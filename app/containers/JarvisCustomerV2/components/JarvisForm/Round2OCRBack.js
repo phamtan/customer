@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { Camera, Preview } from 'camera-component/camera-document';
-import _ from "lodash";
+import _ from 'lodash';
 import ocrframe from 'images/ocrframe.png';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
@@ -114,13 +114,17 @@ const styles = theme => ({
   },
 });
 
-const DialogTitle = withStyles(styles)((props) => {
+const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
-        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+        <IconButton
+          aria-label="close"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
           <CloseIcon />
         </IconButton>
       ) : null}
@@ -128,12 +132,11 @@ const DialogTitle = withStyles(styles)((props) => {
   );
 });
 
-const DialogContent = withStyles((theme) => ({
+const DialogContent = withStyles(theme => ({
   root: {
     padding: theme.spacing(2),
   },
 }))(MuiDialogContent);
-
 
 const CAPTURE_OPTIONS = {
   audio: false,
@@ -150,43 +153,66 @@ export default function Round2OCRGuide(props) {
   function handleTakePhoto(blob) {
     // Do stuff with the photo...
     return new Promise((resolve, reject) => {
-      props.dispatch(Actions.uploadOCRBack({
-        imgBack: blob,
-        customerId: jarvisCustomer.id,
-      }, resolve, reject))
-    }).then((res) => {
-      const response = JSON.parse(res.body);
-      if (res.statusCodeValue === 200) {
-        return new Promise((resolve, reject) => {
-          props.dispatch(Actions.faceMatching({
+      props.dispatch(
+        Actions.uploadOCRBack(
+          {
+            imgBack: blob,
             customerId: jarvisCustomer.id,
-          }, resolve, reject))
-        }).then((res) => {
-          const response = JSON.parse(res.body);
-          if (res.statusCodeValue === 200) {
-            props.setStep(5);
-            // turnOffCamera();
-          } else {
-            setOpen(true);
-          }
-        }).catch(() => {
-          props.handleShoMessage({
-            message: 'Có lỗi xảy ra vui lòng thử lại',
-            severity: 'error',
-          });
-        })
-      } else {
-        setOpen(true);
-      }
-    }).catch(() => {
-      props.handleShoMessage({
-        message: 'Có lỗi xảy ra vui lòng thử lại',
-        severity: 'error',
-      });
+          },
+          resolve,
+          reject,
+        ),
+      );
     })
+      .then(res => {
+        const responseOCR = JSON.parse(res.body);
+        if (res.statusCodeValue === 200) {
+          return new Promise((resolve, reject) => {
+            props.dispatch(
+              Actions.faceMatching(
+                {
+                  customerId: jarvisCustomer.id,
+                },
+                resolve,
+                reject,
+              ),
+            );
+          })
+            .then(resFacceMatching => {
+              if (resFacceMatching.statusCodeValue === 200) {
+                const valueSubmit = jarvisCustomer;
+                if (
+                  responseOCR.data &&
+                  responseOCR.data[0] &&
+                  responseOCR.data[0].id
+                ) {
+                  valueSubmit.docIssuedDate = responseOCR.data[0].issue_date;
+                }
+                props.dispatch(Actions.saveRawData(valueSubmit));
+                props.setStep(5);
+                // turnOffCamera();
+              } else {
+                setOpen(true);
+              }
+            })
+            .catch(() => {
+              props.handleShoMessage({
+                message: 'Có lỗi xảy ra vui lòng thử lại',
+                severity: 'error',
+              });
+            });
+        }
+        setOpen(true);
+      })
+      .catch(() => {
+        props.handleShoMessage({
+          message: 'Có lỗi xảy ra vui lòng thử lại',
+          severity: 'error',
+        });
+      });
   }
 
-   const handleClose = () => {
+  const handleClose = () => {
     setOpen(false);
   };
 
@@ -194,7 +220,10 @@ export default function Round2OCRGuide(props) {
     <JarvisFormStyle>
       <div className={classes.container}>
         <div>
-          <ArrowBackIosIcon className={classes.backIcon} onClick={() => props.setStep(19)} />
+          <ArrowBackIosIcon
+            className={classes.backIcon}
+            onClick={() => props.setStep(19)}
+          />
         </div>
         {isCameraOpen && (
           <div className={classes.cameraContainer}>
@@ -207,15 +236,19 @@ export default function Round2OCRGuide(props) {
           </div>
         )}
       </div>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+      <Dialog
+        onClose={handleClose}
+        aria-labelledby="customized-dialog-title"
+        open={open}
+      >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Thông báo hình ảnh cần khắc phục
         </DialogTitle>
         <DialogContent dividers>
           <Typography gutterBottom>
-            Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được gương mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và chụp lại.
+            Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được gương
+            mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và chụp lại.
           </Typography>
-          
         </DialogContent>
       </Dialog>
     </JarvisFormStyle>

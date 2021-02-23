@@ -21,7 +21,7 @@ import messages from './messages';
 import * as Actions from './actions';
 import Application from './components/JarvisForm/Application';
 import LandingCard from './components/JarvisForm/LandingCard';
-import Round1 from './components/JarvisForm/Round1';
+import Login from './components/JarvisForm/Login';
 import Liveness from './components/JarvisForm/Liveness';
 
 export function JarvisCustomerV2(props) {
@@ -43,6 +43,9 @@ export function JarvisCustomerV2(props) {
       </Route>
       <Route exact path="/v2/step2">
         <Liveness {...props} />
+      </Route>
+      <Route exact path="/v2/login">
+        <Login {...props} />
       </Route>
     </div>
   );

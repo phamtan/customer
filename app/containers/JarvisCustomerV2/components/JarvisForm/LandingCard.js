@@ -262,7 +262,7 @@ export default function LandingCard(props) {
   return (
     <JarvisFormStyle>
       <div className={classes.pageContainer}>
-        <Header className="header" />
+        <Header className="header" {...props} />
         <TabContext value={tab}>
           <TabList
             className={classes.tabStyle}

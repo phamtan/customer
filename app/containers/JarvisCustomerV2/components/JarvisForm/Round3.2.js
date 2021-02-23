@@ -109,8 +109,18 @@ export default function Round3(props) {
   const [district, setDistrict] = useState([]);
 
   function onSubmitForm(values) {
-    props.dispatch(Actions.saveData(values));
-    props.setStep(11);
+    return new Promise((resolve, reject) => {
+      props.dispatch(Actions.saveDataApp(values, resolve, reject));
+    })
+      .then(() => {
+        props.setStep(25);
+      })
+      .catch(() => {
+        props.handleShoMessage({
+          message: 'Có lỗi xảy ra vui lòng thử lại',
+          severity: 'error',
+        });
+      });
   }
 
   function getSelectedValue(category, value) {
@@ -718,7 +728,7 @@ export default function Round3(props) {
 
             <button
               type="submit"
-              className="btn btnSubmit"
+              className={classes.action}
               disabled={formState.isSubmitting}
             >
               Tiếp tục

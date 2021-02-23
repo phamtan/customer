@@ -53,9 +53,9 @@ const PrettoSlider = withStyles({
 
 const useStyles = makeStyles(() => ({
   pageContainer: {
+    marginTop: '16px',
     width: '100%',
     maxWidth: '470px',
-    margin: 'auto',
     backgroundColor: 'white',
     marginBottom: '16px',
     borderRadius: '4px',

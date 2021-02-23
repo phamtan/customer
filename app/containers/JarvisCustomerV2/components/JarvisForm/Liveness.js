@@ -133,6 +133,22 @@ const useStyles = makeStyles(theme => ({
   dialogPaper: {
     margin: '16px',
   },
+  slideToCloseText: {
+    width: '100%',
+    textAlign: 'center',
+    color: 'rgba(18, 18, 18, 0.87)',
+    opacity: '0.78',
+    fontSize: '12px',
+  },
+  slideContainer: {
+    position: 'relative',
+  },
+  slideText: {
+    position: 'absolute',
+    top: '27px',
+    left: '30%',
+    textTransform: 'uppercase',
+  },
 }));
 
 const styles = theme => ({
@@ -153,7 +169,7 @@ const DialogTitle = withStyles(styles)(props => {
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
-      {onClose ? (
+      {/* {onClose ? (
         <IconButton
           aria-label="close"
           className={classes.closeButton}
@@ -161,7 +177,7 @@ const DialogTitle = withStyles(styles)(props => {
         >
           <CloseIcon />
         </IconButton>
-      ) : null}
+      ) : null} */}
     </MuiDialogTitle>
   );
 });
@@ -406,6 +422,9 @@ export default function VideoKYC(props) {
   function slideToClose(e, newValue) {
     if (newValue === 100) {
       setOpen(false);
+      setRecording(false);
+      setProcess(false);
+      // restartCamera();
     }
   }
 
@@ -442,6 +461,7 @@ export default function VideoKYC(props) {
       <canvas style={{ display: 'none' }} />
       <Dialog
         onClose={handleClose}
+        disableBackdropClick
         aria-labelledby="customized-dialog-title"
         open={open}
         classes={{
@@ -455,8 +475,7 @@ export default function VideoKYC(props) {
           <Typography gutterBottom>
             Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được gương
             mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và chụp lại.
-            <div>
-              <div>Tôi đồng ý</div>
+            <div className={classes.slideContainer}>
               <PrettoSlider
                 valueLabelDisplay="none"
                 aria-label="pretto slider"
@@ -466,6 +485,10 @@ export default function VideoKYC(props) {
                 ThumbComponent={CustomThumbComponent}
                 onChange={slideToClose}
               />
+              <div className={classes.slideText}>Tôi đồng ý</div>
+            </div>
+            <div className={classes.slideToCloseText}>
+              Gạt sang để tiếp tục
             </div>
           </Typography>
         </DialogContent>

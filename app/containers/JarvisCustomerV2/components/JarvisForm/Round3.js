@@ -1,11 +1,13 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import _ from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, {
+  createFilterOptions,
+} from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
@@ -15,13 +17,7 @@ import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import * as Actions from '../../actions';
 
-const company = [
-  { value: 'vin', label: 'Vingroup' },
-  { value: 'vpb', label: 'VPBank' },
-  { value: 'masan', label: 'Masan' },
-  { value: 'flc', label: 'FLC' },
-  { value: 'other', label: 'Khác' },
-];
+const filter = createFilterOptions();
 
 const useStyles = makeStyles(() => ({
   formContainer: {
@@ -94,6 +90,8 @@ export default function Round3(props) {
   const selections = _.get(props, 'jarvisCustomerV2.selections', []);
   const companies = _.get(props, 'jarvisCustomerV2.companies', []);
   const [district, setDistrict] = useState([]);
+  const [companyList, setCompanyList] = useState([]);
+  const [showOtherCompany, setShowOtherCompany] = useState(false);
   const [searchCompany, setSearchCompany] = useState('');
   const { handleSubmit, errors, control, formState } = useForm({
     reValidateMode: 'onChange',
@@ -104,6 +102,13 @@ export default function Round3(props) {
     },
     resolver: yupResolver(schema),
   });
+
+  useEffect(() => {
+    // if (companies) {
+    //   companies.push({ code: 'others', name: 'Khác' });
+    // }
+    setCompanyList([...companies]);
+  }, [companies]);
 
   function onSubmitForm(values) {
     const valuesSubmit = [...values];
@@ -143,6 +148,14 @@ export default function Round3(props) {
     debouncedSearch(val);
   }
 
+  function chooseCompany(val) {
+    if (val === 'others') {
+      setShowOtherCompany(true);
+    } else {
+      setShowOtherCompany(false);
+    }
+  }
+
   return (
     <JarvisFormStyle>
       <Header className="header" step={3} showStep />
@@ -159,18 +172,32 @@ export default function Round3(props) {
                     id="country-select-demo"
                     style={{ width: '90vw' }}
                     options={
-                      companies &&
-                      companies.map(company => ({
+                      companyList &&
+                      companyList.map(company => ({
                         value: company.code,
                         label: company.name,
                       }))
                     }
+                    filterOptions={(options, params) => {
+                      const filtered = filter(options, params);
+
+                      // Suggest the creation of a new value
+                      if (params.inputValue !== '') {
+                        filtered.push({
+                          value: 'others',
+                          label: 'Khác',
+                        });
+                      }
+
+                      return filtered;
+                    }}
                     classes={{
                       option: classes.option,
                     }}
                     onChange={(_event, newValue) => {
                       if (newValue) {
                         onChange(newValue.value);
+                        chooseCompany(newValue.value);
                       }
                     }}
                     autoHighlight
@@ -195,6 +222,24 @@ export default function Round3(props) {
                 </span>
               )}
             </div>
+
+            {showOtherCompany && (
+              <div className="form-group">
+                <Controller
+                  as={TextField}
+                  name="employerNameOther"
+                  fullWidth
+                  variant="outlined"
+                  label="Tên công ty"
+                  control={control}
+                />
+                {errors.employerNameOther && (
+                  <span className="formError">
+                    {errors.employerNameOther.message}
+                  </span>
+                )}
+              </div>
+            )}
 
             <div className="form-group">
               <Controller
@@ -299,15 +344,15 @@ export default function Round3(props) {
             <div className="form-group">
               <Controller
                 as={TextField}
-                name="companyPhone"
+                name="landlinePhoneNo"
                 fullWidth
                 variant="outlined"
                 label="Số Điện thoại cố định"
                 control={control}
               />
-              {errors.companyPhone && (
+              {errors.landlinePhoneNo && (
                 <span className="formError">
-                  {errors.companyPhone.message}
+                  {errors.landlinePhoneNo.message}
                 </span>
               )}
             </div>
@@ -315,14 +360,16 @@ export default function Round3(props) {
             <div className="form-group">
               <Controller
                 as={TextField}
-                name="companyPhone"
+                name="internalPhoneNo"
                 fullWidth
                 variant="outlined"
                 label="Số máy lẻ"
                 control={control}
               />
-              {errors.ext && (
-                <span className="formError">{errors.ext.message}</span>
+              {errors.internalPhoneNo && (
+                <span className="formError">
+                  {errors.internalPhoneNo.message}
+                </span>
               )}
             </div>
 
