@@ -125,9 +125,9 @@ export default function Round3(props) {
   function getSelectedValue(category, value) {
     const item = selections.find(opt => {
       if (opt.category === category && opt.code === value)
-        return { value: opt.code, label: opt.nameVi };
+        return { value: opt.code, label: opt.nameVI };
     });
-    return { value: item && item.code, label: item && item.nameVi } || {};
+    return { value: item && item.code, label: item && item.nameVI } || {};
   }
 
   return (
@@ -153,7 +153,7 @@ export default function Round3(props) {
                         )
                         .map(selection => ({
                           value: selection.code,
-                          label: selection.nameVi,
+                          label: selection.nameVI,
                         }))
                     }
                     classes={{
@@ -300,7 +300,7 @@ export default function Round3(props) {
                         )
                         .map(selection => ({
                           value: selection.code,
-                          label: selection.nameVi,
+                          label: selection.nameVI,
                         }))
                     }
                     classes={{
@@ -365,7 +365,7 @@ export default function Round3(props) {
                         )
                         .map(selection => ({
                           value: selection.code,
-                          label: selection.nameVi,
+                          label: selection.nameVI,
                         }))
                     }
                     classes={{
@@ -412,7 +412,7 @@ export default function Round3(props) {
                         )
                         .map(selection => ({
                           value: selection.code,
-                          label: selection.nameVi,
+                          label: selection.nameVI,
                         }))
                     }
                     classes={{

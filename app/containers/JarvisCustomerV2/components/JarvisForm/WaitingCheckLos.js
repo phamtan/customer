@@ -20,10 +20,15 @@ import * as Actions from '../../actions';
 
 import JarvisFormStyle from './JarvisFormStyle';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   container: {
     backgroundImage: `url(${backGroundGreen})`,
     width: '100%',
+    maxWidth: '470px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '24px',
+      marginBottom: '24px',
+    },
     height: '100%',
     minHeight: '100vh',
     backgroundSize: 'contain',
@@ -174,7 +179,7 @@ export default function WaitingCheckLos(props) {
       props.dispatch(
         Actions.checkLosResult(
           {
-            appId: jarvisCustomer.id,
+            appId: jarvisCustomer.applicationId,
             round: 'Check_1',
           },
           resolve,

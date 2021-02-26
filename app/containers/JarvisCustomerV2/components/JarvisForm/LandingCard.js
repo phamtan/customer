@@ -344,7 +344,7 @@ export default function LandingCard(props) {
                         </button>
                         <button
                           type="button"
-                          // onClick={() => props.setStep(17)}
+                          onClick={() => props.setStep(22)}
                           className={classes.compareCardBtn}
                         >
                           So sánh
@@ -390,7 +390,7 @@ export default function LandingCard(props) {
                         </button>
                         <button
                           type="button"
-                          // onClick={() => props.setStep(17)}
+                          onClick={() => props.setStep(22)}
                           className={classes.compareCardBtn}
                         >
                           So sánh

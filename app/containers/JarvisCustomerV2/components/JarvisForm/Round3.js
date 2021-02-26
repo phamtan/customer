@@ -388,7 +388,7 @@ export default function Round3(props) {
                         )
                         .map(selection => ({
                           value: selection.code,
-                          label: selection.nameVi,
+                          label: selection.nameVI,
                         }))
                     }
                     classes={{
@@ -431,7 +431,7 @@ export default function Round3(props) {
                         )
                         .map(selection => ({
                           value: selection.code,
-                          label: selection.nameVi,
+                          label: selection.nameVI,
                         }))
                     }
                     classes={{

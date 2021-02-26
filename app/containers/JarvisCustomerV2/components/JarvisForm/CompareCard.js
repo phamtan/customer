@@ -9,22 +9,14 @@ import no1Card from 'images/cards/no1-card.png';
 import mc2Card from 'images/cards/mc2-card.png';
 import vnaCard from 'images/cards/vna-card.png';
 import platinumCard from 'images/cards/platinum-card.png';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import AddCircleOutlinedIcon from '@material-ui/icons/AddCircleOutlined';
 import RemoveCircleOutlinedIcon from '@material-ui/icons/RemoveCircleOutlined';
 import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
+import CloseIcon from '@material-ui/icons/Close';
 import platinumCashbackCard from 'images/cards/platinum-cashback.png';
 import stepupCard from 'images/cards/step-up-card.png';
 import ladyCard from 'images/cards/lady-card.png';
@@ -39,6 +31,7 @@ import signatureTravel from 'images/cards/signature-travel.png';
 import theshopee from 'images/cards/theshopee.png';
 import titaniumcashback from 'images/cards/titanium-cashback.png';
 import travelgold from 'images/cards/travelgold.png';
+import compare from 'images/compare.svg';
 import dataCard from 'images/data.json';
 import Header from './Header';
 import 'slick-carousel/slick/slick.css';
@@ -48,12 +41,6 @@ import * as Actions from '../../actions';
 import JarvisFormStyle from './JarvisFormStyle';
 
 const useStyles = makeStyles(() => ({
-  sliderStyle: {
-    width: '100%',
-  },
-  sliderItem: {
-    // height: '80px',
-  },
   pageHeader: {
     width: '100%',
     padding: '24px 24px 16px 16px',
@@ -171,8 +158,12 @@ const useStyles = makeStyles(() => ({
     textTransform: 'uppercase',
   },
   imgCompare: {
-    width: '99px',
-    height: '72px',
+    width: '30%',
+    minWidth: '92px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   dialogBody: {
     width: '100%',
@@ -183,6 +174,7 @@ const useStyles = makeStyles(() => ({
   imageCompareContainer: {
     width: '100%',
     display: 'flex',
+    justifyContent: 'space-evenly',
   },
   cellHeader: {
     width: '30%',
@@ -200,15 +192,60 @@ const useStyles = makeStyles(() => ({
     marginBottom: '8px',
     marginTop: '8px',
   },
-}));
-
-const StyledTableRow = withStyles(theme => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
+  cardName: {
+    fontSize: '12px',
+    lineHeight: '1.33',
+    letterSpacing: '0.4px',
+    color: 'rgba(18, 18, 18, 0.87)',
+    width: '100%',
+    textAlign: 'center',
+    textTransform: 'uppercase',
   },
-}))(TableRow);
+  action: {
+    width: '154px',
+    height: '38px',
+    margin: '9px 19px 11px 16px',
+    borderRadius: '4px',
+    backgroundColor: '#028547',
+    border: 'none',
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: '16px',
+  },
+  compareBlockTitle: {
+    width: '100%',
+    minHeight: '40px',
+    backgroundColor: '#f7f7f7',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '14px',
+    fontWeight: 'normal',
+    lineHeight: '1.43',
+    color: '#121212',
+  },
+  compareBlock: {
+    display: 'flex',
+  },
+  comparePart: {
+    width: '48%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    margin: '16px',
+    textAlign: 'center',
+    fontSize: '12px',
+  },
+  dialogTitle: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '8px 20px 8px 20px',
+  },
+}));
 
 export default function LandingCard(props) {
   const classes = useStyles();
@@ -274,15 +311,6 @@ export default function LandingCard(props) {
     return vnaCard;
   }
 
-  function chooseThisCard(cardId) {
-    const values = {};
-    values.card = cardId.id;
-    values.selectedCard = cardId;
-    values.limitType = '1';
-    props.dispatch(Actions.saveData(values));
-    props.setStep(1000);
-  }
-
   function addCardCompare(card) {
     const updateCardCompare = [...cardCompare];
     if (cardCompare.length > 1) {
@@ -318,6 +346,18 @@ export default function LandingCard(props) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  function chooseThisCard(cardId) {
+    const values = {};
+    values.card = cardId;
+    values.selectedCard = cardId;
+    values.limitType = '1';
+    return new Promise((resolve, reject) => {
+      props.dispatch(Actions.saveRawData(values, resolve, reject));
+    }).then(() => {
+      props.setStep(1000);
+    });
+  }
 
   return (
     <JarvisFormStyle>
@@ -376,411 +416,285 @@ export default function LandingCard(props) {
       <Dialog
         open={open}
         onClose={handleClose}
+        disableBackdropClick
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Chi tiết so sánh</DialogTitle>
+        <div className={classes.dialogTitle}>
+          <div>Chi tiết so sánh</div>
+          <CloseIcon onClick={() => handleClose()} />
+        </div>
+        <Divider />
         <DialogContent className={classes.dialogBody}>
           <div className={classes.imageCompareContainer}>
-            {cardCompare &&
-              cardCompare.map(card => (
-                <div className={classes.imgCompare}>
-                  <img src={getCardImage(card.id_int)} alt="card" />
-                </div>
-              ))}
+            {cardCompare && cardCompare[0] && (
+              <div className={classes.imgCompare}>
+                <img src={getCardImage(cardCompare[0].id_int)} alt="card" />
+                <div className={classes.cardName}>{cardCompare[0].name}</div>
+                <button
+                  type="button"
+                  className={classes.action}
+                  onClick={() => chooseThisCard(cardCompare[0].id_int)}
+                >
+                  MỞ THẺ
+                </button>
+              </div>
+            )}
+            <img src={compare} alt="card" />
+            {cardCompare && cardCompare[1] && (
+              <div className={classes.imgCompare}>
+                <img src={getCardImage(cardCompare[1].id_int)} alt="card" />
+                <div className={classes.cardName}>{cardCompare[1].name}</div>
+                <button
+                  type="button"
+                  className={classes.action}
+                  onClick={() => chooseThisCard(cardCompare[0].id_int)}
+                >
+                  MỞ THẺ
+                </button>
+              </div>
+            )}
           </div>
-          <div className={classes.compareSection}>Tổng quan</div>
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="customized table">
-              <TableBody>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Loại thẻ
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] && cardCompare[0].comparison.table_1.type}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] && cardCompare[1].comparison.table_1.type}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Hạn mức tín dụng
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_1.creditLimit}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_1.creditLimit}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Lãi suất
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_1.interestRate}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_1.interestRate}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Hạn mức giao dịch
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_1.transactionLimit}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_1.transactionLimit}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Phí thường niên
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_1.anualFee}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_1.anualFee}
-                  </TableCell>
-                </StyledTableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <div className={classes.compareSection}>Lợi ích</div>
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="customized table">
-              <TableBody>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Điểm thưởng
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_2.bonusPoints.map(
-                        bonus => <div>{bonus}</div>,
-                      )}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_2.bonusPoints.map(
-                        bonus => <div>{bonus}</div>,
-                      )}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Hoàn tiền
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_2.cashback.map(
-                        cashback => <div>{cashback}</div>,
-                      )}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_2.cashback.map(
-                        cashback => <div>{cashback}</div>,
-                      )}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Vé máy bay
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_2.freeTicket.map(
-                        freeTicket => <div>{freeTicket}</div>,
-                      )}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_2.freeTicket.map(
-                        freeTicket => <div>{freeTicket}</div>,
-                      )}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Mobifone
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_2.mobifone.map(
-                        mobifone => <div>{mobifone}</div>,
-                      )}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_2.mobifone.map(
-                        mobifone => <div>{mobifone}</div>,
-                      )}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Rút tiền
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_2.rutTienmat.map(
-                        rutTienmat => <div>{rutTienmat}</div>,
-                      )}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_2.rutTienmat.map(
-                        rutTienmat => <div>{rutTienmat}</div>,
-                      )}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Miễn phí thường niên
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_2.freeAnualFee.map(
-                        freeAnualFee => <div>{freeAnualFee}</div>,
-                      )}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_2.freeAnualFee.map(
-                        freeAnualFee => <div>{freeAnualFee}</div>,
-                      )}
-                  </TableCell>
-                </StyledTableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <div className={classes.compareSection}>Lợi ích chung</div>
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="customized table">
-              <TableBody>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Thanh toán trên toàn cầu
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_3.paymentOverGlobe}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_3.paymentOverGlobe}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Bảo vệ thẻ với 3D secure
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_3.threeDsecure}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_3.threeDsecure}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    45 ngày miễn lãi tối đa
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_3.fortyfiveDays}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_3.fortyfiveDays}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Ưu đãi tới 50%
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_3.uudai50}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_3.uudai50}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Trả góp với lãi suất 1%
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_3.tragop1}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_3.tragop1}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Rút tiền đến 70%
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_3.ruttien70}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_3.ruttien70}
-                  </TableCell>
-                </StyledTableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <div className={classes.compareSection}>
-            Thủ tục đăng kí và điều kiện
+          <div className={classes.compareBlockTitle}>Loại thẻ</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_1.type}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_1.type}
+            </div>
           </div>
-          <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="customized table">
-              <TableBody>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Điều kiện chung
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] &&
-                      cardCompare[0].comparison.table_4.commonCond}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] &&
-                      cardCompare[1].comparison.table_4.commonCond}
-                  </TableCell>
-                </StyledTableRow>
-                <StyledTableRow>
-                  <TableCell
-                    component="td"
-                    scope="row"
-                    width={150}
-                    className={classes.cellHeader}
-                  >
-                    Thu nhập
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[0] && cardCompare[0].comparison.table_4.income}
-                  </TableCell>
-                  <TableCell align="left" className={classes.cellContent}>
-                    {cardCompare[1] && cardCompare[1].comparison.table_4.income}
-                  </TableCell>
-                </StyledTableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <div className={classes.compareBlockTitle}>Hạn mức tín dụng</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_1.creditLimit}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_1.creditLimit}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>Lãi suất</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_1.interestRate}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_1.interestRate}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}> Hạn mức giao dịch</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_1.transactionLimit}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_1.transactionLimit}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}> Phí thường niên</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_1.anualFee}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_1.anualFee}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}> Điểm thưởng</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_2.bonusPoints.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_2.bonusPoints.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>Hoàn tiền</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_2.cashback.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_2.cashback.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>Vé máy bay</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_2.freeTicket.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_2.freeTicket.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>Mobifone</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_2.mobifone.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_2.mobifone.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>Rút tiền</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_2.rutTienmat.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_2.rutTienmat.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>Miễn phí thường niên</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_2.freeAnualFee.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_2.freeAnualFee.map(bonus => (
+                  <div>{bonus}</div>
+                ))}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>
+            Thanh toán trên toàn cầu
+          </div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_3.paymentOverGlobe}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_3.paymentOverGlobe}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>
+            Bảo vệ thẻ với 3D secure
+          </div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_3.threeDsecure}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_3.threeDsecure}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>
+            45 ngày miễn lãi tối đa
+          </div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] &&
+                cardCompare[0].comparison.table_3.fortyfiveDays}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] &&
+                cardCompare[1].comparison.table_3.fortyfiveDays}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>Ưu đãi tới 50%</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_3.uudai50}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_3.uudai50}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>
+            Trả góp với lãi suất 1%
+          </div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_3.tragop1}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_3.tragop1}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}>Rút tiền đến 70%</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_3.ruttien70}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_3.ruttien70}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}> Điều kiện chung</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_4.commonCond}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_4.commonCond}
+            </div>
+          </div>
+          <div className={classes.compareBlockTitle}> Thu nhập</div>
+          <div className={classes.compareBlock}>
+            <div className={classes.comparePart}>
+              {cardCompare[0] && cardCompare[0].comparison.table_4.income}
+            </div>
+            <Divider orientation="vertical" flexItem />
+            <div className={classes.comparePart}>
+              {cardCompare[1] && cardCompare[1].comparison.table_4.income}
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </JarvisFormStyle>

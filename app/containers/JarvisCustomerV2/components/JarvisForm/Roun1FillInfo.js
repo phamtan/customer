@@ -19,12 +19,14 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/picker
 import MomentUtils from '@date-io/moment';
 import XRegExp from 'xregexp';
 import Header from './Header';
+import StepApp from './StepApp';
 import JarvisFormStyle from './JarvisFormStyle';
 import * as Actions from '../../actions';
 
 const useStyles = makeStyles(() => ({
   formContainer: {
     width: '100%',
+    maxWidth: '470px',
     backgroundColor: 'white',
     minHeight: '100vh',
     marginTop: '16px',
@@ -148,6 +150,11 @@ export default function Round1(props) {
   const [district, setDistrict] = useState([]);
   const [currentDistrict, setCurrentDistrict] = useState([]);
   const [showPermanentAddress, setShowPermaneAddress] = useState(false);
+  const [isMobile] = useState(
+    /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent,
+    ),
+  );
   const { handleSubmit, errors, control, reset, formState } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
@@ -224,8 +231,9 @@ export default function Round1(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={2} showStep />
+      <Header className="header" step={2} showStep={isMobile} />
       <div className={classes.formContainer}>
+        {!isMobile && <StepApp />}
         <div className={classes.titleHeader}>Thông tin cá nhân</div>
         <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
           <div className="formWrapper">
@@ -351,7 +359,7 @@ export default function Round1(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       countries &&
                       countries.map(country => ({
@@ -411,7 +419,7 @@ export default function Round1(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={DOCUMENT_TYPE}
                     classes={{
                       option: classes.option,
@@ -499,7 +507,7 @@ export default function Round1(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -507,8 +515,8 @@ export default function Round1(props) {
                           selection => selection.category === 'PLACEOFISSUE',
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVi,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))
                     }
                     value={
@@ -521,8 +529,8 @@ export default function Round1(props) {
                             selection.code === value,
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVi,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))[0]
                     }
                     classes={{
@@ -577,7 +585,7 @@ export default function Round1(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={provinces.map(province => ({
                       value: province.code,
                       label: province.name,
@@ -628,7 +636,7 @@ export default function Round1(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       district &&
                       district.map(dis => ({
@@ -736,7 +744,7 @@ export default function Round1(props) {
                     control={control}
                     render={({ value, onChange }) => (
                       <Autocomplete
-                        style={{ width: '90vw' }}
+                        style={{ width: '100%' }}
                         options={provinces.map(province => ({
                           value: province.code,
                           label: province.name,
@@ -785,7 +793,7 @@ export default function Round1(props) {
                     control={control}
                     render={({ value, onChange }) => (
                       <Autocomplete
-                        style={{ width: '90vw' }}
+                        style={{ width: '100%' }}
                         options={
                           currentDistrict &&
                           currentDistrict.map(dis => ({

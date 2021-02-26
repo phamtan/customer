@@ -12,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import { Camera, Preview } from 'camera-component/camera-document';
 import _ from 'lodash';
+import moment from 'moment';
 import ocrframe from 'images/ocrframe.png';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
@@ -186,7 +187,22 @@ export default function Round2OCRGuide(props) {
                   responseOCR.data[0] &&
                   responseOCR.data[0].id
                 ) {
-                  valueSubmit.docIssuedDate = responseOCR.data[0].issue_date;
+                  const docIssuedDate = responseOCR.data[0].issue_date;
+                  if (
+                    !!docIssuedDate &&
+                    docIssuedDate !== 'N/A' &&
+                    (moment(docIssuedDate, 'DD/MM/YYYY', true).isValid() ||
+                      moment(docIssuedDate, 'DD-MM-YYYY', true).isValid())
+                  ) {
+                    const formatDate = docIssuedDate.includes('-')
+                      ? 'DD-MM-YYYY'
+                      : 'DD/MM/YYYY';
+                    const issueDateConvert = moment(
+                      docIssuedDate,
+                      formatDate,
+                    ).format('DD/MM/YYYY');
+                    valueSubmit.docIssuedDate = issueDateConvert || '';
+                  }
                 }
                 props.dispatch(Actions.saveRawData(valueSubmit));
                 props.setStep(5);

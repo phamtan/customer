@@ -98,7 +98,7 @@ function* saveDataApplicationSaga(action) {
     if (values.program) {
       yield put(
         checkLosResult(
-          { appId: response.id, round: 'Check_2' },
+          { appId: response.applicationId, round: 'Check_2' },
           action.resolve,
           action.reject,
         ),
@@ -106,7 +106,7 @@ function* saveDataApplicationSaga(action) {
     } else {
       yield put(
         checkLosResult(
-          { appId: response.id, round: 'Check_1' },
+          { appId: response.applicationId, round: 'Check_1' },
           action.resolve,
           action.reject,
         ),

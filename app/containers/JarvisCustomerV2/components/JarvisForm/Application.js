@@ -39,7 +39,7 @@ function Alert(props) {
 }
 
 export default function Application(props) {
-  const [step, setStep] = useState(15);
+  const [step, setStep] = useState(23);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',

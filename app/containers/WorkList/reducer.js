@@ -4,7 +4,7 @@
  *
  */
 import produce from 'immer';
-import { DEFAULT_ACTION } from './constants';
+import { DEFAULT_ACTION, GET_WORKLIST_SUCCESS } from './constants';
 
 export const initialState = {};
 
@@ -12,6 +12,11 @@ export const initialState = {};
 const workListReducer = (state = initialState, action) =>
   produce(state, (/* draft */) => {
     switch (action.type) {
+      case GET_WORKLIST_SUCCESS:
+        return {
+          ...state,
+          workList: action.payload,
+        };
       case DEFAULT_ACTION:
         break;
     }

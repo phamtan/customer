@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import _ from 'lodash';
+import moment from 'moment';
 import JarvisFormStyle from './JarvisFormStyle';
 import 'react-html5-camera-photo/build/css/index.css';
 import * as Actions from '../../actions';
@@ -170,7 +171,14 @@ export default function Round2OCRGuide(props) {
           if (response.data && response.data[0] && response.data[0].id) {
             valueSubmit.documentNumber = response.data[0].id;
             valueSubmit.fullName = response.data[0].name;
-            valueSubmit.dob = response.data[0].dob;
+            const { dob } = response.data[0];
+            if (!!dob && dob !== 'N/A') {
+              const formatDate = dob.includes('-')
+                ? 'DD-MM-YYYY'
+                : 'DD/MM/YYYY';
+              const dobConvert = moment(dob, formatDate).format('DD/MM/YYYY');
+              valueSubmit.dob = dobConvert;
+            }
             valueSubmit.permanentAddressLine1 = response.data[0].address;
           }
           props.dispatch(Actions.saveRawData(valueSubmit));
