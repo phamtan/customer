@@ -9,12 +9,18 @@ import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import * as Actions from '../../actions';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
     backgroundColor: 'white',
     marginTop: '18px',
     minHeight: '100vh',
+    maxWidth: '470px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '16px',
+      marginBottom: '32px',
+      borderRadius: '4px',
+    },
   },
   guilineImg: {
     width: '100%',

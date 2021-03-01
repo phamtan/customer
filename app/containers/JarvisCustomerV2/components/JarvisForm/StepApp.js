@@ -11,10 +11,15 @@ const useStyles = makeStyles(theme => ({
     maxWidth: '470px',
     margin: 'auto',
     color: '#028547',
-    backgroundColor: 'white',
+    backgroundColor: '#f7f8f8',
     border: '1px solid white',
     height: '38px',
     marginTop: '16px',
+    [theme.breakpoints.up('md')]: {
+      backgroundColor: 'white',
+      paddingTop: '48px',
+      height: 'auto',
+    },
     [theme.breakpoints.down('xs')]: {
       padding: '0px',
     },
@@ -28,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   },
   step: {
     '&$completed': {
-      color: 'lightgreen',
+      color: '#117f8a',
     },
     '&$active': {
       color: '#028547',
@@ -36,6 +41,9 @@ const useStyles = makeStyles(theme => ({
   },
   active: {
     color: '#028547',
+  },
+  completed: {
+    color: '#117f8a',
   },
   stepperBackground: {
     backgroundColor: 'white',
@@ -59,7 +67,7 @@ const useStyles = makeStyles(theme => ({
 export default function Header(props) {
   const steps = getSteps();
   const classes = useStyles();
-  const [activeStep] = React.useState(0);
+  const [activeStep] = React.useState(props.step || 0);
 
   function getSteps() {
     return ['Bắt đầu', 'Thông tin', 'Hoàn thành'];

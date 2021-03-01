@@ -9,9 +9,10 @@ import * as yup from 'yup';
 import XRegExp from 'xregexp';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
+import StepApp from './StepApp';
 import * as Actions from '../../actions';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
     backgroundColor: 'white',
@@ -21,6 +22,11 @@ const useStyles = makeStyles(() => ({
     margin: 'auto',
     borderRadius: '4px',
     marginBottom: '16px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '0px',
+      marginBottom: '32px',
+      borderRadius: '0px',
+    },
   },
   titleHeader: {
     fontSize: '24px',
@@ -136,7 +142,8 @@ export default function Round1(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={1} showStep />
+      <Header className="header" step={1} />
+      <StepApp />
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>
           <div>Xin chào!</div>

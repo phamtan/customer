@@ -14,8 +14,8 @@ import RegisVirtualCardInfo from './RegisVirtualCardInfo';
 import RegisLimitInfo from './RegisLimitInfo';
 import ConfirmDocument from './ConfirmDocument';
 import CheckSuccess from './CheckSuccess';
-import Round3 from './Round3';
-import Round31 from './Round3.1';
+import Round22 from './Round2.2';
+import Round21 from './Round2.1';
 import Round32 from './Round3.2';
 import Round2Confirm from './Round2Confirm';
 import UploadDocument from './UploadDocument';
@@ -39,7 +39,7 @@ function Alert(props) {
 }
 
 export default function Application(props) {
-  const [step, setStep] = useState(23);
+  const [step, setStep] = useState(15);
   const [state, setState] = React.useState({
     open: false,
     vertical: 'top',
@@ -150,8 +150,8 @@ export default function Application(props) {
       {step === 7 && <Round2CheckLimit setStep={setStep} {...props} />}
       {step === 999 && <CheckSuccess setStep={setStep} {...props} />}
       {step === 995 && <WaitingCheck setStep={setStep} {...props} />}
-      {step === 8 && <Round3 setStep={setStep} {...props} />}
-      {step === 9 && <Round31 setStep={setStep} {...props} />}
+      {step === 8 && <Round22 setStep={setStep} {...props} />}
+      {step === 9 && <Round21 setStep={setStep} {...props} />}
       {step === 10 && <Round32 setStep={setStep} {...props} />}
       {step === 11 && <RegisVirtualCard setStep={setStep} {...props} />}
       {step === 12 && <RegisVirtualCardInfo setStep={setStep} {...props} />}

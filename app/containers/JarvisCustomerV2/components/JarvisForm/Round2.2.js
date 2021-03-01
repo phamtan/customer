@@ -15,16 +15,22 @@ import debounce from 'lodash.debounce';
 import moment from 'moment';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
+import StepApp from './StepApp';
 import * as Actions from '../../actions';
 
 const filter = createFilterOptions();
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
+    maxWidth: '470px',
     backgroundColor: 'white',
-    minHeight: '100vh',
     marginTop: '16px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '0px',
+      marginBottom: '32px',
+      borderRadius: '0px',
+    },
   },
   titleHeader: {
     fontSize: '24px',
@@ -72,16 +78,13 @@ const useStyles = makeStyles(() => ({
 }));
 
 const schema = yup.object().shape({
-  // employmentStatus: yup.object().required('Bạn chưa chọn tình trạng công việc'),
-  // company: yup.object().required('Bạn chưa chọn công ty'),
-  // companyAddress: yup.object({
-  //   addressDetail: yup.string().required('Bạn chưa nhập địa chỉ chi tiết'),
-  //   district: yup.object().required('Bạn chưa chọn quận'),
-  //   province: yup.object().required('Bạn chưa chọn thành phố'),
-  // }),
-  // taxNumber: yup.string().required('Bạn chưa nhập mã số thuế công ty'),
-  // companyPhone: yup.string().required('Bạn chưa nhập số điện thoại công ty'),
-  // industry: yup.object().required('Bạn chưa chọn lĩnh vực công việc'),
+  nameOfEmployer: yup.string().required('Bạn chưa chọn công ty làm việc'),
+  employerAddressLine: yup.object().required('Bạn chưa nhập địa chỉ công ty'),
+  employerProvince: yup.string().required('Bạn chưa nhập địa chỉ công ty'),
+  employerDistrict: yup.string().required('Bạn chưa nhập địa chỉ công ty'),
+  landlinePhoneNo: yup.string().required('Bạn chưa nhập số điện thoại công ty'),
+  typeCompany: yup.object().required('Bạn chưa chọn loại công ty'),
+  position: yup.object().required('Bạn chưa chọn vị trí hiện tại'),
 });
 export default function Round3(props) {
   const classes = useStyles();
@@ -158,7 +161,8 @@ export default function Round3(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={3} showStep />
+      <Header className="header" step={3} />
+      <StepApp step={1} />
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>Thông tin công việc</div>
         <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
@@ -170,7 +174,7 @@ export default function Round3(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       companyList &&
                       companyList.map(company => ({
@@ -263,7 +267,7 @@ export default function Round3(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={provinces.map(province => ({
                       value: province.code,
                       label: province.name,
@@ -291,9 +295,9 @@ export default function Round3(props) {
                   />
                 )}
               />
-              {errors.permanentProvince && (
+              {errors.employerProvince && (
                 <span className="formError">
-                  {errors.permanentProvince.message}
+                  {errors.employerProvince.message}
                 </span>
               )}
             </div>
@@ -304,7 +308,7 @@ export default function Round3(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       district &&
                       district.map(dis => ({
@@ -334,9 +338,9 @@ export default function Round3(props) {
                   />
                 )}
               />
-              {errors.permanentDistrict && (
+              {errors.employerDistrict && (
                 <span className="formError">
-                  {errors.permanentDistrict.message}
+                  {errors.employerDistrict.message}
                 </span>
               )}
             </div>
@@ -379,7 +383,7 @@ export default function Round3(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -412,8 +416,8 @@ export default function Round3(props) {
                   />
                 )}
               />
-              {errors.industry && (
-                <span className="formError">{errors.industry.message}</span>
+              {errors.typeCompany && (
+                <span className="formError">{errors.typeCompany.message}</span>
               )}
             </div>
             <div className="form-group">
@@ -422,7 +426,7 @@ export default function Round3(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -455,13 +459,13 @@ export default function Round3(props) {
                   />
                 )}
               />
-              {errors.industry && (
-                <span className="formError">{errors.industry.message}</span>
+              {errors.position && (
+                <span className="formError">{errors.position.message}</span>
               )}
             </div>
             <button
               type="submit"
-              className="btn btnSubmit"
+              className={classes.action}
               disabled={formState.isSubmitting}
             >
               Tiếp tục

@@ -11,14 +11,21 @@ import Divider from '@material-ui/core/Divider';
 import { makeStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import Header from './Header';
+import StepApp from './StepApp';
 import JarvisFormStyle from './JarvisFormStyle';
 
 const useStyles = makeStyles(theme => ({
   container: {
     width: '100%',
+    maxWidth: '470px',
     minHeight: '100vh',
     backgroundColor: 'white',
     marginTop: '16px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '0px',
+      marginBottom: '32px',
+      borderRadius: '0px',
+    },
   },
   pageTitle: {
     width: '100%',
@@ -156,7 +163,8 @@ export default function ConfirmDocument(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={5} showStep />
+      <Header className="header" step={5} />
+      <StepApp />
       <div className={classes.container}>
         <div className={classes.pageTitle}>NỘP HỒ SƠ</div>
         <div className={classes.secondHeader}>

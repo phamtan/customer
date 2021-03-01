@@ -20,6 +20,17 @@ import 'react-html5-camera-photo/build/css/index.css';
 import * as Actions from '../../actions';
 
 const useStyles = makeStyles(theme => ({
+  pageContainer: {
+    width: '100%',
+    marginTop: '18px',
+    minHeight: '100vh',
+    maxWidth: '470px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '16px',
+      marginBottom: '32px',
+      borderRadius: '4px',
+    },
+  },
   container: {
     width: '100%',
     backgroundColor: 'black',
@@ -234,39 +245,41 @@ export default function Round2OCRGuide(props) {
 
   return (
     <JarvisFormStyle>
-      <div className={classes.container}>
-        <div>
-          <ArrowBackIosIcon
-            className={classes.backIcon}
-            onClick={() => props.setStep(19)}
-          />
-        </div>
-        {isCameraOpen && (
-          <div className={classes.cameraContainer}>
-            <Camera
-              onCapture={blob => handleTakePhoto(blob)}
-              onClear={() => setCardImage(undefined)}
-              ref={cameraRef}
-              title="Chứng minh thư mặt sau"
+      <div className={classes.pageContainer}>
+        <div className={classes.container}>
+          <div>
+            <ArrowBackIosIcon
+              className={classes.backIcon}
+              onClick={() => props.setStep(19)}
             />
           </div>
-        )}
+          {isCameraOpen && (
+            <div className={classes.cameraContainer}>
+              <Camera
+                onCapture={blob => handleTakePhoto(blob)}
+                onClear={() => setCardImage(undefined)}
+                ref={cameraRef}
+                title="Chứng minh thư mặt sau"
+              />
+            </div>
+          )}
+        </div>
+        <Dialog
+          onClose={handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={open}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+            Thông báo hình ảnh cần khắc phục
+          </DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được gương
+              mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và chụp lại.
+            </Typography>
+          </DialogContent>
+        </Dialog>
       </div>
-      <Dialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Thông báo hình ảnh cần khắc phục
-        </DialogTitle>
-        <DialogContent dividers>
-          <Typography gutterBottom>
-            Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được gương
-            mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và chụp lại.
-          </Typography>
-        </DialogContent>
-      </Dialog>
     </JarvisFormStyle>
   );
 }

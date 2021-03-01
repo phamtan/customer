@@ -16,6 +16,7 @@ import MomentUtils from '@date-io/moment';
 import * as yup from 'yup';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
+import StepApp from './StepApp';
 import * as Actions from '../../actions';
 
 const DOCUMENT_TYPE = [
@@ -24,12 +25,18 @@ const DOCUMENT_TYPE = [
   { value: 'ICM', label: 'CMND Quân Đội' },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
+    maxWidth: '470px',
     backgroundColor: 'white',
     minHeight: '100vh',
     marginTop: '16px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '0px',
+      marginBottom: '32px',
+      borderRadius: '0px',
+    },
   },
   titleHeader: {
     fontSize: '24px',
@@ -77,14 +84,48 @@ const useStyles = makeStyles(() => ({
 }));
 
 const schema = yup.object().shape({
-  // maritalStatus: yup.object().required('Bạn chưa chọn tình trạng hôn nhân'),
-  // nameOfReference: yup.string().required('Bạn chưa nhập tên người tham chiếu'),
-  // typeOfReference: yup
-  //   .object()
-  //   .required('Bạn chưa chọn mối quan hệ với người tham chiếu'),
-  // phoneOfReference: yup
-  //   .string()
-  //   .required('Bạn chưa nhập số điện thoại người tham chiếu'),
+  maritalStatus: yup
+    .string()
+    .required('Bạn chưa chọn tình trạng hôn nhân')
+    .nullable(),
+  fullNameRefOne: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa nhập tên vợ/chồng'),
+    })
+    .nullable(),
+  birthDateSpouse: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa nhập ngày sinh vợ/chồng'),
+    })
+    .nullable(),
+  documentTypeSpouse: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa chọn loại giấy tờ'),
+    })
+    .nullable(),
+  documentNumberSpouse: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa nhập số giấy tờ'),
+    })
+    .nullable(),
+  mobileNumberRefOne: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa nhập số điện thoại vợ/chồng'),
+    })
+    .nullable(),
+  employmentStatus: yup.string().required('Bạn chưa chọn tình trạng công việc'),
+  mainIncomeType: yup.object().required('Bạn chưa chọn loại hình thu nhập'),
+  monthlyIncome: yup.string().required('Bạn chưa nhập thu nhập hàng tháng'),
 });
 export default function Round3(props) {
   const classes = useStyles();
@@ -132,7 +173,8 @@ export default function Round3(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={3} showStep />
+      <Header className="header" step={3} />
+      <StepApp step={1} />
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>Thông tin cá nhân</div>
         <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
@@ -144,7 +186,7 @@ export default function Round3(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -187,25 +229,27 @@ export default function Round3(props) {
                 </span>
               )}
             </div>
-            <div className="form-group">
-              <Controller
-                as={TextField}
-                name="fullNameRefOne"
-                fullWidth
-                variant="outlined"
-                label={
-                  maritalStatus && maritalStatus === 'MARRIED'
-                    ? 'Họ tên Vợ/Chồng'
-                    : 'Họ tên người tham chiếu 1'
-                }
-                control={control}
-              />
-              {errors.fullNameRefOne && (
-                <span className="formError">
-                  {errors.fullNameRefOne.message}
-                </span>
-              )}
-            </div>
+            {maritalStatus && maritalStatus === 'MARRIED' && (
+              <div className="form-group">
+                <Controller
+                  as={TextField}
+                  name="fullNameRefOne"
+                  fullWidth
+                  variant="outlined"
+                  label={
+                    maritalStatus && maritalStatus === 'MARRIED'
+                      ? 'Họ tên Vợ/Chồng'
+                      : 'Họ tên người tham chiếu 1'
+                  }
+                  control={control}
+                />
+                {errors.fullNameRefOne && (
+                  <span className="formError">
+                    {errors.fullNameRefOne.message}
+                  </span>
+                )}
+              </div>
+            )}
             {maritalStatus && maritalStatus === 'MARRIED' && (
               <>
                 <div className="form-group">
@@ -235,7 +279,7 @@ export default function Round3(props) {
                     control={control}
                     render={({ value, onChange }) => (
                       <Autocomplete
-                        style={{ width: '90vw' }}
+                        style={{ width: '100%' }}
                         options={DOCUMENT_TYPE}
                         classes={{
                           option: classes.option,
@@ -284,69 +328,74 @@ export default function Round3(props) {
                 </div>
               </>
             )}
-            <div className="form-group">
-              <Controller
-                name="relationRefOne"
-                control={control}
-                render={({ value, onChange }) => (
-                  <Autocomplete
-                    id="country-select-demo"
-                    style={{ width: '90vw' }}
-                    options={
-                      selections &&
-                      selections
-                        .filter(
-                          selection => selection.category === 'RELATIONSHIP',
-                        )
-                        .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVI,
-                        }))
-                    }
-                    classes={{
-                      option: classes.option,
-                    }}
-                    value={getSelectedValue('RELATIONSHIP', value)}
-                    onChange={(event, newValue) => {
-                      onChange(newValue.value);
-                    }}
-                    autoHighlight
-                    getOptionLabel={option => option.label}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label="Mối quan hệ với chủ thẻ"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
+            {maritalStatus && maritalStatus === 'MARRIED' && (
+              <>
+                <div className="form-group">
+                  <Controller
+                    name="relationRefOne"
+                    control={control}
+                    render={({ value, onChange }) => (
+                      <Autocomplete
+                        id="country-select-demo"
+                        style={{ width: '100%' }}
+                        options={
+                          selections &&
+                          selections
+                            .filter(
+                              selection =>
+                                selection.category === 'RELATIONSHIP',
+                            )
+                            .map(selection => ({
+                              value: selection.code,
+                              label: selection.nameVI,
+                            }))
+                        }
+                        classes={{
+                          option: classes.option,
                         }}
+                        value={getSelectedValue('RELATIONSHIP', value)}
+                        onChange={(event, newValue) => {
+                          onChange(newValue.value);
+                        }}
+                        autoHighlight
+                        getOptionLabel={option => option.label}
+                        renderInput={params => (
+                          <TextField
+                            {...params}
+                            label="Mối quan hệ với chủ thẻ"
+                            variant="outlined"
+                            inputProps={{
+                              ...params.inputProps,
+                            }}
+                          />
+                        )}
                       />
                     )}
                   />
-                )}
-              />
-              {errors.relationRefOne && (
-                <span className="formError">
-                  {errors.relationRefOne.message}
-                </span>
-              )}
-            </div>
+                  {errors.relationRefOne && (
+                    <span className="formError">
+                      {errors.relationRefOne.message}
+                    </span>
+                  )}
+                </div>
 
-            <div className="form-group">
-              <Controller
-                as={TextField}
-                name="mobileNumberRefOne"
-                fullWidth
-                variant="outlined"
-                label="Số điện thoại"
-                control={control}
-              />
-              {errors.mobileNumberRefOne && (
-                <span className="formError">
-                  {errors.mobileNumberRefOne.message}
-                </span>
-              )}
-            </div>
+                <div className="form-group">
+                  <Controller
+                    as={TextField}
+                    name="mobileNumberRefOne"
+                    fullWidth
+                    variant="outlined"
+                    label="Số điện thoại"
+                    control={control}
+                  />
+                  {errors.mobileNumberRefOne && (
+                    <span className="formError">
+                      {errors.mobileNumberRefOne.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
 
             <div className="form-group">
               <Controller
@@ -355,7 +404,7 @@ export default function Round3(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -403,7 +452,7 @@ export default function Round3(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -436,8 +485,10 @@ export default function Round3(props) {
                   />
                 )}
               />
-              {errors.incomeType && (
-                <span className="formError">{errors.incomeType.message}</span>
+              {errors.mainIncomeType && (
+                <span className="formError">
+                  {errors.mainIncomeType.message}
+                </span>
               )}
             </div>
 

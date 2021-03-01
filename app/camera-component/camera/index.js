@@ -63,6 +63,9 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'uppercase',
     background: 'transparent',
     border: '1px solid',
+    [theme.breakpoints.up('md')]: {
+      marginBottom: '16px',
+    },
   },
 }));
 

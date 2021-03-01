@@ -21,14 +21,21 @@ import {
 import MomentUtils from '@date-io/moment';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
+import StepApp from './StepApp';
 import * as Actions from '../../actions';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
+    maxWidth: '470px',
     backgroundColor: 'white',
     minHeight: '100vh',
-    marginTop: '16px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '0px',
+      marginBottom: '32px',
+      borderRadius: '0px',
+    },
+    borderRadius: '4px',
   },
   titleHeader: {
     fontSize: '24px',
@@ -82,8 +89,52 @@ const DOCUMENT_TYPE = [
 ];
 
 const schema = yup.object().shape({
-  securityQuestion: yup.object().required('Bạn chưa chọn câu hỏi bí mật'),
-  securityAnswer: yup.string().required('Bạn chưa nhập câu trả lời'),
+  requestLimit: yup.string().required('Bạn chưa nhập hạn mức'),
+  typeOfCreditCard: yup.string().required('Bạn chưa chọn loại thẻ'),
+  accInternetBanking: yup
+    .string()
+    .required('Bạn chưa nhập thông tin tài khoản online'),
+  fullNameRefOne: yup.string().required('Bạn chưa nhập tên người tham chiếu'),
+  birthDateSpouse: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa nhập ngày sinh vợ/chồng'),
+    })
+    .nullable(),
+  documentTypeSpouse: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa chọn loại giấy tờ'),
+    })
+    .nullable(),
+  documentNumberSpouse: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa nhập số giấy tờ'),
+    })
+    .nullable(),
+  mobileNumberRefOne: yup
+    .string()
+    .when('maritalStatus', {
+      is: 'MARRIED',
+      otherwise: s => s.required('Bạn chưa nhập số điện thoại vợ/chồng'),
+    })
+    .nullable(),
+  fullNameRefTwo: yup
+    .string()
+    .required('Bạn chưa nhập tên người tham chiếu thứ 2'),
+  relationRefTwo: yup
+    .string()
+    .required('Bạn chưa chọn mối quan hệ với chủ thẻ'),
+  mobileNumberRefTwo: yup
+    .string()
+    .required('Bạn chưa nhập số điện thoại người tham chiếu 2'),
+  securityQuestion: yup.string().required('Bạn chưa chọn câu hỏi bảo mật'),
+  securityAnswer: yup.string().required('Bạn chưa nhập câu trả lời bí mật'),
+  deliveryCard: yup.string().required('Bạn chưa chọn địa chỉ nhận thẻ'),
 });
 
 export default function Round3(props) {
@@ -138,7 +189,8 @@ export default function Round3(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={3} showStep />
+      <Header className="header" step={3} showStep={false} />
+      <StepApp step={2} />
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>Thông tin khác</div>
         <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
@@ -153,9 +205,7 @@ export default function Round3(props) {
                 control={control}
               />
               {errors.requestLimit && (
-                <span className="formError">
-                  {errors.requestLimit.message}
-                </span>
+                <span className="formError">{errors.requestLimit.message}</span>
               )}
             </div>
             <div className="form-group">
@@ -287,7 +337,7 @@ export default function Round3(props) {
                     control={control}
                     render={({ value, onChange }) => (
                       <Autocomplete
-                        style={{ width: '90vw' }}
+                        style={{ width: '100%' }}
                         options={DOCUMENT_TYPE}
                         classes={{
                           option: classes.option,
@@ -343,7 +393,7 @@ export default function Round3(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -425,7 +475,7 @@ export default function Round3(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -486,7 +536,7 @@ export default function Round3(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -589,7 +639,7 @@ export default function Round3(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     id="country-select-demo"
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       selections &&
                       selections
@@ -624,9 +674,7 @@ export default function Round3(props) {
                 )}
               />
               {errors.deliveryCard && (
-                <span className="formError">
-                  {errors.deliveryCard.message}
-                </span>
+                <span className="formError">{errors.deliveryCard.message}</span>
               )}
             </div>
 
@@ -636,7 +684,7 @@ export default function Round3(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={provinces.map(province => ({
                       value: province.code,
                       label: province.name,
@@ -647,9 +695,7 @@ export default function Round3(props) {
                     value={
                       provinces &&
                       value &&
-                      provinces.filter(
-                        province => province.value === value,
-                      )[0]
+                      provinces.filter(province => province.value === value)[0]
                     }
                     autoHighlight
                     onChange={(event, newValue) => {
@@ -684,7 +730,7 @@ export default function Round3(props) {
                 control={control}
                 render={({ value, onChange }) => (
                   <Autocomplete
-                    style={{ width: '90vw' }}
+                    style={{ width: '100%' }}
                     options={
                       district &&
                       district.map(dis => ({

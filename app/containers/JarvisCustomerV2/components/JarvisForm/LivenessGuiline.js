@@ -9,14 +9,20 @@ import livenessguidline from 'images/livenessguidline.svg';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
+    maxWidth: '470px',
     backgroundColor: 'white',
     minHeight: '100vh',
-    display:'flex',
+    display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '16px',
+      marginBottom: '32px',
+      borderRadius: '4px',
+    },
   },
   guilineImg: {
     width: '100%',

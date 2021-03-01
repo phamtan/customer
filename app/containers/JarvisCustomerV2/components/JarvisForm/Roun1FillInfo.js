@@ -23,13 +23,17 @@ import StepApp from './StepApp';
 import JarvisFormStyle from './JarvisFormStyle';
 import * as Actions from '../../actions';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
     maxWidth: '470px',
     backgroundColor: 'white',
     minHeight: '100vh',
     marginTop: '16px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '0px',
+      marginBottom: '32px',
+    },
   },
   titleHeader: {
     fontSize: '24px',
@@ -58,6 +62,7 @@ const useStyles = makeStyles(() => ({
     fontSize: '14px',
     border: 'none',
     textTransform: 'uppercase',
+    marginBottom: '24px',
   },
   genderContainer: {
     display: 'flex',
@@ -231,9 +236,9 @@ export default function Round1(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={2} showStep={isMobile} />
+      <Header className="header" step={2} />
+      <StepApp />
       <div className={classes.formContainer}>
-        {!isMobile && <StepApp />}
         <div className={classes.titleHeader}>Thông tin cá nhân</div>
         <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
           <div className="formWrapper">

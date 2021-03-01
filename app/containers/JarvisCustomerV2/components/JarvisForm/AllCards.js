@@ -30,7 +30,18 @@ import * as Actions from '../../actions';
 
 import JarvisFormStyle from './JarvisFormStyle';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
+  pageContainer: {
+    width: '100%',
+    maxWidth: '470px',
+    backgroundColor: 'white',
+    marginTop: '24px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '16px',
+      marginBottom: '32px',
+      borderRadius: '4px',
+    },
+  },
   sliderStyle: {
     width: '100%',
   },
@@ -204,21 +215,23 @@ export default function LandingCard(props) {
   return (
     <JarvisFormStyle>
       <Header className="header" />
-      <div className={classes.pageHeader}>Thẻ tín dụng VPBank</div>
-      <div className={classes.cardContainer}>
-        {allCard &&
-          allCard.map(card => (
-            <div
-              className={classes.cardItem}
-              onClick={() => chooseThisCard(card.id_int)}
-            >
-              <img src={getCardImage(card.id_int)} alt="card" />
-              <span className={classes.cardTitle}>{card.name}</span>
-              <div className={classes.cardbenefit}>
-                {getCardBenefit(card.benefit_id)}
+      <div className={classes.pageContainer}>
+        <div className={classes.pageHeader}>Thẻ tín dụng VPBank</div>
+        <div className={classes.cardContainer}>
+          {allCard &&
+            allCard.map(card => (
+              <div
+                className={classes.cardItem}
+                onClick={() => chooseThisCard(card.id_int)}
+              >
+                <img src={getCardImage(card.id_int)} alt="card" />
+                <span className={classes.cardTitle}>{card.name}</span>
+                <div className={classes.cardbenefit}>
+                  {getCardBenefit(card.benefit_id)}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+        </div>
       </div>
     </JarvisFormStyle>
   );

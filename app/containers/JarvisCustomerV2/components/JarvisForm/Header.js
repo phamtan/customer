@@ -25,6 +25,10 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  headerMenu: {
+    width: '100%',
+    maxWidth: '470px',
+  },
   stepperRoot: {
     width: '100%',
     maxWidth: '470px',
@@ -139,12 +143,14 @@ export default function Header(props) {
   }
   return (
     <div className={classes.headerContainer}>
-      <div className={props.className}>
-        <img src={logo} alt="logo" />
-        <MenuIcon
-          className={classes.menuIcon}
-          onClick={toggleDrawer('left', true)}
-        />
+      <div className={classes.headerMenu}>
+        <div className={props.className}>
+          <img src={logo} alt="logo" />
+          <MenuIcon
+            className={classes.menuIcon}
+            onClick={toggleDrawer('left', true)}
+          />
+        </div>
       </div>
       {props.showStep && (
         <Stepper

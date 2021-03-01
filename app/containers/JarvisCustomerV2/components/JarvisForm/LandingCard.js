@@ -45,7 +45,7 @@ import JarvisFormStyle from './JarvisFormStyle';
 const useStyles = makeStyles(() => ({
   pageContainer: {
     width: '100%',
-    maxWidth: '500px',
+    maxWidth: '470px',
     backgroundColor: 'white',
     marginTop: '24px',
     borderRadius: 4,
@@ -106,7 +106,7 @@ const useStyles = makeStyles(() => ({
     marginBottom: '16px',
   },
   imageSlide: {
-    width: '198px !important',
+    maxWidth: '198px !important',
     height: '145px',
   },
   tabStyle: {
@@ -143,6 +143,16 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: '16px',
+  },
+  cardListDesktop: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    marginLeft: '16px',
+  },
+  cardListItemDesktop: {
+    width: '48%',
+    display: 'flex',
+    justifyContent: 'center',
   },
 }));
 
@@ -310,6 +320,27 @@ export default function LandingCard(props) {
               <div className={classes.sectionTilte}>
                 Thẻ được đăng ký nhiều {'>'}
               </div>
+              {/* <div className={classes.cardListDesktop}>
+                {mostRegisCards &&
+                  mostRegisCards.map(card => (
+                    <div
+                      className={classes.cardListItemDesktop}
+                      key={`most-regis-${card.id_int}`}
+                    >
+                      <div className="imageSlide">
+                        <img
+                          className={classes.imageSlide}
+                          src={getCardImage(card.id_int)}
+                          alt="cashback"
+                        />
+                        <div className={classes.cardTitle}>{card.name}</div>
+                        <div className={classes.cardbenefit}>
+                          {getCardBenefit(card.benefit_id)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div> */}
               <Slider
                 {...settings}
                 className={clsx('card', classes.sliderStyle)}
@@ -356,6 +387,27 @@ export default function LandingCard(props) {
               <div className={classes.sectionTilte}>
                 Thẻ mới phát hành {'>'}
               </div>
+              {/* <div className={classes.cardListDesktop}>
+                {newCards &&
+                  newCards.map(card => (
+                    <div
+                      className={classes.cardListItemDesktop}
+                      key={`new-card-${card.id_int}`}
+                    >
+                      <div className="imageSlide">
+                        <img
+                          className={classes.imageSlide}
+                          src={getCardImage(card.id_int)}
+                          alt="cashback"
+                        />
+                        <div className={classes.cardTitle}>{card.name}</div>
+                        <div className={classes.cardbenefit}>
+                          {getCardBenefit(card.benefit_id)}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </div> */}
               <Slider
                 {...settings}
                 className={clsx('card', classes.sliderStyle)}

@@ -9,14 +9,21 @@ import * as yup from 'yup';
 import _ from 'lodash';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
+import StepApp from './StepApp';
 import * as Actions from '../../actions';
 
 const useStyles = makeStyles(theme => ({
   formContainer: {
     width: '100%',
+    maxWidth: '470px',
     backgroundColor: 'white',
     minHeight: '100vh',
     marginTop: '18px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '0px',
+      marginBottom: '32px',
+      borderRadius: '0px',
+    },
   },
   titleHeader: {
     fontSize: '24px',
@@ -135,7 +142,8 @@ export default function OTP(props) {
 
   return (
     <JarvisFormStyle>
-      <Header className="header" step={1} showStep />
+      <Header className="header" step={1} />
+      <StepApp step={0} />
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>Nhập mã OTP</div>
         <div className={classes.secondHeader}>
@@ -151,17 +159,17 @@ export default function OTP(props) {
                     key={`otp-${index}`}
                     name={`otp-${index}`}
                     ref={inputRef[index]}
-                    onFocus={(e) => e.target.value = ""}
+                    onFocus={e => (e.target.value = '')}
                     // ref={register}
                     type="number"
                     variant="outlined"
                     InputProps={{
                       className: classes.otpItem,
                     }}
-                    // onInput={(e)=>{ 
+                    // onInput={(e)=>{
                     //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(1,1)
                     // }}
-                    onChange={(e) => handleOtpChange(e.target.value, index)}
+                    onChange={e => handleOtpChange(e.target.value, index)}
                   />
                 ))}
               <span className={classes.separate}>-</span>
@@ -169,20 +177,20 @@ export default function OTP(props) {
                 .fill('')
                 .map((_, index) => (
                   <TextField
-                    key={`otp-${index+3}`}
-                    name={`otp-${index+3}`}
-                    onFocus={(e) => e.target.value = ""}
+                    key={`otp-${index + 3}`}
+                    name={`otp-${index + 3}`}
+                    onFocus={e => (e.target.value = '')}
                     // ref={register}
-                    ref={inputRef[index+3]}
+                    ref={inputRef[index + 3]}
                     type="number"
                     variant="outlined"
                     InputProps={{
                       className: classes.otpItem,
                     }}
-                    // onInput={(e)=>{ 
+                    // onInput={(e)=>{
                     //     e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(1,1)
                     // }}
-                    onChange={(e) => handleOtpChange(e.target.value, index+3)}
+                    onChange={e => handleOtpChange(e.target.value, index + 3)}
                   />
                 ))}
 

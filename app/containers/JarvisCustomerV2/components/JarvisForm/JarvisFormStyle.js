@@ -13,6 +13,7 @@ const JarvisFormStyle = styled.div`
   background: url(${backGround});
   @media (max-width: 425px) {
     background: none;
+    background-color: #ebebeb;
   }
   .header {
     width: 100%;

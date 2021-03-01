@@ -22,16 +22,35 @@ import Slider from '@material-ui/core/Slider';
 import _ from 'lodash';
 import captureBtn from 'images/capture.svg';
 import arrow from 'images/arrow.svg';
+import JarvisFormStyle from './JarvisFormStyle';
 import * as Actions from '../../actions';
 
 const useStyles = makeStyles(theme => ({
+  pageContainer: {
+    width: '100%',
+    marginTop: '18px',
+    minHeight: '100vh',
+    maxWidth: '470px',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '16px',
+      marginBottom: '32px',
+      borderRadius: '4px',
+    },
+  },
   container: {
     width: '100%',
+    maxWidth: '470px',
+    margin: 'auto',
     height: '100%',
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      marginTop: '16px',
+      marginBottom: '32px',
+      borderRadius: '4px',
+    },
   },
   cameraContainer: {
     width: '100%',
@@ -429,70 +448,75 @@ export default function VideoKYC(props) {
   }
 
   return (
-    <div className={classes.container}>
-      <div className={classes.cameraContainer}>
-        <video id="myVideo" className={classes.video} playsInline />
+    <JarvisFormStyle>
+      <div className={classes.pageContainer}>
+        <div className={classes.container}>
+          <div className={classes.cameraContainer}>
+            <video id="myVideo" className={classes.video} playsInline />
+          </div>
+          <ArrowBackIosIcon
+            className={classes.backIcon}
+            onClick={() => props.setStep(17)}
+          />
+          {isMobile && (
+            <FlipCameraIosOutlinedIcon
+              onClick={() => changeCamera()}
+              className={classes.changeCamera}
+            />
+          )}
+          <div className={classes.divOverlay} />
+          <div className={classes.textGuidline}>
+            {!recording && !process
+              ? 'Để mặt bạn vừa trong hình oval'
+              : 'Đang quay'}
+          </div>
+          {!process && (
+            <img
+              src={captureBtn}
+              disabled={recording}
+              alt="capture btn"
+              className={classes.btnCapture}
+              onClick={recordVideo}
+            />
+          )}
+          <canvas style={{ display: 'none' }} />
+          <Dialog
+            onClose={handleClose}
+            disableBackdropClick
+            aria-labelledby="customized-dialog-title"
+            open={open}
+            classes={{
+              paper: classes.dialogPaper,
+            }}
+          >
+            <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+              Thông báo hình ảnh cần khắc phục
+            </DialogTitle>
+            <DialogContent dividers>
+              <Typography gutterBottom>
+                Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được
+                gương mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và
+                chụp lại.
+                <div className={classes.slideContainer}>
+                  <PrettoSlider
+                    valueLabelDisplay="none"
+                    aria-label="pretto slider"
+                    defaultValue={0}
+                    min={0}
+                    max={100}
+                    ThumbComponent={CustomThumbComponent}
+                    onChange={slideToClose}
+                  />
+                  <div className={classes.slideText}>Tôi đồng ý</div>
+                </div>
+                <div className={classes.slideToCloseText}>
+                  Gạt sang để tiếp tục
+                </div>
+              </Typography>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-      <ArrowBackIosIcon
-        className={classes.backIcon}
-        onClick={() => props.setStep(17)}
-      />
-      {isMobile && (
-        <FlipCameraIosOutlinedIcon
-          onClick={() => changeCamera()}
-          className={classes.changeCamera}
-        />
-      )}
-      <div className={classes.divOverlay} />
-      <div className={classes.textGuidline}>
-        {!recording && !process
-          ? 'Để mặt bạn vừa trong hình oval'
-          : 'Đang quay'}
-      </div>
-      {!process && (
-        <img
-          src={captureBtn}
-          disabled={recording}
-          alt="capture btn"
-          className={classes.btnCapture}
-          onClick={recordVideo}
-        />
-      )}
-      <canvas style={{ display: 'none' }} />
-      <Dialog
-        onClose={handleClose}
-        disableBackdropClick
-        aria-labelledby="customized-dialog-title"
-        open={open}
-        classes={{
-          paper: classes.dialogPaper,
-        }}
-      >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Thông báo hình ảnh cần khắc phục
-        </DialogTitle>
-        <DialogContent dividers>
-          <Typography gutterBottom>
-            Hình ảnh của bạn quá tối, chúng tôi không thể nhận diện được gương
-            mặt, vui lòng di chuyển tới vị trí nhiều ánh sáng hơn và chụp lại.
-            <div className={classes.slideContainer}>
-              <PrettoSlider
-                valueLabelDisplay="none"
-                aria-label="pretto slider"
-                defaultValue={0}
-                min={0}
-                max={100}
-                ThumbComponent={CustomThumbComponent}
-                onChange={slideToClose}
-              />
-              <div className={classes.slideText}>Tôi đồng ý</div>
-            </div>
-            <div className={classes.slideToCloseText}>
-              Gạt sang để tiếp tục
-            </div>
-          </Typography>
-        </DialogContent>
-      </Dialog>
-    </div>
+    </JarvisFormStyle>
   );
 }
