@@ -96,22 +96,21 @@ export default function OTP(props) {
     defaultValues: {},
     resolver: yupResolver(schema),
   });
-    const [activeInput, setActiveInput] = useState(0);
-  
+  const [activeInput, setActiveInput] = useState(0);
+
   // Define state otpValues = array with <length> items with default value = ""
-  const [otpValues, setOTPValues] = useState(Array(6).fill(""));
-  const inputRef = useRef(Array(6).fill(""));
-  
+  const [otpValues, setOTPValues] = useState(Array(6).fill(''));
+  const inputRef = useRef(Array(6).fill(''));
 
   const classes = useStyles();
 
   function handleOtpChange(value, index) {
     if (value) {
-      let currentOtp = [...otpValues];
+      const currentOtp = [...otpValues];
       currentOtp[index] = value;
       setOTPValues(currentOtp);
       const nextSibling = document.querySelector(
-        `input[name=otp-${index + 1}]`
+        `input[name=otp-${index + 1}]`,
       );
       if (nextSibling !== null) {
         nextSibling.focus();
@@ -121,24 +120,46 @@ export default function OTP(props) {
 
   function onSubmitForm() {
     return new Promise((resolve, reject) => {
-     props.dispatch(Actions.verifyOtp({
-        phoneOrEmail: jarvisCustomer.mobileNumber,
-        otpNumber: otpValues.join(""),
-      }, resolve, reject))
-    }).then(() => {
-      props.setStep(17);  
-    }).catch(() => {
-      props.handleShoMessage({
-        message: 'Lỗi xác thực OTP',
-        severity: 'error',
+      props.dispatch(
+        Actions.verifyOtp(
+          {
+            phoneOrEmail: jarvisCustomer.mobileNumber,
+            otpNumber: otpValues.join(''),
+          },
+          resolve,
+          reject,
+        ),
+      );
+    })
+      .then(() => {
+        if (jarvisCustomer.message) {
+          return new Promise((res, rej) => {
+            props.dispatch(
+              Actions.getDetailApp(
+                {
+                  custId: jarvisCustomer.id,
+                },
+                res,
+                rej,
+              ),
+            );
+          }).then(() => {
+            props.setStep(17);
+          });
+        }
+        props.setStep(17);
+      })
+      .catch(() => {
+        props.handleShoMessage({
+          message: 'Lỗi xác thực OTP',
+          severity: 'error',
+        });
       });
-    });
-    
   }
 
-  const resetInput = (e) => {
-    e.target.value = "";
-  }
+  const resetInput = e => {
+    e.target.value = '';
+  };
 
   return (
     <JarvisFormStyle>
@@ -146,6 +167,9 @@ export default function OTP(props) {
       <StepApp step={0} />
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>Nhập mã OTP</div>
+        {jarvisCustomer.message && (
+          <div className={classes.secondHeader}>Chào mừng bạn quay trở lại</div>
+        )}
         <div className={classes.secondHeader}>
           Điền mã OTP đã được gửi tới số {jarvisCustomer.mobileNumber}{' '}
         </div>

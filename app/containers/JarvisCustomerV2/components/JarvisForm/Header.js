@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/prop-types */
 import React from 'react';
 import Stepper from '@material-ui/core/Stepper';
@@ -13,6 +15,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import clsx from 'clsx';
 import logo from 'images/logo-vp.svg';
 
@@ -77,9 +80,15 @@ const useStyles = makeStyles(theme => ({
       fontSize: '10px',
     },
   },
-  menuIcon: {
+  loginContainer: {
     marginRight: '16px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  loginIcon: {
+    marginRight: '4px',
+  }
 }));
 
 export default function Header(props) {
@@ -146,10 +155,9 @@ export default function Header(props) {
       <div className={classes.headerMenu}>
         <div className={props.className}>
           <img src={logo} alt="logo" />
-          <MenuIcon
-            className={classes.menuIcon}
-            onClick={toggleDrawer('left', true)}
-          />
+          <div className={classes.loginContainer} onClick={() => gotoLogin()}>
+            <AccountCircleIcon className={classes.loginIcon} /> Đã đăng ký
+          </div>
         </div>
       </div>
       {props.showStep && (

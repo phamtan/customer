@@ -95,34 +95,34 @@ const schema = yup.object().shape({
     .string()
     .required('Bạn chưa nhập thông tin tài khoản online'),
   fullNameRefOne: yup.string().required('Bạn chưa nhập tên người tham chiếu'),
-  birthDateSpouse: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa nhập ngày sinh vợ/chồng'),
-    })
-    .nullable(),
-  documentTypeSpouse: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa chọn loại giấy tờ'),
-    })
-    .nullable(),
-  documentNumberSpouse: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa nhập số giấy tờ'),
-    })
-    .nullable(),
-  mobileNumberRefOne: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa nhập số điện thoại vợ/chồng'),
-    })
-    .nullable(),
+  // birthDateSpouse: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa nhập ngày sinh vợ/chồng'),
+  //   })
+  //   .nullable(),
+  // documentTypeSpouse: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa chọn loại giấy tờ'),
+  //   })
+  //   .nullable(),
+  // documentNumberSpouse: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa nhập số giấy tờ'),
+  //   })
+  //   .nullable(),
+  // mobileNumberRefOne: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa nhập số điện thoại vợ/chồng'),
+  //   })
+  //   .nullable(),
   fullNameRefTwo: yup
     .string()
     .required('Bạn chưa nhập tên người tham chiếu thứ 2'),
@@ -401,8 +401,8 @@ export default function Round3(props) {
                           selection => selection.category === 'RELATIONSHIP',
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVI,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))
                     }
                     classes={{
@@ -483,8 +483,8 @@ export default function Round3(props) {
                           selection => selection.category === 'RELATIONSHIP',
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVI,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))
                     }
                     classes={{
@@ -772,11 +772,7 @@ export default function Round3(props) {
               )}
             </div>
 
-            <button
-              type="submit"
-              className={classes.action}
-              disabled={formState.isSubmitting}
-            >
+            <button type="submit" className={classes.action}>
               Tiếp tục
             </button>
           </div>

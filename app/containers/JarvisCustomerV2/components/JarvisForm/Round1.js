@@ -126,11 +126,16 @@ export default function Round1(props) {
   const classes = useStyles();
 
   function onSubmitForm(values) {
+    const valuesSubmit = values;
+    valuesSubmit.type = 'CC';
+    valuesSubmit.processStep = 'BasicStep';
     return new Promise((resolve, reject) => {
-      props.dispatch(Actions.saveData(values, resolve, reject));
+      props.dispatch(Actions.register(valuesSubmit, resolve, reject));
     })
-      .then(() => {
-        props.setStep(1);
+      .then(data => {
+        if (data.needVerifyOTP) {
+          props.setStep(1);
+        }
       })
       .catch(() => {
         props.handleShoMessage({

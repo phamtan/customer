@@ -16,6 +16,8 @@ import {
   UPLOAD_OCR_BACK,
   FACE_MATCHING,
   REQUEST_COMPANIES_SEARCH,
+  REGISTER,
+  GET_DETAIL,
 } from './constants';
 import {
   callapiSuccess,
@@ -85,6 +87,30 @@ function* saveApplicationSaga(action) {
   }
 }
 
+function* registerSaga(action) {
+  const payload = {
+    url: '/c-flow/register',
+    params: null,
+    data: action.payload,
+  };
+  try {
+    const response = yield call(Api.post, payload);
+
+    yield put(createApplicationSuccess(response));
+    action.resolve(response);
+    if (response.needVerifyOTP) {
+      yield put(
+        requestOtp({
+          phoneOrEmail: response.mobileNumber,
+        }),
+      );
+    }
+  } catch (error) {
+    // yield put(callapiErorr());
+    action.reject(error);
+  }
+}
+
 function* saveDataApplicationSaga(action) {
   const payload = {
     url: '/customer/save',
@@ -95,23 +121,23 @@ function* saveDataApplicationSaga(action) {
     const response = yield call(Api.post, payload);
 
     yield put(createApplicationSuccess(response));
-    if (values.program) {
-      yield put(
-        checkLosResult(
-          { appId: response.applicationId, round: 'Check_2' },
-          action.resolve,
-          action.reject,
-        ),
-      );
-    } else {
-      yield put(
-        checkLosResult(
-          { appId: response.applicationId, round: 'Check_1' },
-          action.resolve,
-          action.reject,
-        ),
-      );
-    }
+    // if (values.hasResultR1) {
+    //   yield put(
+    //     checkLosResult(
+    //       { appId: response.applicationId, round: 'Check_2' },
+    //       action.resolve,
+    //       action.reject,
+    //     ),
+    //   );
+    // } else {
+    //   yield put(
+    //     checkLosResult(
+    //       { appId: response.applicationId, round: 'Check_1' },
+    //       action.resolve,
+    //       action.reject,
+    //     ),
+    //   );
+    // }
     action.resolve(response);
   } catch (error) {
     // yield put(callapiErorr());
@@ -152,6 +178,7 @@ function* checkLosRound1(action) {
   };
   try {
     const response = yield call(Api.post, payload);
+    yield put(createApplicationSuccess(action.payload));
     action.resolve(response);
   } catch (error) {
     // yield put(callapiErorr());
@@ -276,6 +303,23 @@ function* fetchCompaniesSearchSaga(action) {
   }
 }
 
+function* getApplicationDataSaga(action) {
+  const payload = {
+    // url: `/customer/get-app-detail/${action.payload.custId}`,
+    url: `/customer/get-app-detail`,
+    params: null,
+  };
+  try {
+    const response = yield call(Api.get, payload);
+
+    yield put(createApplicationSuccess(response));
+    action.resolve(response);
+  } catch (error) {
+    // yield put(callapiErorr());
+    action.reject(error);
+  }
+}
+
 export default function* jarvisCustomerV2Saga() {
   yield all([
     takeEvery(REQUEST_COUNTRIES, fetchCountriesSaga),
@@ -292,5 +336,7 @@ export default function* jarvisCustomerV2Saga() {
     takeEvery(UPLOAD_OCR_FRONT, uploadOCRFrontSaga),
     takeEvery(FACE_MATCHING, faceMatchingSaga),
     takeEvery(REQUEST_COMPANIES_SEARCH, fetchCompaniesSearchSaga),
+    takeEvery(REGISTER, registerSaga),
+    takeEvery(GET_DETAIL, getApplicationDataSaga),
   ]);
 }

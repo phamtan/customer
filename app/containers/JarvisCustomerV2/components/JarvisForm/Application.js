@@ -31,6 +31,7 @@ import CompareCard from './CompareCard';
 import WaitingCheckLos from './WaitingCheckLos';
 import AllCards from './AllCards';
 import RejectCard from './RejectCard';
+import RejectCustomer from './RejectCustomer';
 import RegisCardDone from './RegisCardDone';
 import CheckLimitDone from './CheckLimitDone';
 
@@ -114,6 +115,7 @@ export default function Application(props) {
       {step === 24 && <RejectCard setStep={setStep} {...props} />}
       {step === 25 && <RegisCardDone setStep={setStep} {...props} />}
       {step === 26 && <CheckLimitDone setStep={setStep} {...props} />}
+      {step === 27 && <RejectCustomer setStep={setStep} {...props} />}
       {step === 998 && <AllCards setStep={setStep} {...props} />}
       {step === 1000 && <ChooseLimit setStep={setStep} {...props} />}
       {step === 997 && <ChooseCard setStep={setStep} {...props} />}

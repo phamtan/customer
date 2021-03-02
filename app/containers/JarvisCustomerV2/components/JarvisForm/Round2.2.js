@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
@@ -79,12 +80,12 @@ const useStyles = makeStyles(theme => ({
 
 const schema = yup.object().shape({
   nameOfEmployer: yup.string().required('Bạn chưa chọn công ty làm việc'),
-  employerAddressLine: yup.object().required('Bạn chưa nhập địa chỉ công ty'),
+  employerAddressLine: yup.string().required('Bạn chưa nhập địa chỉ công ty'),
   employerProvince: yup.string().required('Bạn chưa nhập địa chỉ công ty'),
   employerDistrict: yup.string().required('Bạn chưa nhập địa chỉ công ty'),
   landlinePhoneNo: yup.string().required('Bạn chưa nhập số điện thoại công ty'),
-  typeCompany: yup.object().required('Bạn chưa chọn loại công ty'),
-  position: yup.object().required('Bạn chưa chọn vị trí hiện tại'),
+  typeCompany: yup.string().required('Bạn chưa chọn loại công ty'),
+  position: yup.string().required('Bạn chưa chọn vị trí hiện tại'),
 });
 export default function Round3(props) {
   const classes = useStyles();
@@ -106,6 +107,8 @@ export default function Round3(props) {
     resolver: yupResolver(schema),
   });
 
+  console.log(errors);
+
   useEffect(() => {
     // if (companies) {
     //   companies.push({ code: 'others', name: 'Khác' });
@@ -113,8 +116,16 @@ export default function Round3(props) {
     setCompanyList([...companies]);
   }, [companies]);
 
+  useEffect(() => {
+    // if (companies) {
+    //   companies.push({ code: 'others', name: 'Khác' });
+    // }
+    console.log(errors);
+  }, [errors]);
+
   function onSubmitForm(values) {
-    const valuesSubmit = [...values];
+    const valuesSubmit = values;
+    valuesSubmit.processStep = 'Work_Form_R_2_2';
     valuesSubmit.docIssuedDate = moment(values.docIssuedDate).format(
       'DD/MM/YYYY',
     );
@@ -122,9 +133,28 @@ export default function Round3(props) {
     return new Promise((resolve, reject) => {
       props.dispatch(Actions.saveDataApp(valuesSubmit, resolve, reject));
     })
-      .then(() => {
-        props.setStep(23);
-      })
+      .then(() =>
+        new Promise((res, rej) => {
+          props.dispatch(
+            Actions.checkLosResult(
+              {
+                appId: jarvisCustomer.applicationId,
+                round: 'Check_1',
+              },
+              res,
+              rej,
+            ),
+          );
+        }).then(result => {
+          if (result.status === 'PASS' && result.data.pa === 'N') {
+            props.setStep(23);
+          } else if (result.status === 'PASS' && result.data.pa === 'Y') {
+            props.setStep(10);
+          } else {
+            props.setStep(25);
+          }
+        }),
+      )
       .catch(() => {
         props.handleShoMessage({
           message: 'Có lỗi xảy ra',
@@ -391,8 +421,8 @@ export default function Round3(props) {
                           selection => selection.category === 'TYPEOFCOMPANY',
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVI,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))
                     }
                     classes={{
@@ -434,8 +464,8 @@ export default function Round3(props) {
                           selection => selection.category === 'OCCUPATION',
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVI,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))
                     }
                     classes={{
@@ -463,11 +493,7 @@ export default function Round3(props) {
                 <span className="formError">{errors.position.message}</span>
               )}
             </div>
-            <button
-              type="submit"
-              className={classes.action}
-              disabled={formState.isSubmitting}
-            >
+            <button type="submit" className={classes.action}>
               Tiếp tục
             </button>
           </div>

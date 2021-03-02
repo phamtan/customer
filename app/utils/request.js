@@ -17,7 +17,7 @@ const sendRequest = ({ url, method, params, data, apiName = '' }) =>
       Authorization: localStorage.getItem('token') || '',
     },
   })
-    .then(response => handleSuccess(response.data, apiName))
+    .then(response => handleSuccess(response.data, apiName, response))
     .catch(error => handleError(error, apiName));
 
 export const get = ({ url, params, apiName }) =>
@@ -32,7 +32,7 @@ export const put = ({ url, params, data, apiName }) =>
 export const deleteData = ({ url, params, data, apiName }) =>
   sendRequest({ url, params, data, method: 'DELETE', apiName });
 
-const handleSuccess = (respond, apiName) => {
+const handleSuccess = (respond, apiName, response) => {
   if (apiName) {
     const message = `${apiName} is succeed`;
 
@@ -47,6 +47,11 @@ const handleSuccess = (respond, apiName) => {
         duration: 2000,
       },
     });
+  }
+  if (response) {
+    if (response.headers.authorization) {
+      localStorage.setItem('token', response.headers.authorization);
+    }
   }
   return Promise.resolve(respond);
 };

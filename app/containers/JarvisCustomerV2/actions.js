@@ -28,6 +28,8 @@ import {
   UPLOAD_OCR_BACK,
   FACE_MATCHING,
   REQUEST_COMPANIES_SEARCH,
+  REGISTER,
+  GET_DETAIL,
 } from './constants';
 
 export function defaultAction() {
@@ -209,6 +211,24 @@ export function saveDataApp(form, resolve, reject) {
 export function faceMatching(data, resolve, reject) {
   return {
     type: FACE_MATCHING,
+    payload: data,
+    resolve,
+    reject,
+  };
+}
+
+export function register(data, resolve, reject) {
+  return {
+    type: REGISTER,
+    payload: data,
+    resolve,
+    reject,
+  };
+}
+
+export function getDetailApp(data, resolve, reject) {
+  return {
+    type: GET_DETAIL,
     payload: data,
     resolve,
     reject,

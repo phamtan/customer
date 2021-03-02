@@ -166,7 +166,7 @@ export default function Round1(props) {
     shouldUnregister: true,
     defaultValues: {
       id: '',
-      nationality: 'VI',
+      nationality: 'VN',
       fullName: '',
       email: '',
       mobileNumber: '',
@@ -190,8 +190,23 @@ export default function Round1(props) {
   useEffect(() => {
     if (jarvisCustomer) {
       reset(jarvisCustomer);
+      if (jarvisCustomer.permanentProvince && provinces) {
+        const province = provinces.filter(
+          pv => pv.code === jarvisCustomer.permanentProvince,
+        )[0];
+        setDistrict(province.districts);
+      }
     }
   }, [jarvisCustomer]);
+
+  useEffect(() => {
+    if (jarvisCustomer && jarvisCustomer.permanentProvince && provinces) {
+      const province = provinces.filter(
+        pv => pv.code === jarvisCustomer.permanentProvince,
+      )[0];
+      setDistrict(province.districts);
+    }
+  }, [provinces]);
 
   function changeProvince(e) {
     const province = provinces.filter(pv => pv.code === e.value)[0];
@@ -212,13 +227,14 @@ export default function Round1(props) {
   }
 
   function onSubmitForm(values) {
-    const valuesSubmit = values;
+    const valuesSubmit = {...values};
     valuesSubmit.docIssuedDate = moment(valuesSubmit.docIssuedDate).format(
       'DD/MM/YYYY',
     );
     valuesSubmit.dob = moment(valuesSubmit.dob).format(
       'YYYY-MM-DDTHH:mm:ss.SSS',
     );
+    valuesSubmit.processStep = 'Work_Form_R_1';
     return new Promise((resolve, reject) => {
       props.dispatch(
         Actions.checkLosRound1(valuesSubmit, resolve, reject),
@@ -376,7 +392,13 @@ export default function Round1(props) {
                     value={
                       countries &&
                       value &&
-                      countries.filter(country => country.value === value)[0]
+                      countries
+                        .filter(country => country.isoCode === value)
+                        .map(country => ({
+                          value: country.isoCode,
+                          label: country.vi,
+                          code: country.isoCode,
+                        }))[0]
                     }
                     getOptionSelected={(option, val) =>
                       option.name === val.name
@@ -437,7 +459,10 @@ export default function Round1(props) {
                       value &&
                       DOCUMENT_TYPE.filter(
                         document => document.value === value,
-                      )[0]
+                      ).map(document => ({
+                        value: document.value,
+                        label: document.label,
+                      }))[0]
                     }
                     autoHighlight
                     getOptionLabel={option => (option ? option.label : '')}

@@ -1,6 +1,7 @@
 // export const ROOT_URI = 'http://testdg.vpbank.com.vn/jarvisapi';
-export const ROOT_URI = 'http://10.39.171.17:9090/jarvisapi/c-flow';
-// export const ROOT_URI = 'https://testdg.vpbank.com.vn/customerjarvisapi';
+// export const ROOT_URI = 'http://10.39.171.17:9090/jarvisapi/c-flow';
+export const ROOT_URI = 'http://localhost:8080/jarvisapi/c-flow';
+// export const ROOT_URI = 'https://testdg.vpbank.com.vn/jarvisapi/c-flow';
 export const API_TIMEOUT = '30000';
 
 export const RESTART_ON_REMOUNT = '@@saga-injector/restart-on-remount';

@@ -88,43 +88,43 @@ const schema = yup.object().shape({
     .string()
     .required('Bạn chưa chọn tình trạng hôn nhân')
     .nullable(),
-  fullNameRefOne: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa nhập tên vợ/chồng'),
-    })
-    .nullable(),
-  birthDateSpouse: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa nhập ngày sinh vợ/chồng'),
-    })
-    .nullable(),
-  documentTypeSpouse: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa chọn loại giấy tờ'),
-    })
-    .nullable(),
-  documentNumberSpouse: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa nhập số giấy tờ'),
-    })
-    .nullable(),
-  mobileNumberRefOne: yup
-    .string()
-    .when('maritalStatus', {
-      is: 'MARRIED',
-      otherwise: s => s.required('Bạn chưa nhập số điện thoại vợ/chồng'),
-    })
-    .nullable(),
+  // fullNameRefOne: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa nhập tên vợ/chồng'),
+  //   })
+  //   .nullable(),
+  // birthDateSpouse: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa nhập ngày sinh vợ/chồng'),
+  //   })
+  //   .nullable(),
+  // documentTypeSpouse: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa chọn loại giấy tờ'),
+  //   })
+  //   .nullable(),
+  // documentNumberSpouse: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa nhập số giấy tờ'),
+  //   })
+  //   .nullable(),
+  // mobileNumberRefOne: yup
+  //   .string()
+  //   .when('maritalStatus', {
+  //     is: 'MARRIED',
+  //     otherwise: s => s.required('Bạn chưa nhập số điện thoại vợ/chồng'),
+  //   })
+  //   .nullable(),
   employmentStatus: yup.string().required('Bạn chưa chọn tình trạng công việc'),
-  mainIncomeType: yup.object().required('Bạn chưa chọn loại hình thu nhập'),
+  mainIncomeType: yup.string().required('Bạn chưa chọn loại hình thu nhập'),
   monthlyIncome: yup.string().required('Bạn chưa nhập thu nhập hàng tháng'),
 });
 export default function Round3(props) {
@@ -149,12 +149,31 @@ export default function Round3(props) {
   });
 
   function onSubmitForm(values) {
+    const valuesSubmit = values;
+    valuesSubmit.processStep = 'Work_Form_R_2';
     return new Promise((resolve, reject) => {
-      props.dispatch(Actions.saveDataApp(values, resolve, reject));
+      props.dispatch(Actions.saveDataApp(valuesSubmit, resolve, reject));
     })
-      .then(() => {
-        props.setStep(8);
-      })
+      .then(() =>
+        new Promise((res, rej) => {
+          props.dispatch(
+            Actions.checkLosResult(
+              {
+                appId: jarvisCustomer.applicationId,
+                round: 'Check_1',
+              },
+              res,
+              rej,
+            ),
+          );
+        }).then(result => {
+          if (result.status === 'PASS') {
+            props.setStep(8);
+          } else {
+            props.setStep(27);
+          }
+        }),
+      )
       .catch(() => {
         props.handleShoMessage({
           message: 'Có lỗi xảy ra vui lòng thử lại',
@@ -194,8 +213,8 @@ export default function Round3(props) {
                           selection => selection.category === 'MARITALSTATUS',
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVI,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))
                     }
                     classes={{
@@ -346,8 +365,8 @@ export default function Round3(props) {
                                 selection.category === 'RELATIONSHIP',
                             )
                             .map(selection => ({
-                              value: selection.code,
-                              label: selection.nameVI,
+                              value: selection.code || '',
+                              label: selection.nameVI || '',
                             }))
                         }
                         classes={{
@@ -413,8 +432,8 @@ export default function Round3(props) {
                             selection.category === 'EMPLOYMENTSTATUS',
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVI,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))
                     }
                     classes={{
@@ -460,8 +479,8 @@ export default function Round3(props) {
                           selection => selection.category === 'MAININCOME',
                         )
                         .map(selection => ({
-                          value: selection.code,
-                          label: selection.nameVI,
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
                         }))
                     }
                     classes={{
@@ -508,11 +527,7 @@ export default function Round3(props) {
               )}
             </div>
 
-            <button
-              type="submit"
-              className={classes.action}
-              disabled={formState.isSubmitting}
-            >
+            <button type="submit" className={classes.action}>
               Tiếp tục
             </button>
           </div>

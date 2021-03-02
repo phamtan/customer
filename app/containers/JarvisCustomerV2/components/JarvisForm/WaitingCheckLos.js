@@ -188,8 +188,20 @@ export default function WaitingCheckLos(props) {
       );
     })
       .then(response => {
-        if (response.status === 'PASS') {
+        console.log(jarvisCustomer);
+        if (
+          response.status === 'PASS' &&
+          jarvisCustomer.processStep === 'Work_Form_R_1'
+        ) {
           setAllowNext(true);
+        } else if (
+          response.status === 'PASS' &&
+          jarvisCustomer.processStep === 'Work_Form_R_2_2' &&
+          response.hasResultR2
+        ) {
+          setAllowNext(true);
+        } else {
+          props.setStep(27);
         }
       })
       .catch(error => {});
@@ -237,7 +249,11 @@ export default function WaitingCheckLos(props) {
             <button
               type="button"
               disabled={!allowNext}
-              onClick={() => props.setStep(9)}
+              onClick={() =>
+                props.setStep(
+                  jarvisCustomer.processStep === 'Work_Form_R_1' ? 9 : 10,
+                )
+              }
               className={allowNext ? classes.action : classes.actionDisabled}
             >
               Tiếp tục

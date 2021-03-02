@@ -28,3 +28,6 @@ export const SAVE_DATA_APP = 'SAVE_DATA_APP';
 export const UPLOAD_OCR_FRONT = 'UPLOAD_OCR_FRONT';
 export const UPLOAD_OCR_BACK = 'UPLOAD_OCR_BACK';
 export const FACE_MATCHING = 'FACE_MATCHING';
+export const REGISTER = 'REGISTER';
+export const GET_DETAIL = 'GET_DETAIL';
+export const LOGIN = 'LOGIN';
