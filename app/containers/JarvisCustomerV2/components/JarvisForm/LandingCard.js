@@ -182,7 +182,7 @@ export default function LandingCard(props) {
 
   function chooseThisCard(cardId) {
     const values = {};
-    values.card = cardId;
+    values.typeOfCreditCard = cardId;
     values.selectedCard = cardId;
     values.limitType = '1';
     return new Promise((resolve, reject) => {

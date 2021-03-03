@@ -197,9 +197,19 @@ export default function WaitingCheckLos(props) {
         } else if (
           response.status === 'PASS' &&
           jarvisCustomer.processStep === 'Work_Form_R_2_2' &&
-          response.hasResultR2
+          response.data.hasResultR1
         ) {
-          setAllowNext(true);
+          if (response.data.pa === 'Y') {
+            setAllowNext(true);
+          } else {
+            props.setStep(25);
+          }
+        } else if (
+          response.status === 'PASS' &&
+          jarvisCustomer.processStep === 'Work_Form_R_2_2' &&
+          !response.data.hasResultR1
+        ) {
+          props.setStep(25);
         } else {
           props.setStep(27);
         }

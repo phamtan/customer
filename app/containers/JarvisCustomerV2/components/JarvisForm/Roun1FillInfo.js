@@ -91,6 +91,7 @@ const schema = yup.object().shape({
   fullName: yup
     .string()
     .required('Bạn chưa nhập họ tên')
+    .max(100, 'Tên không vượt quá 100 kí tự')
     .matches(XRegExp('^[\\pL\\s]+$'), 'Tên không chứa ký tự đặc biệt'),
   mobileNumber: yup
     .string()
@@ -194,7 +195,10 @@ export default function Round1(props) {
         const province = provinces.filter(
           pv => pv.code === jarvisCustomer.permanentProvince,
         )[0];
-        setDistrict(province.districts);
+        if (province && province.districts) {
+          setDistrict(province.districts);
+        }
+        
       }
     }
   }, [jarvisCustomer]);
@@ -227,7 +231,7 @@ export default function Round1(props) {
   }
 
   function onSubmitForm(values) {
-    const valuesSubmit = {...values};
+    const valuesSubmit = Object.assign(jarvisCustomer, values);
     valuesSubmit.docIssuedDate = moment(valuesSubmit.docIssuedDate).format(
       'DD/MM/YYYY',
     );
@@ -455,14 +459,7 @@ export default function Round1(props) {
                       onChange(newValue.value);
                     }}
                     value={
-                      DOCUMENT_TYPE &&
-                      value &&
-                      DOCUMENT_TYPE.filter(
-                        document => document.value === value,
-                      ).map(document => ({
-                        value: document.value,
-                        label: document.label,
-                      }))[0]
+                      DOCUMENT_TYPE.filter(doc => doc.value === value)[0]
                     }
                     autoHighlight
                     getOptionLabel={option => (option ? option.label : '')}
@@ -547,7 +544,7 @@ export default function Round1(props) {
                         .map(selection => ({
                           value: selection.code || '',
                           label: selection.nameVI || '',
-                        }))
+                        }))[0]
                     }
                     value={
                       selections &&

@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
@@ -135,6 +135,7 @@ export default function Round3(props) {
   const [maritalStatus, setMaritalStatus] = useState(null);
   const {
     register,
+    reset,
     handleSubmit,
     errors,
     control,
@@ -148,8 +149,14 @@ export default function Round3(props) {
     resolver: yupResolver(schema),
   });
 
+  useEffect(() => {
+    if (jarvisCustomer) {
+      reset(jarvisCustomer);
+    }
+  }, [jarvisCustomer]);
+
   function onSubmitForm(values) {
-    const valuesSubmit = values;
+    const valuesSubmit = Object.assign(jarvisCustomer, values);
     valuesSubmit.processStep = 'Work_Form_R_2';
     return new Promise((resolve, reject) => {
       props.dispatch(Actions.saveDataApp(valuesSubmit, resolve, reject));
@@ -167,7 +174,32 @@ export default function Round3(props) {
             ),
           );
         }).then(result => {
-          if (result.status === 'PASS') {
+          if (result.status === 'PASS' && result.data.hasResultR1) {
+            if (
+              !result.data.program &&
+              valuesSubmit.employmentStatus === 'FT' &&
+              valuesSubmit.checkSaleLocation.allowCurrentAddress
+            ) {
+              props.setStep(8);
+            } else if (
+              !result.data.program &&
+              valuesSubmit.employmentStatus === 'FT' &&
+              !valuesSubmit.checkSaleLocation.allowCurrentAddress
+            ) {
+              props.setStep(25);
+            } else if (
+              !result.data.program &&
+              ['BO', 'PT'].includes(valuesSubmit.employmentStatus) &&
+              valuesSubmit.checkSaleLocation.allowCurrentAddress
+            ) {
+              props.setStep(25);
+            } else if (
+              !result.data.program &&
+              ['UE', 'R'].includes(valuesSubmit.employmentStatus)
+            ) {
+              props.setStep(27);
+            }
+          } else if (result.status === 'PASS' && !result.data.hasResultR1) {
             props.setStep(8);
           } else {
             props.setStep(27);
@@ -216,6 +248,20 @@ export default function Round3(props) {
                           value: selection.code || '',
                           label: selection.nameVI || '',
                         }))
+                    }
+                    value={
+                      selections &&
+                      value &&
+                      selections
+                        .filter(
+                          selection =>
+                            selection.category === 'MARITALSTATUS' &&
+                            selection.code === value,
+                        )
+                        .map(selection => ({
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
+                        }))[0]
                     }
                     classes={{
                       option: classes.option,
@@ -436,6 +482,20 @@ export default function Round3(props) {
                           label: selection.nameVI || '',
                         }))
                     }
+                    value={
+                      selections &&
+                      value &&
+                      selections
+                        .filter(
+                          selection =>
+                            selection.category === 'EMPLOYMENTSTATUS' &&
+                            selection.code === value,
+                        )
+                        .map(selection => ({
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
+                        }))[0]
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -483,6 +543,20 @@ export default function Round3(props) {
                           label: selection.nameVI || '',
                         }))
                     }
+                    value={
+                      selections &&
+                      value &&
+                      selections
+                        .filter(
+                          selection =>
+                            selection.category === 'MAININCOME' &&
+                            selection.code === value,
+                        )
+                        .map(selection => ({
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
+                        }))[0]
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -524,6 +598,64 @@ export default function Round3(props) {
                 <span className="formError">
                   {errors.monthlyIncome.message}
                 </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <Controller
+                name="position"
+                control={control}
+                render={({ value, onChange }) => (
+                  <Autocomplete
+                    style={{ width: '100%' }}
+                    options={
+                      selections &&
+                      selections
+                        .filter(
+                          selection => selection.category === 'OCCUPATION',
+                        )
+                        .map(selection => ({
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
+                        }))
+                    }
+                    value={
+                      selections &&
+                      value &&
+                      selections
+                        .filter(
+                          selection =>
+                            selection.category === 'OCCUPATION' &&
+                            selection.code === value,
+                        )
+                        .map(selection => ({
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
+                        }))[0]
+                    }
+                    classes={{
+                      option: classes.option,
+                    }}
+                    autoHighlight
+                    onChange={(_event, newValue) => {
+                      onChange(newValue.value);
+                    }}
+                    getOptionLabel={option => option.label}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        label="Vị trí hiện tại"
+                        variant="outlined"
+                        inputProps={{
+                          ...params.inputProps,
+                        }}
+                      />
+                    )}
+                  />
+                )}
+              />
+              {errors.position && (
+                <span className="formError">{errors.position.message}</span>
               )}
             </div>
 

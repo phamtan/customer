@@ -85,7 +85,6 @@ const schema = yup.object().shape({
   employerDistrict: yup.string().required('Bạn chưa nhập địa chỉ công ty'),
   landlinePhoneNo: yup.string().required('Bạn chưa nhập số điện thoại công ty'),
   typeCompany: yup.string().required('Bạn chưa chọn loại công ty'),
-  position: yup.string().required('Bạn chưa chọn vị trí hiện tại'),
 });
 export default function Round3(props) {
   const classes = useStyles();
@@ -97,7 +96,7 @@ export default function Round3(props) {
   const [companyList, setCompanyList] = useState([]);
   const [showOtherCompany, setShowOtherCompany] = useState(false);
   const [searchCompany, setSearchCompany] = useState('');
-  const { handleSubmit, errors, control, formState } = useForm({
+  const { handleSubmit, errors, control, formState, reset } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -117,6 +116,29 @@ export default function Round3(props) {
   }, [companies]);
 
   useEffect(() => {
+    if (jarvisCustomer) {
+      reset(jarvisCustomer);
+      if (jarvisCustomer.employerProvince && provinces) {
+        const province = provinces.filter(
+          pv => pv.code === jarvisCustomer.employerProvince,
+        )[0];
+        if (province && province.districts) {
+          setDistrict(province.districts);
+        }
+      }
+    }
+  }, [jarvisCustomer]);
+
+  useEffect(() => {
+    if (jarvisCustomer && jarvisCustomer.employerProvince && provinces) {
+      const province = provinces.filter(
+        pv => pv.code === jarvisCustomer.employerProvince,
+      )[0];
+      setDistrict(province.districts);
+    }
+  }, [provinces]);
+
+  useEffect(() => {
     // if (companies) {
     //   companies.push({ code: 'others', name: 'Khác' });
     // }
@@ -124,12 +146,12 @@ export default function Round3(props) {
   }, [errors]);
 
   function onSubmitForm(values) {
-    const valuesSubmit = values;
+    const valuesSubmit = Object.assign(jarvisCustomer, values);
     valuesSubmit.processStep = 'Work_Form_R_2_2';
-    valuesSubmit.docIssuedDate = moment(values.docIssuedDate).format(
-      'DD/MM/YYYY',
-    );
-    valuesSubmit.dob = moment(values.dob).format('YYYY-MM-DDTHH:mm:ss.SSS');
+    // valuesSubmit.docIssuedDate = moment(values.docIssuedDate).format(
+    //   'DD/MM/YYYY',
+    // );
+    // valuesSubmit.dob = moment(values.dob).format('YYYY-MM-DDTHH:mm:ss.SSS');
     return new Promise((resolve, reject) => {
       props.dispatch(Actions.saveDataApp(valuesSubmit, resolve, reject));
     })
@@ -211,6 +233,16 @@ export default function Round3(props) {
                         value: company.code,
                         label: company.name,
                       }))
+                    }
+                    value={
+                      companyList &&
+                      value &&
+                      companyList
+                        .filter(company => company.code === value)
+                        .map(company => ({
+                          value: company.code,
+                          label: company.name,
+                        }))[0]
                     }
                     filterOptions={(options, params) => {
                       const filtered = filter(options, params);
@@ -302,6 +334,16 @@ export default function Round3(props) {
                       value: province.code,
                       label: province.name,
                     }))}
+                    value={
+                      provinces &&
+                      value &&
+                      provinces
+                        .filter(province => province.code === value)
+                        .map(province => ({
+                          value: province.code,
+                          label: province.name,
+                        }))[0]
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -345,6 +387,16 @@ export default function Round3(props) {
                         value: dis.code,
                         label: dis.name,
                       }))
+                    }
+                    value={
+                      district &&
+                      value &&
+                      district
+                        .filter(distr => distr.code === value)
+                        .map(distr => ({
+                          value: distr.code,
+                          label: distr.name,
+                        }))[0]
                     }
                     classes={{
                       option: classes.option,
@@ -425,6 +477,20 @@ export default function Round3(props) {
                           label: selection.nameVI || '',
                         }))
                     }
+                    value={
+                      selections &&
+                      value &&
+                      selections
+                        .filter(
+                          selection =>
+                            selection.category === 'TYPEOFCOMPANY' &&
+                            selection.code === value,
+                        )
+                        .map(selection => ({
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
+                        }))[0]
+                    }
                     classes={{
                       option: classes.option,
                     }}
@@ -448,49 +514,6 @@ export default function Round3(props) {
               />
               {errors.typeCompany && (
                 <span className="formError">{errors.typeCompany.message}</span>
-              )}
-            </div>
-            <div className="form-group">
-              <Controller
-                name="position"
-                control={control}
-                render={({ value, onChange }) => (
-                  <Autocomplete
-                    style={{ width: '100%' }}
-                    options={
-                      selections &&
-                      selections
-                        .filter(
-                          selection => selection.category === 'OCCUPATION',
-                        )
-                        .map(selection => ({
-                          value: selection.code || '',
-                          label: selection.nameVI || '',
-                        }))
-                    }
-                    classes={{
-                      option: classes.option,
-                    }}
-                    autoHighlight
-                    onChange={(_event, newValue) => {
-                      onChange(newValue.value);
-                    }}
-                    getOptionLabel={option => option.label}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label="Vị trí hiện tại"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
-                        }}
-                      />
-                    )}
-                  />
-                )}
-              />
-              {errors.position && (
-                <span className="formError">{errors.position.message}</span>
               )}
             </div>
             <button type="submit" className={classes.action}>

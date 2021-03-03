@@ -7,6 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
 import XRegExp from 'xregexp';
+import _ from  'lodash';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import StepApp from './StepApp';
@@ -103,6 +104,7 @@ const schema = yup.object().shape({
   fullName: yup
     .string()
     .required('Bạn chưa nhập họ tên')
+    .max(100, 'Tên không vượt quá 100 kí tự')
     .matches(XRegExp('^[\\pL\\s]+$'), 'Tên không chứa ký tự đặc biệt'),
   mobileNumber: yup
     .string()
@@ -116,6 +118,7 @@ const schema = yup.object().shape({
 });
 
 export default function Round1(props) {
+  const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', null);
   const { handleSubmit, errors, control, formState } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
@@ -126,7 +129,7 @@ export default function Round1(props) {
   const classes = useStyles();
 
   function onSubmitForm(values) {
-    const valuesSubmit = values;
+    const valuesSubmit = Object.assign(jarvisCustomer, values);
     valuesSubmit.type = 'CC';
     valuesSubmit.processStep = 'BasicStep';
     return new Promise((resolve, reject) => {
