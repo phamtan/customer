@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
 import XRegExp from 'xregexp';
-import _ from  'lodash';
+import _ from 'lodash';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import StepApp from './StepApp';
@@ -104,6 +104,17 @@ const schema = yup.object().shape({
   fullName: yup
     .string()
     .required('Bạn chưa nhập họ tên')
+    .test(
+      `test-name`,
+      'Xin lỗi quý khách, phần họ tên không đúng định dạng',
+      value => {
+        // your logic
+        if (value.split(' ').length < 2) {
+          return false;
+        }
+        return true;
+      },
+    )
     .max(100, 'Tên không vượt quá 100 kí tự')
     .matches(XRegExp('^[\\pL\\s]+$'), 'Tên không chứa ký tự đặc biệt'),
   mobileNumber: yup
@@ -114,7 +125,10 @@ const schema = yup.object().shape({
   email: yup
     .string()
     .required('Bạn chưa nhập email')
-    .email('Email không đúng định dạng'),
+    .matches(
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+      'Email không đúng định dạng',
+    ),
 });
 
 export default function Round1(props) {
@@ -137,7 +151,7 @@ export default function Round1(props) {
     })
       .then(data => {
         if (data.needVerifyOTP) {
-          props.setStep(1);
+          props.history.push('/v2/otp');
         }
       })
       .catch(() => {

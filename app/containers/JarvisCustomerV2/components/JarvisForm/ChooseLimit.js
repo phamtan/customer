@@ -165,10 +165,10 @@ export default function ChooseLimit(props) {
   }, [card]);
 
   function chooseThisBenefit() {
-    const values = {};
+    const values = jarvisCustomer;
     values.requestLimit = amount * 1000000;
     props.dispatch(Actions.saveRawData(values));
-    props.setStep(0);
+    props.history.push('/v2/begin');
   }
 
   function updateLimit(event, newValue) {

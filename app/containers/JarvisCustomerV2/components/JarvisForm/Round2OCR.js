@@ -160,7 +160,7 @@ const CAPTURE_OPTIONS = {
 export default function Round2OCRGuide(props) {
   const classes = useStyles();
   const cameraRef = useRef();
-  const [isCameraOpen, setIsCameraOpen] = useState(true);
+  const [isCameraOpen] = useState(true);
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
   const [open, setOpen] = React.useState(false);
 
@@ -197,7 +197,7 @@ export default function Round2OCRGuide(props) {
             valueSubmit.permanentAddressLine1 = response.data[0].address;
           }
           props.dispatch(Actions.saveRawData(valueSubmit));
-          props.setStep(21);
+          props.history.push('/v2/ocr-back');
           // turnOffCamera();
         } else {
           setOpen(true);
@@ -222,14 +222,13 @@ export default function Round2OCRGuide(props) {
           <div>
             <ArrowBackIosIcon
               className={classes.backIcon}
-              onClick={() => props.setStep(19)}
+              onClick={() => props.history.push('/v2/ocr-guideline')}
             />
           </div>
           {isCameraOpen && (
             <div className={classes.cameraContainer}>
               <Camera
                 onCapture={blob => handleTakePhoto(blob)}
-                onClear={() => setCardImage(undefined)}
                 ref={cameraRef}
                 title="Chứng minh thư mặt trước"
               />

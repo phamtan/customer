@@ -404,7 +404,7 @@ export default function VideoKYC(props) {
               !response.is_deepfake &&
               res.statusCodeValue === 200
             ) {
-              props.setStep(19);
+              props.history.push('/v2/ocr-guideline');
               turnOffCamera();
             } else {
               setOpen(true);
@@ -456,7 +456,7 @@ export default function VideoKYC(props) {
           </div>
           <ArrowBackIosIcon
             className={classes.backIcon}
-            onClick={() => props.setStep(17)}
+            onClick={() => props.history.push('/v2/liveness-guiline')}
           />
           {isMobile && (
             <FlipCameraIosOutlinedIcon

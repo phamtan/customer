@@ -181,6 +181,7 @@ export default function LandingCard(props) {
   };
 
   function chooseThisCard(cardId) {
+    localStorage.removeItem('token');
     const values = {};
     values.typeOfCreditCard = cardId;
     values.selectedCard = cardId;
@@ -188,7 +189,7 @@ export default function LandingCard(props) {
     return new Promise((resolve, reject) => {
       props.dispatch(Actions.saveRawData(values, resolve, reject));
     }).then(() => {
-      props.setStep(1000);
+      props.history.push('/v2/choose-limit');
     });
   }
 
@@ -375,7 +376,7 @@ export default function LandingCard(props) {
                         </button>
                         <button
                           type="button"
-                          onClick={() => props.setStep(22)}
+                          onClick={() => props.history.push('/v2/compare')}
                           className={classes.compareCardBtn}
                         >
                           So sánh
@@ -442,7 +443,7 @@ export default function LandingCard(props) {
                         </button>
                         <button
                           type="button"
-                          onClick={() => props.setStep(22)}
+                          onClick={() => props.history.push('/v2/compare')}
                           className={classes.compareCardBtn}
                         >
                           So sánh

@@ -95,17 +95,23 @@ export default function Round1(props) {
           <img src={chooseDocument} alt="document type" />
         </div>
         <div className={classes.titleHeader}>Chọn loại giấy tờ tùy thân</div>
-        <div className={classes.secondHeader} onClick={() => props.setStep(20)}>
+        <div
+          className={classes.secondHeader}
+          onClick={() => props.history.push('/v2/ocr-front')}
+        >
           Nộp giấy tờ để chứng minh nhân thân của bạn
         </div>
         <div
           className={classes.selectDocumentType}
-          onClick={() => props.setStep(20)}
+          onClick={() => props.history.push('/v2/ocr-front')}
         >
           Chứng minh nhân dân/ Căn cước công dân
         </div>
         <div className={classes.selectDocumentType}>Hộ chiếu</div>
-        <div className={classes.guiline} onClick={() => props.setStep(5)}>
+        <div
+          className={classes.guiline}
+          onClick={() => props.history.push('/v2/round1')}
+        >
           Tôi sẽ cung cấp giấy tờ tùy thân sau
         </div>
       </div>

@@ -188,7 +188,6 @@ export default function WaitingCheckLos(props) {
       );
     })
       .then(response => {
-        console.log(jarvisCustomer);
         if (
           response.status === 'PASS' &&
           jarvisCustomer.processStep === 'Work_Form_R_1'
@@ -202,16 +201,16 @@ export default function WaitingCheckLos(props) {
           if (response.data.pa === 'Y') {
             setAllowNext(true);
           } else {
-            props.setStep(25);
+            props.history.push('/v2/regis-done');
           }
         } else if (
           response.status === 'PASS' &&
           jarvisCustomer.processStep === 'Work_Form_R_2_2' &&
           !response.data.hasResultR1
         ) {
-          props.setStep(25);
+          props.history.push('/v2/regis-done');
         } else {
-          props.setStep(27);
+          props.history.push('/v2/reject');
         }
       })
       .catch(error => {});
@@ -224,7 +223,8 @@ export default function WaitingCheckLos(props) {
           <CardContent className={classes.cardStyle}>
             <div className={classes.cardContainer}>
               <div className={classes.titleHeader}>
-                Hệ thống đã ghi nhận thông tin, xin quý khách chờ trong giây lát
+                Hệ thống đã ghi nhận thông tin, xin quý khách chờ trong giây
+                lát
               </div>
               <div className={classes.progressCircle}>
                 <CircularProgressbarWithChildren
@@ -260,8 +260,10 @@ export default function WaitingCheckLos(props) {
               type="button"
               disabled={!allowNext}
               onClick={() =>
-                props.setStep(
-                  jarvisCustomer.processStep === 'Work_Form_R_1' ? 9 : 10,
+                props.history.push(
+                  jarvisCustomer.processStep === 'Work_Form_R_1'
+                    ? '/v2/round2-1'
+                    : '/v2/round3',
                 )
               }
               className={allowNext ? classes.action : classes.actionDisabled}

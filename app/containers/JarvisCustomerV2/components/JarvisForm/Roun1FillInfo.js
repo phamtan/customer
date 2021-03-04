@@ -91,6 +91,16 @@ const schema = yup.object().shape({
   fullName: yup
     .string()
     .required('Bạn chưa nhập họ tên')
+    .test(
+      `test-name`,
+      'Xin lỗi quý khách, phần họ tên không đúng định dạng',
+      value => {
+        if (value.split(' ').length < 2) {
+          return false;
+        }
+        return true;
+      },
+    )
     .max(100, 'Tên không vượt quá 100 kí tự')
     .matches(XRegExp('^[\\pL\\s]+$'), 'Tên không chứa ký tự đặc biệt'),
   mobileNumber: yup
@@ -101,13 +111,43 @@ const schema = yup.object().shape({
   email: yup
     .string()
     .required('Bạn chưa nhập email')
-    .email('Email không đúng định dạng'),
+    .matches(
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+      'Email không đúng định dạng',
+    ),
   dob: yup
     .string()
     .required('Bạn chưa nhập ngày sinh')
+    .test(
+      `test-dob`,
+      'Xin lỗi quý khách, Tuổi không được nhỏ hơn 18 và lớn hơn 65',
+      value => {
+        const doDob = moment(value);
+        const currentYear = moment();
+        if (doDob.year()) {
+          const diffYears = currentYear.diff(doDob, 'years', true);
+          if (diffYears > 65 || diffYears < 18) {
+            return false;
+          }
+        }
+        return true;
+      },
+    )
     .nullable(),
   gender: yup.string().required('Bạn chưa nhập giới tính'),
-  nationality: yup.string().required('Bạn chưa nhập quốc tịch'),
+  nationality: yup
+    .string()
+    .required('Bạn chưa nhập quốc tịch')
+    .test(
+      `test-nationality`,
+      'Xin lỗi quý khách, Hiện tại hệ thống chưa hỗ trợ người nước ngoài',
+      value => {
+        if (value && value !== 'VN') {
+          return false;
+        }
+        return true;
+      },
+    ),
   documentType: yup.string().required('Bạn chưa chọn loại giấy tờ'),
   documentNumber: yup.string().required('Bạn chưa nhập số giấy tờ'),
   docIssuedDate: yup
@@ -126,16 +166,16 @@ const schema = yup.object().shape({
     .required('Bạn chưa chọn Tỉnh thành phố thường trú'),
   permanentDistrict: yup.string().required('Bạn chưa chọn quận huyện'),
   currentAddLine1: yup.string().when('currentIsPermanent', {
-    is: '1',
-    otherwise: s => s.required('Bạn chưa nhập địa chỉ hiện tại'),
+    is: '0',
+    then: s => s.required('Bạn chưa nhập địa chỉ hiện tại'),
   }),
   currentProvince: yup.string().when('currentIsPermanent', {
-    is: '1',
-    otherwise: s => s.required('Bạn chưa nhập thành phố hiện tại'),
+    is: '0',
+    then: s => s.required('Bạn chưa nhập thành phố hiện tại'),
   }),
   currentDistrict: yup.string().when('currentIsPermanent', {
-    is: '1',
-    otherwise: s => s.required('Bạn chưa nhập quận huyện hiện tại'),
+    is: '0',
+    then: s => s.required('Bạn chưa nhập quận huyện hiện tại'),
   }),
 });
 
@@ -161,7 +201,7 @@ export default function Round1(props) {
       navigator.userAgent,
     ),
   );
-  const { handleSubmit, errors, control, reset, formState } = useForm({
+  const { handleSubmit, errors, control, reset, formState, watch } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
@@ -172,7 +212,7 @@ export default function Round1(props) {
       email: '',
       mobileNumber: '',
       gender: 'F',
-      currentIsPermanent: '1',
+      currentIsPermanent: '0',
       documentNumber: '',
       permanentDistrict: '',
       permanentProvince: '',
@@ -187,6 +227,16 @@ export default function Round1(props) {
     },
     resolver: yupResolver(schema),
   });
+
+  const watchAllFields = watch();
+
+  console.log(watchAllFields);
+
+  // useEffect(() => {
+  //   if (!jarvisCustomer) {
+  //     props.history.push('/v2');
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (jarvisCustomer) {
@@ -244,7 +294,7 @@ export default function Round1(props) {
         Actions.checkLosRound1(valuesSubmit, resolve, reject),
       );
     }).then(() => {
-      props.setStep(23);
+      props.history.push('/v2/waiting');
     }).catch(() => {
       props.handleShoMessage({
         message: 'Có lỗi xảy ra',
@@ -252,6 +302,14 @@ export default function Round1(props) {
       });
     });
     
+  }
+
+  function getDocumentSelected(value) {
+    const item = DOCUMENT_TYPE.find(opt => {
+      if (opt.value === value)
+        return { value: opt.value, label: opt.label };
+    });
+    return { value: item && item.value, label: item && item.label } || {};
   }
 
   return (
@@ -458,9 +516,7 @@ export default function Round1(props) {
                     onChange={(event, newValue) => {
                       onChange(newValue.value);
                     }}
-                    value={
-                      DOCUMENT_TYPE.filter(doc => doc.value === value)[0]
-                    }
+                    value={getDocumentSelected(value)}
                     autoHighlight
                     getOptionLabel={option => (option ? option.label : '')}
                     renderInput={params => (
@@ -539,12 +595,14 @@ export default function Round1(props) {
                       selections &&
                       selections
                         .filter(
-                          selection => selection.category === 'PLACEOFISSUE',
+                          selection =>
+                            selection.category &&
+                            selection.category === 'PLACEOFISSUE',
                         )
                         .map(selection => ({
                           value: selection.code || '',
                           label: selection.nameVI || '',
-                        }))[0]
+                        }))
                     }
                     value={
                       selections &&
@@ -552,7 +610,9 @@ export default function Round1(props) {
                       selections
                         .filter(
                           selection =>
+                            selection.category &&
                             selection.category === 'PLACEOFISSUE' &&
+                            selection.code &&
                             selection.code === value,
                         )
                         .map(selection => ({
@@ -713,7 +773,7 @@ export default function Round1(props) {
               <Controller
                 name="currentIsPermanent"
                 control={control}
-                render={({ value, onChange }) => (
+                render={({ val, onChange }) => (
                   <FormControl component="fieldset">
                     <FormLabel
                       component="legend"
@@ -724,7 +784,7 @@ export default function Round1(props) {
                     <RadioGroup
                       aria-label="currentIsPermanent"
                       name="currentIsPermanent"
-                      value={value}
+                      value="0"
                       onChange={e => {
                         changeCurrentIsPermanent(e.target.value);
                         onChange(e.target.value);

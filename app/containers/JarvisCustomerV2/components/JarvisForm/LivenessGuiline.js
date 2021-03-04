@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
@@ -110,7 +112,12 @@ export default function LivenessGuiline(props) {
         <Divider className={classes.dividerStyle} />
         <div className={classes.guilineRow}>
           <AccountCircleOutlinedIcon className={classes.guilineIcon} />
-          <div className={classes.secondHeader} onClick={() => props.setStep(5)}>Hãy nhìn thẳng vào camera</div>
+          <div
+            className={classes.secondHeader}
+            onClick={() => props.history.push('/v2/round1')}
+          >
+            Hãy nhìn thẳng vào camera
+          </div>
         </div>
         <div className={classes.guilineRow}>
           <EmojiEmotionsOutlinedIcon className={classes.guilineIcon} />
@@ -122,7 +129,7 @@ export default function LivenessGuiline(props) {
         <button
           type="button"
           className={classes.action}
-          onClick={() => props.setStep(18)}
+          onClick={() => props.history.push('/v2/liveness')}
         >
           Tôi đã hiểu, tiếp tục
         </button>

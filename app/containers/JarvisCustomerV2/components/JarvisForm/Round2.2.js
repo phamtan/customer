@@ -119,6 +119,7 @@ export default function Round3(props) {
     if (jarvisCustomer) {
       reset(jarvisCustomer);
       if (jarvisCustomer.employerProvince && provinces) {
+        const district = district;
         const province = provinces.filter(
           pv => pv.code === jarvisCustomer.employerProvince,
         )[0];
@@ -126,17 +127,15 @@ export default function Round3(props) {
           setDistrict(province.districts);
         }
       }
+      if (
+        jarvisCustomer.nameOfEmployer &&
+        jarvisCustomer.nameOfEmployer !== 'others'
+      ) {
+        setSearchCompany(jarvisCustomer.nameOfEmployer);
+        debouncedSearch(jarvisCustomer.nameOfEmployer);
+      }
     }
   }, [jarvisCustomer]);
-
-  useEffect(() => {
-    if (jarvisCustomer && jarvisCustomer.employerProvince && provinces) {
-      const province = provinces.filter(
-        pv => pv.code === jarvisCustomer.employerProvince,
-      )[0];
-      setDistrict(province.districts);
-    }
-  }, [provinces]);
 
   useEffect(() => {
     // if (companies) {
@@ -169,11 +168,11 @@ export default function Round3(props) {
           );
         }).then(result => {
           if (result.status === 'PASS' && result.data.pa === 'N') {
-            props.setStep(23);
+            props.history.push('/v2/waiting');
           } else if (result.status === 'PASS' && result.data.pa === 'Y') {
-            props.setStep(10);
+            props.history.push('/v2/round3');
           } else {
-            props.setStep(25);
+            props.history.push('/v2/regis-done');
           }
         }),
       )
@@ -209,6 +208,13 @@ export default function Round3(props) {
     } else {
       setShowOtherCompany(false);
     }
+  }
+
+  function getDistrictSelected(value) {
+    const item = district.find(opt => {
+      if (opt.code === value) return { value: opt.code, label: opt.name };
+    });
+    return { value: item && item.code, label: item && item.name } || {};
   }
 
   return (
@@ -381,23 +387,11 @@ export default function Round3(props) {
                 render={({ value, onChange }) => (
                   <Autocomplete
                     style={{ width: '100%' }}
-                    options={
-                      district &&
-                      district.map(dis => ({
-                        value: dis.code,
-                        label: dis.name,
-                      }))
-                    }
-                    value={
-                      district &&
-                      value &&
-                      district
-                        .filter(distr => distr.code === value)
-                        .map(distr => ({
-                          value: distr.code,
-                          label: distr.name,
-                        }))[0]
-                    }
+                    options={district.map(dis => ({
+                      value: dis.code || '',
+                      label: dis.name || '',
+                    }))}
+                    value={getDistrictSelected(value)}
                     classes={{
                       option: classes.option,
                     }}

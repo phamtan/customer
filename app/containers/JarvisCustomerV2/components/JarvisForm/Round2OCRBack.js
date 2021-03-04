@@ -216,7 +216,7 @@ export default function Round2OCRGuide(props) {
                   }
                 }
                 props.dispatch(Actions.saveRawData(valueSubmit));
-                props.setStep(5);
+                props.history.push('/v2/round1');
                 // turnOffCamera();
               } else {
                 setOpen(true);
@@ -250,7 +250,7 @@ export default function Round2OCRGuide(props) {
           <div>
             <ArrowBackIosIcon
               className={classes.backIcon}
-              onClick={() => props.setStep(19)}
+              onClick={() => props.history.push('/v2/ocr-guideline')}
             />
           </div>
           {isCameraOpen && (

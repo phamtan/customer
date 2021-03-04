@@ -84,7 +84,7 @@ export default function Round2OCRGuide(props) {
         </Stepper>
       </div>
       <button
-        onClick={() => props.setStep(3)}
+        onClick={() => props.history.push('/v2/round1')}
         type="button"
         className="btn btnSubmit"
       >

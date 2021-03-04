@@ -18,12 +18,14 @@ import {
   REQUEST_COMPANIES_SEARCH,
   REGISTER,
   GET_DETAIL,
+  GET_DETAIL_APP_BY_TOKEN,
+  LOGIN,
 } from './constants';
 import {
   callapiSuccess,
   callapiErorr,
   getProvincesSuccess,
-  checkLosResult,
+  saveRawData,
   requestOtp,
   createApplicationSuccess,
   getSelectionSuccess,
@@ -320,6 +322,43 @@ function* getApplicationDataSaga(action) {
   }
 }
 
+function* getApplicationByTokenSaga() {
+  const payload = {
+    url: `/customer/get-app-detail`,
+    params: null,
+  };
+  try {
+    const response = yield call(Api.get, payload);
+
+    yield put(createApplicationSuccess(response));
+  } catch (error) {}
+}
+
+function* loginSaga(action) {
+  const payload = {
+    // url: `/customer/get-app-detail/${action.payload.custId}`,
+    url: `/c-flow/check-exist/${action.payload.mobileNumber}`,
+    params: null,
+  };
+  try {
+    const response = yield call(Api.get, payload);
+    if (response.outputObject && response.outputObject === 'true') {
+      yield put(
+        requestOtp({
+          phoneOrEmail: action.payload.mobileNumber,
+        }),
+      );
+      yield put(saveRawData(action.payload));
+      action.resolve(response);
+    } else {
+      action.reject('Số điện thoại chưa tồn tại');
+    }
+  } catch (error) {
+    // yield put(callapiErorr());
+    action.reject(error);
+  }
+}
+
 export default function* jarvisCustomerV2Saga() {
   yield all([
     takeEvery(REQUEST_COUNTRIES, fetchCountriesSaga),
@@ -338,5 +377,7 @@ export default function* jarvisCustomerV2Saga() {
     takeEvery(REQUEST_COMPANIES_SEARCH, fetchCompaniesSearchSaga),
     takeEvery(REGISTER, registerSaga),
     takeEvery(GET_DETAIL, getApplicationDataSaga),
+    takeEvery(LOGIN, loginSaga),
+    takeEvery(GET_DETAIL_APP_BY_TOKEN, getApplicationByTokenSaga),
   ]);
 }

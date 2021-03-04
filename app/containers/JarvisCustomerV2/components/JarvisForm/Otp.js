@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-return-assign */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useRef } from 'react';
@@ -131,9 +133,10 @@ export default function OTP(props) {
         ),
       );
     })
-      .then(() => {
-        if (jarvisCustomer.message) {
-          return new Promise((res, rej) => {
+      .then(
+        () =>
+          // if (jarvisCustomer.message) {
+          new Promise((res, rej) => {
             props.dispatch(
               Actions.getDetailApp(
                 {
@@ -143,12 +146,22 @@ export default function OTP(props) {
                 rej,
               ),
             );
-          }).then(() => {
-            props.setStep(17);
-          });
-        }
-        props.setStep(17);
-      })
+          }).then(result => {
+            if (result.processStep === 'BasicStep') {
+              props.history.push('/v2/liveness-guiline');
+            } else if (result.processStep === 'Work_Form_R_2') {
+              props.history.push('/v2/round2-1');
+            } else if (result.processStep === 'Work_Form_R_2_2') {
+              props.history.push('/v2/round2-2');
+            } else if (result.processStep === 'Work_Form_R_3') {
+              props.history.push('/v2/round3');
+            } else {
+              props.history.push('/v2/round1Fill');
+            }
+          }),
+        // }
+        // props.setStep(17);
+      )
       .catch(() => {
         props.handleShoMessage({
           message: 'Lỗi xác thực OTP',
@@ -156,10 +169,6 @@ export default function OTP(props) {
         });
       });
   }
-
-  const resetInput = e => {
-    e.target.value = '';
-  };
 
   return (
     <JarvisFormStyle>

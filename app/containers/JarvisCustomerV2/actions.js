@@ -30,6 +30,8 @@ import {
   REQUEST_COMPANIES_SEARCH,
   REGISTER,
   GET_DETAIL,
+  GET_DETAIL_APP_BY_TOKEN,
+  LOGIN,
 } from './constants';
 
 export function defaultAction() {
@@ -229,6 +231,21 @@ export function register(data, resolve, reject) {
 export function getDetailApp(data, resolve, reject) {
   return {
     type: GET_DETAIL,
+    payload: data,
+    resolve,
+    reject,
+  };
+}
+
+export function getAppDetailByToken() {
+  return {
+    type: GET_DETAIL_APP_BY_TOKEN,
+  };
+}
+
+export function login(data, resolve, reject) {
+  return {
+    type: LOGIN,
     payload: data,
     resolve,
     reject,

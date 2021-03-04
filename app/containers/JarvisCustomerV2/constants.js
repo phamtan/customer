@@ -31,3 +31,4 @@ export const FACE_MATCHING = 'FACE_MATCHING';
 export const REGISTER = 'REGISTER';
 export const GET_DETAIL = 'GET_DETAIL';
 export const LOGIN = 'LOGIN';
+export const GET_DETAIL_APP_BY_TOKEN = 'GET_DETAIL_APP_BY_TOKEN';

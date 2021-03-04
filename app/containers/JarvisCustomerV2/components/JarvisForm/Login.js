@@ -114,10 +114,10 @@ export default function Round1(props) {
 
   function onSubmitForm(values) {
     return new Promise((resolve, reject) => {
-      props.dispatch(Actions.saveData(values, resolve, reject));
+      props.dispatch(Actions.login(values, resolve, reject));
     })
       .then(() => {
-        props.setStep(1);
+        props.history.push('/v2/otp');
       })
       .catch(() => {
         props.handleShoMessage({

@@ -123,9 +123,28 @@ const schema = yup.object().shape({
   //     otherwise: s => s.required('Bạn chưa nhập số điện thoại vợ/chồng'),
   //   })
   //   .nullable(),
-  employmentStatus: yup.string().required('Bạn chưa chọn tình trạng công việc'),
-  mainIncomeType: yup.string().required('Bạn chưa chọn loại hình thu nhập'),
-  monthlyIncome: yup.string().required('Bạn chưa nhập thu nhập hàng tháng'),
+  employmentStatus: yup
+    .string()
+    .required('Bạn chưa chọn tình trạng công việc')
+    .nullable(),
+  mainIncomeType: yup
+    .string()
+    .required('Bạn chưa chọn loại hình thu nhập')
+    .nullable(),
+  monthlyIncome: yup
+    .string()
+    .required('Bạn chưa nhập thu nhập hàng tháng')
+    .test(
+      `test-monthlyIncome`,
+      'Xin lỗi quý khách, thu nhập tối thiểu để mở thẻ là là 5 triệu/ tháng',
+      value => {
+        if (value && Number(value) < 5000000) {
+          return false;
+        }
+        return true;
+      },
+    )
+    .nullable(),
 });
 export default function Round3(props) {
   const classes = useStyles();
@@ -145,7 +164,7 @@ export default function Round3(props) {
     reValidateMode: 'onChange',
     shouldFocusError: true,
     shouldUnregister: true,
-    defaultValues: jarvisCustomer,
+    defaultValues: {},
     resolver: yupResolver(schema),
   });
 
@@ -180,29 +199,29 @@ export default function Round3(props) {
               valuesSubmit.employmentStatus === 'FT' &&
               valuesSubmit.checkSaleLocation.allowCurrentAddress
             ) {
-              props.setStep(8);
+              props.history.push('/v2/round2-2');
             } else if (
               !result.data.program &&
               valuesSubmit.employmentStatus === 'FT' &&
               !valuesSubmit.checkSaleLocation.allowCurrentAddress
             ) {
-              props.setStep(25);
+              props.history.push('/v2/round2-2');
             } else if (
               !result.data.program &&
               ['BO', 'PT'].includes(valuesSubmit.employmentStatus) &&
               valuesSubmit.checkSaleLocation.allowCurrentAddress
             ) {
-              props.setStep(25);
+              props.history.push('/v2/round2-2');
             } else if (
               !result.data.program &&
               ['UE', 'R'].includes(valuesSubmit.employmentStatus)
             ) {
-              props.setStep(27);
+              props.history.push('/v2/reject');
             }
           } else if (result.status === 'PASS' && !result.data.hasResultR1) {
-            props.setStep(8);
+            props.history.push('/v2/round2-2');
           } else {
-            props.setStep(27);
+            props.history.push('/v2/round2-2');
           }
         }),
       )
