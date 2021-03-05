@@ -100,6 +100,7 @@
     "react-lazyload": "^3.1.0",
     "react-measure": "^2.5.2",
     "react-notifications-component": "^2.4.1",
+    "react-number-format": "^4.4.4",
     "react-record-webcam": "0.0.10",
     "react-redux": "7.2.1",
     "react-router-dom": "^5.2.0",

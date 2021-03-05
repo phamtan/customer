@@ -14,6 +14,7 @@ import {
 } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import * as yup from 'yup';
+import MaskedInput from 'MaskedInput';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import StepApp from './StepApp';
@@ -168,11 +169,11 @@ export default function Round3(props) {
     resolver: yupResolver(schema),
   });
 
-  useEffect(() => {
-    if (jarvisCustomer) {
-      reset(jarvisCustomer);
-    }
-  }, [jarvisCustomer]);
+  // useEffect(() => {
+  //   if (jarvisCustomer) {
+  //     reset(jarvisCustomer);
+  //   }
+  // }, [jarvisCustomer]);
 
   function onSubmitForm(values) {
     const valuesSubmit = Object.assign(jarvisCustomer, values);
@@ -605,13 +606,32 @@ export default function Round3(props) {
             </div>
 
             <div className="form-group">
-              <Controller
+              {/* <Controller
                 as={TextField}
                 name="monthlyIncome"
                 fullWidth
                 variant="outlined"
                 label="Thu nhập hàng tháng"
                 control={control}
+              /> */}
+              <Controller
+                control={control}
+                render={({ value, onChange }) => (
+                  <TextField
+                    value={value}
+                    fullWidth
+                    onChange={event => {
+                      onChange(event.currentTarget.value);
+                    }}
+                    name="monthlyIncome"
+                    variant="outlined"
+                    label="Thu nhập hàng tháng"
+                    InputProps={{
+                      inputComponent: MaskedInput,
+                    }}
+                  />
+                )}
+                name="monthlyIncome"
               />
               {errors.monthlyIncome && (
                 <span className="formError">
