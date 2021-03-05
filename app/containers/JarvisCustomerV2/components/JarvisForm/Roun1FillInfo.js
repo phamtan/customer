@@ -773,7 +773,7 @@ export default function Round1(props) {
               <Controller
                 name="currentIsPermanent"
                 control={control}
-                render={({ val, onChange }) => (
+                render={({ value, onChange }) => (
                   <FormControl component="fieldset">
                     <FormLabel
                       component="legend"
@@ -784,7 +784,7 @@ export default function Round1(props) {
                     <RadioGroup
                       aria-label="currentIsPermanent"
                       name="currentIsPermanent"
-                      value="0"
+                      value={value}
                       onChange={e => {
                         changeCurrentIsPermanent(e.target.value);
                         onChange(e.target.value);
@@ -846,7 +846,6 @@ export default function Round1(props) {
                         }}
                         autoHighlight
                         onChange={(event, newValue) => {
-                          console.log(`province${newValue.value}`);
                           changeCurrentProvince(newValue);
                           onChange(newValue.value);
                         }}

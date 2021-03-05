@@ -202,7 +202,8 @@ const useStyles = makeStyles(() => ({
     textTransform: 'uppercase',
   },
   action: {
-    width: '154px',
+    width: '90%',
+    maxWidth: '154px',
     height: '38px',
     margin: '9px 19px 11px 16px',
     borderRadius: '4px',
@@ -355,7 +356,7 @@ export default function LandingCard(props) {
     return new Promise((resolve, reject) => {
       props.dispatch(Actions.saveRawData(values, resolve, reject));
     }).then(() => {
-      props.setStep(1000);
+      props.history.push('/v2/choose-limit');
     });
   }
 

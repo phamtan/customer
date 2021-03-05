@@ -222,7 +222,7 @@ export default function Round3(props) {
           } else if (result.status === 'PASS' && !result.data.hasResultR1) {
             props.history.push('/v2/round2-2');
           } else {
-            props.history.push('/v2/round2-2');
+            props.history.push('/v2/reject');
           }
         }),
       )

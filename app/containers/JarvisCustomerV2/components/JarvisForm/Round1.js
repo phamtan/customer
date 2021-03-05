@@ -1,13 +1,20 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
+import {
+  Button
+} from '@material-ui/core';
+import { TextField } from 'formik-material-ui';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from 'yup';
 import XRegExp from 'xregexp';
 import _ from 'lodash';
+import { Formik, Form, Field, useFormik } from 'formik';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import StepApp from './StepApp';
@@ -133,13 +140,14 @@ const schema = yup.object().shape({
 
 export default function Round1(props) {
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', null);
-  const { handleSubmit, errors, control, formState } = useForm({
-    reValidateMode: 'onChange',
-    shouldFocusError: true,
-    shouldUnregister: true,
-    defaultValues: {},
-    resolver: yupResolver(schema),
-  });
+  // const { handleSubmit, errors, control, formState } = useForm({
+  //   reValidateMode: 'onChange',
+  //   shouldFocusError: true,
+  //   shouldUnregister: true,
+  //   defaultValues: {},
+  //   resolver: yupResolver(schema),
+  // });
+  // const errors = {};
   const classes = useStyles();
 
   function onSubmitForm(values) {
@@ -171,70 +179,104 @@ export default function Round1(props) {
           <div>Xin chào!</div>
           <div>Nhập thông tin của bạn để mở thẻ tín dụng mới.</div>
         </div>
-        <form onSubmit={handleSubmit(onSubmitForm)}>
-          <div className="formWrapper">
-            <div className="form-group">
-              <Controller
-                as={TextField}
-                name="fullName"
-                fullWidth
-                variant="outlined"
-                label="Họ tên"
-                control={control}
-                className={classes.inputSytle}
-                classes={{
-                  root: classes.inputStyle,
-                }}
-              />
-              {errors.fullName && (
-                <span className="formError">{errors.fullName.message}</span>
-              )}
-            </div>
-            <div className="form-group">
-              <Controller
-                as={TextField}
-                name="mobileNumber"
-                fullWidth
-                variant="outlined"
-                label="Số điện thoại"
-                control={control}
-                className={classes.inputSytle}
-                classes={{
-                  root: classes.inputStyle,
-                }}
-              />
-              {errors.mobileNumber && (
-                <span className="formError">{errors.mobileNumber.message}</span>
-              )}
-            </div>
+        <Formik
+          initialValues={jarvisCustomer || {}}
+          validate={values => {
+            const errors = {};
+            if (!values.email) {
+              errors.email = 'Bạn chưa nhập email';
+            } else if (
+              !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i.test(
+                values.email,
+              )
+            ) {
+              errors.email = 'Email không đúng định dạng';
+            }
+            if (!values.fullName) {
+              errors.fullName = 'Bạn chưa nhập họ tên';
+            } else if (values.fullName.trim().split(' ').length < 2) {
+              errors.fullName =
+                'Xin lỗi quý khách, phần họ tên không đúng định dạng';
+            } else if (!XRegExp('^[\\pL\\s]+$').test(values.fullName)) {
+              errors.fullName =
+                'Xin lỗi quý khách, phần họ tên không chứa số hoặc kí tự đặc biệt';
+            }
+            if (!values.mobileNumber) {
+              errors.mobileNumber = 'Bạn chưa nhập số điện thoại';
+            }
+            return errors;
+          }}
+          onSubmit={(values, { setSubmitting }) => {
+            setTimeout(() => {
+              setSubmitting(false);
+              alert(JSON.stringify(values, null, 2));
+            }, 500);
+          }}
+        >
+          {({ submitForm, isSubmitting }) => (
+            <Form>
+              <div className="formWrapper">
+                <div className="form-group">
+                  <Field
+                    component={TextField}
+                    name="fullName"
+                    fullWidth
+                    variant="outlined"
+                    label="Họ tên"
+                    className={classes.inputSytle}
+                    classes={{
+                      root: classes.inputStyle,
+                    }}
+                  />
+                  {/* {errors.fullName && (
+                    <span className="formError">{errors.fullName}</span>
+                  )} */}
+                </div>
+                <div className="form-group">
+                  <Field
+                    component={TextField}
+                    name="mobileNumber"
+                    fullWidth
+                    variant="outlined"
+                    label="Số điện thoại"
+                    className={classes.inputSytle}
+                    classes={{
+                      root: classes.inputStyle,
+                    }}
+                  />
+                  {/* {errors.mobileNumber && (
+                    <span className="formError">{errors.mobileNumber}</span>
+                  )} */}
+                </div>
 
-            <div className="form-group">
-              <Controller
-                as={TextField}
-                name="email"
-                fullWidth
-                variant="outlined"
-                label="Email"
-                control={control}
-                className={classes.inputSytle}
-                classes={{
-                  root: classes.inputStyle,
-                }}
-              />
-              {errors.email && (
-                <span className="formError">{errors.email.message}</span>
-              )}
-            </div>
+                <div className="form-group">
+                  <Field
+                    component={TextField}
+                    name="email"
+                    fullWidth
+                    variant="outlined"
+                    label="Email"
+                    className={classes.inputSytle}
+                    classes={{
+                      root: classes.inputStyle,
+                    }}
+                  />
+                  {/* {errors.email && (
+                    <span className="formError">{errors.email}</span>
+                  )} */}
+                </div>
 
-            <button
-              type="submit"
-              className={classes.action}
-              disabled={formState.isSubmitting}
-            >
-              Tiếp tục
-            </button>
-          </div>
-        </form>
+                <Button
+                  onClick={submitForm}
+                  className={classes.action}
+                  disabled={isSubmitting}
+                >
+                  Tiếp tục
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
     </JarvisFormStyle>
   );
