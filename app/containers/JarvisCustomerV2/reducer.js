@@ -19,7 +19,51 @@ import {
   REQUEST_COMPANIES_SUCCESS,
 } from './constants';
 
-export const initialState = {};
+export const initialState = {
+  jarvisCustomer: {
+    email: '',
+    fullName: '',
+    mobileNumber: '',
+    dob: '',
+    gender: 'F',
+    nationality: 'VN',
+    documentType: '',
+    documentNumber: '',
+    docIssuedDate: '',
+    docIssuedPlace: '',
+    permanentAddressLine1: '',
+    permanentProvince: '',
+    permanentDistrict: '',
+    currentIsPermanent: '1',
+    currentAddLine1: '',
+    currentProvince: '',
+    currentDistrict: '',
+    maritalStatus: '',
+    fullNameRefOne: '',
+    birthDateSpouse: '',
+    documentTypeSpouse: '',
+    documentNumberSpouse: '',
+    mobileNumberRefOne: '',
+    employmentStatus: '',
+    mainIncomeType: '',
+    monthlyIncome: '',
+    nameOfEmployer: '',
+    employerAddressLine: '',
+    employerProvince: '',
+    employerDistrict: '',
+    landlinePhoneNo: '',
+    typeCompany: '',
+    requestLimit: '',
+    typeOfCreditCard: '',
+    accInternetBanking: '',
+    fullNameRefTwo: '',
+    relationRefTwo: '',
+    mobileNumberRefTwo: '',
+    securityQuestion: '',
+    securityAnswer: '',
+    deliveryCard: '',
+  },
+};
 
 /* eslint-disable default-case, no-param-reassign */
 const jarvisCustomerV2Reducer = (state = initialState, action) =>

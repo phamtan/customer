@@ -1,12 +1,12 @@
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, {useEffect, useState} from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers';
-import * as yup from 'yup';
 import _ from 'lodash';
 import TextField from '@material-ui/core/TextField';
+import { useFormik } from 'formik';
 import FormControl from '@material-ui/core/FormControl';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -87,98 +87,6 @@ const DOCUMENT_TYPE = [
   { value: 'ICM', label: 'CMND Quân Đội' },
 ];
 
-const schema = yup.object().shape({
-  fullName: yup
-    .string()
-    .required('Bạn chưa nhập họ tên')
-    .test(
-      `test-name`,
-      'Xin lỗi quý khách, phần họ tên không đúng định dạng',
-      value => {
-        if (value.split(' ').length < 2) {
-          return false;
-        }
-        return true;
-      },
-    )
-    .max(100, 'Tên không vượt quá 100 kí tự')
-    .matches(XRegExp('^[\\pL\\s]+$'), 'Tên không chứa ký tự đặc biệt'),
-  mobileNumber: yup
-    .string()
-    .required('Bạn chưa nhập số điện thoại')
-    .length(10, 'số điện thoại gồm 10 số')
-    .matches(XRegExp('^[\\d]+$'), 'Số điện thoại chỉ bao gồm số'),
-  email: yup
-    .string()
-    .required('Bạn chưa nhập email')
-    .matches(
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-      'Email không đúng định dạng',
-    ),
-  dob: yup
-    .string()
-    .required('Bạn chưa nhập ngày sinh')
-    .test(
-      `test-dob`,
-      'Xin lỗi quý khách, Tuổi không được nhỏ hơn 18 và lớn hơn 65',
-      value => {
-        const doDob = moment(value);
-        const currentYear = moment();
-        if (doDob.year()) {
-          const diffYears = currentYear.diff(doDob, 'years', true);
-          if (diffYears > 65 || diffYears < 18) {
-            return false;
-          }
-        }
-        return true;
-      },
-    )
-    .nullable(),
-  gender: yup.string().required('Bạn chưa nhập giới tính'),
-  nationality: yup
-    .string()
-    .required('Bạn chưa nhập quốc tịch')
-    .test(
-      `test-nationality`,
-      'Xin lỗi quý khách, Hiện tại hệ thống chưa hỗ trợ người nước ngoài',
-      value => {
-        if (value && value !== 'VN') {
-          return false;
-        }
-        return true;
-      },
-    ),
-  documentType: yup.string().required('Bạn chưa chọn loại giấy tờ'),
-  documentNumber: yup.string().required('Bạn chưa nhập số giấy tờ'),
-  docIssuedDate: yup
-    .string()
-    .required('Bạn chưa nhập ngày cấp')
-    .nullable(),
-  docIssuedPlace: yup
-    .string()
-    .required('Bạn chưa chọn nơi cấp')
-    .nullable(),
-  permanentAddressLine1: yup
-    .string()
-    .required('Bạn chưa nhập địa chỉ thường trú'),
-  permanentProvince: yup
-    .string()
-    .required('Bạn chưa chọn Tỉnh thành phố thường trú'),
-  permanentDistrict: yup.string().required('Bạn chưa chọn quận huyện'),
-  currentAddLine1: yup.string().when('currentIsPermanent', {
-    is: '0',
-    then: s => s.required('Bạn chưa nhập địa chỉ hiện tại'),
-  }),
-  currentProvince: yup.string().when('currentIsPermanent', {
-    is: '0',
-    then: s => s.required('Bạn chưa nhập thành phố hiện tại'),
-  }),
-  currentDistrict: yup.string().when('currentIsPermanent', {
-    is: '0',
-    then: s => s.required('Bạn chưa nhập quận huyện hiện tại'),
-  }),
-});
-
 function countryToFlag(isoCode) {
   return typeof String.fromCodePoint !== 'undefined'
     ? isoCode
@@ -195,42 +103,13 @@ export default function Round1(props) {
   const countries = _.get(props, 'jarvisCustomerV2.countries', []);
   const [district, setDistrict] = useState([]);
   const [currentDistrict, setCurrentDistrict] = useState([]);
-  const [showPermanentAddress, setShowPermaneAddress] = useState(false);
-  const [isMobile] = useState(
-    /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent,
-    ),
-  );
-  const { handleSubmit, errors, control, reset, formState, watch } = useForm({
-    reValidateMode: 'onChange',
-    shouldFocusError: true,
-    shouldUnregister: true,
-    defaultValues: {
-      id: '',
-      nationality: 'VN',
-      fullName: '',
-      email: '',
-      mobileNumber: '',
-      gender: 'F',
-      currentIsPermanent: '0',
-      documentNumber: '',
-      permanentDistrict: '',
-      permanentProvince: '',
-      permanentAddressLine1: '',
-      docIssuedPlace: null,
-      dob: null,
-      docIssuedDate: null,
-      issueDate: moment()
-        .subtract(2, 'years')
-        .format('yyyy-MM-DD'),
-      placeOfIssue: '',
-    },
-    resolver: yupResolver(schema),
-  });
-
-  const watchAllFields = watch();
-
-  console.log(watchAllFields);
+  const [showPermanentAddress, setShowPermaneAddress] = useState(
+    jarvisCustomer.currentIsPermanent === "0");
+  // const [isMobile] = useState(
+  //   /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+  //     navigator.userAgent,
+  //   ),
+  // );
 
   // useEffect(() => {
   //   if (!jarvisCustomer) {
@@ -238,9 +117,247 @@ export default function Round1(props) {
   //   }
   // }, []);
 
+  const validate = values => {
+    const errors = {};
+    if (!values.email) {
+      errors.email = 'Bạn chưa nhập email';
+    } else if (
+      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i.test(
+        values.email,
+      )
+    ) {
+      errors.email = 'Email không đúng định dạng';
+    }
+    if (!values.fullName) {
+      errors.fullName = 'Bạn chưa nhập họ tên';
+    } else if (values.fullName.trim().split(' ').length < 2) {
+      errors.fullName =
+        'Xin lỗi quý khách, phần họ tên không đúng định dạng';
+    } else if (!XRegExp('^[\\pL\\s]+$').test(values.fullName)) {
+      errors.fullName =
+        'Xin lỗi quý khách, phần họ tên không chứa số hoặc kí tự đặc biệt';
+    }
+    if (!values.mobileNumber) {
+      errors.mobileNumber = 'Bạn chưa nhập số điện thoại';
+    } else if (values.mobileNumber && values.mobileNumber.length > 10) {
+      errors.mobileNumber = 'Số điện thoại chỉ từ 10 số';
+    }
+
+    if (!values.dob) {
+      errors.dob = 'Bạn chưa nhập ngày sinh'
+    } else if (values.dob) {
+      const doDob = moment(values.dob);
+      const currentYear = moment();
+      if (doDob.year()) {
+        const diffYears = currentYear.diff(doDob, 'years', true);
+        if (diffYears > 65 || diffYears < 18) {
+          errors.dob =
+            'Xin lỗi quý khách, Tuổi không được nhỏ hơn 18 và lớn hơn 65';
+        }
+      }
+    }
+
+    if (!values.nationality) {
+      errors.nationality = 'Bạn chưa chọn quốc tịch'
+    } else if (values.nationality && values.nationality !== 'VN') {
+      errors.nationality =
+        'Xin lỗi quý khách, Hiện tại hệ thống chưa hỗ trợ người nước ngoài';
+    }
+
+    const listCustomerIdentityDTO = [{}];
+
+    if (!values.documentType) {
+      errors.documentType = 'Bạn chưa chọn loại giấy tờ';
+    }
+
+    if (!values.documentNumber) {
+      errors.documentNumber = 'Bạn chưa nhập số giấy tờ';
+    } 
+
+    if (
+      values.documentType &&
+      values.documentNumber &&
+      values.documentType !== 'PV'
+    ) {
+      const documentLength = values.documentNumber.length;
+      if (
+        values.documentType === 'ICM' &&
+        (documentLength !== 8 && documentLength !== 12)
+      ) {
+        errors.documentNumber =
+          'Xin lỗi quý khách, số CMT quý khách vừa điền không hợp lệ';
+      }
+      if (
+        values.documentType === 'IC' &&
+        values.documentNumber &&
+        !/^(\.|\d)\d*$/.test(values.documentNumber)
+      ) {
+        errors.documentNumber =
+          'Xin lỗi quý khách, số CMT quý khách vừa điền không hợp lệ';
+      }
+      if (
+        values.documentType === 'IC' &&
+        (documentLength !== 9 && documentLength !== 12)
+      ) {
+        errors.documentNumber =
+          'Xin lỗi quý khách, số CMT quý khách vừa điền không hợp lệ';
+      }
+    } else if (
+      values.documentType === 'PV' &&
+      (!values.listCustomerIdentityDTO ||
+      (!values.listCustomerIdentityDTO[1] ||
+        !values.listCustomerIdentityDTO[1].documentNumber) &&
+      (!values.listCustomerIdentityDTO[2] ||
+        !values.listCustomerIdentityDTO[2].documentNumber))
+    ) {
+      listCustomerIdentityDTO.splice(1, 0, {
+        documentNumber:
+          'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
+      });
+      errors.listCustomerIdentityDTO = listCustomerIdentityDTO;
+    } else if (
+      values.documentType === 'PV' &&
+      (!values.listCustomerIdentityDTO ||
+      values.listCustomerIdentityDTO[1] &&
+      values.listCustomerIdentityDTO[1] === 'PV' &&
+      values.listCustomerIdentityDTO[2] &&
+      !values.listCustomerIdentityDTO[2].documentNumber)
+    ) {
+      listCustomerIdentityDTO.splice(1, 0, {
+        documentNumber:
+          'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
+      });
+      errors.listCustomerIdentityDTO = listCustomerIdentityDTO;
+    } else if (
+      values.documentType === 'PV' &&
+      values.listCustomerIdentityDTO &&
+             values.listCustomerIdentityDTO[1] &&
+             values.listCustomerIdentityDTO[1].documentType ===
+               'PV' &&
+               values.listCustomerIdentityDTO[2] && 
+             values.listCustomerIdentityDTO[2].documentType === 'PV'
+    ) {
+      errors.documentNumber =
+               'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư';
+    }
+
+    if (values.documentType === 'PV' && values.documentNumber) {
+      const documentLength = values.documentNumber;
+      if (documentLength < 8 || documentLength > 13) {
+        errors.documentNumber =
+          'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư';
+      }
+    }
+
+    if (
+      values.listCustomerIdentityDTO &&
+      values.listCustomerIdentityDTO[1] &&
+      values.listCustomerIdentityDTO[1].documentType === 'PV' &&
+      values.listCustomerIdentityDTO[1] &&
+      values.listCustomerIdentityDTO[1].documentNumber
+    ) {
+      const documentLength =
+        values.listCustomerIdentityDTO[1].documentNumber;
+      if (documentLength < 8 || documentLength > 13) {
+        listCustomerIdentityDTO.splice(1, 0, {
+          documentNumber:
+            'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
+        });
+        errors.listCustomerIdentityDTO = listCustomerIdentityDTO;
+      }
+    }
+
+    if (
+      values.listCustomerIdentityDTO &&
+      values.listCustomerIdentityDTO[2] &&
+      values.listCustomerIdentityDTO[2].documentType === 'PV' &&
+      values.listCustomerIdentityDTO[2] &&
+      values.listCustomerIdentityDTO[2].documentNumber
+    ) {
+      const documentLength =
+        values.listCustomerIdentityDTO[2].documentNumber;
+      if (documentLength < 8 || documentLength > 13) {
+        listCustomerIdentityDTO.splice(1, 0, {
+          documentNumber:
+            'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
+        });
+        errors.listCustomerIdentityDTO = listCustomerIdentityDTO;
+      }
+    }
+
+    if (values.docIssuedDate) {
+      const doIssue = moment(values.docIssuedDate, 'DD/MM/YYYY');
+      const currentYear = moment();
+      const diffYears = currentYear.diff(doIssue, 'years', true);
+      if (diffYears > 15 && values.documentType !== 'PV') {
+        errors.docIssuedDate =
+          'Xin lỗi quý khách, CMND quá hạn 15 năm không được chấp nhận';
+      } else if (
+        diffYears > 10 &&
+               values.documentType === 'PV'
+      ) {
+        errors.docIssuedDate =
+                 'Xin lỗi quý khách, Hộ chiếu quá hạn 10 năm không được chấp nhận';
+      }
+    }
+
+    if (!values.docIssuedPlace) {
+      errors.docIssuedPlace = 'Xin lỗi quý khách, Bạn chưa chọn nơi cấp';
+    } 
+
+    if (!values.permanentAddressLine1) {
+      errors.permanentAddressLine1 =
+        'Xin lỗi quý khách, Bạn chưa nhập địa chỉ thường trú';
+    } 
+
+    if (!values.permanentProvince) {
+      errors.permanentProvince =
+        'Xin lỗi quý khách, Bạn chưa nhập địa chỉ thường trú';
+    } 
+
+    if (!values.permanentDistrict) {
+      errors.permanentDistrict =
+        'Xin lỗi quý khách, Bạn chưa nhập địa chỉ thường trú';
+    } 
+
+    if (
+      values.currentIsPermanent &&
+      values.currentIsPermanent === '0' &&
+      !values.currentAddLine1
+    ) {
+      errors.permanentAddressLine1 =
+        'Xin lỗi quý khách, Bạn chưa nhập địa chỉ hiện tại';
+    } 
+
+    if (
+      values.currentIsPermanent &&
+      values.currentIsPermanent === '0' &&
+      !values.currentProvince
+    ) {
+      errors.currentProvince =
+        'Xin lỗi quý khách, Bạn chưa nhập địa chỉ hiện tại';
+    } 
+
+    if (
+      values.currentIsPermanent &&
+      values.currentIsPermanent === '0' &&
+      !values.currentDistrict
+    ) {
+      errors.currentDistrict =
+        'Xin lỗi quý khách, Bạn chưa nhập địa chỉ hiện tại';
+    } 
+    
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues: jarvisCustomer || {},
+    validate,
+    onSubmit: onSubmitForm,
+  });
+
   useEffect(() => {
     if (jarvisCustomer) {
-      reset(jarvisCustomer);
       if (jarvisCustomer.permanentProvince && provinces) {
         const province = provinces.filter(
           pv => pv.code === jarvisCustomer.permanentProvince,
@@ -249,6 +366,14 @@ export default function Round1(props) {
           setDistrict(province.districts);
         }
         
+      }
+      if (jarvisCustomer.currentProvince && provinces) {
+        const province = provinces.filter(
+          pv => pv.code === jarvisCustomer.currentProvince,
+        )[0];
+        if (province && province.districts) {
+          setCurrentDistrict(province.districts);
+        }
       }
     }
   }, [jarvisCustomer]);
@@ -312,388 +437,682 @@ export default function Round1(props) {
     return { value: item && item.value, label: item && item.label } || {};
   }
 
+  function getDistrictSelected(options, value) {
+    const item = options.find(opt => {
+      if (opt.code === value)
+        return { value: opt.code, label: opt.name };
+    });
+    return { value: item && item.code, label: item && item.name } || {};
+  }
+
+  function getCountrySelected(value) {
+    const item = countries && countries.find(opt => {
+      if (opt.isoCode === value)
+        return { value: opt.isoCode, label: opt.vi };
+    });
+    return { value: item && item.isoCode, label: item && item.vi } || {};
+  }
+
+  function getCurrentProvinceSelected(value) {
+    const item =
+      provinces &&
+      provinces.find(opt => {
+        if (opt.code === value)
+          return { value: opt.code, label: opt.name };
+      });
+    return { value: item && item.code, label: item && item.name } || {};
+  }
+
+  function getCurrentDistrictSelected(value) {
+    const item =
+      currentDistrict &&
+      currentDistrict.find(opt => {
+        if (opt.code === value) return { value: opt.code, label: opt.name };
+      });
+    return { value: item && item.code, label: item && item.name } || {};
+  }
+
+  ;
+
   return (
     <JarvisFormStyle>
       <Header className="header" step={2} />
       <StepApp />
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>Thông tin cá nhân</div>
-        <form className="formWrapper" onSubmit={handleSubmit(onSubmitForm)}>
+        <form onSubmit={formik.handleSubmit}>
           <div className="formWrapper">
             <div className="form-group">
-              <Controller
-                as={TextField}
+              <TextField
                 name="fullName"
                 fullWidth
                 variant="outlined"
                 label="Họ tên"
-                control={control}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.fullName}
               />
-              {errors.fullName && (
-                <span className="formError">{errors.fullName.message}</span>
+              {formik.errors.fullName && formik.touched.fullName && (
+                <span className="formError">{formik.errors.fullName}</span>
               )}
             </div>
             <div className="form-group">
-              <Controller
-                as={TextField}
+              <TextField
                 name="mobileNumber"
                 fullWidth
                 variant="outlined"
                 label="Số điện thoại"
-                control={control}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 className={classes.inputSytle}
                 classes={{
                   root: classes.inputStyle,
                 }}
+                value={formik.values.mobileNumber}
               />
-              {errors.mobileNumber && (
+              {formik.errors.mobileNumber && formik.touched.mobileNumber && (
                 <span className="formError">
-                  {errors.mobileNumber.message}
+                  {formik.errors.mobileNumber}
                 </span>
               )}
             </div>
 
             <div className="form-group">
-              <Controller
-                as={TextField}
+              <TextField
                 name="email"
                 fullWidth
                 variant="outlined"
                 label="Email"
-                control={control}
                 className={classes.inputSytle}
                 classes={{
                   root: classes.inputStyle,
                 }}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
               />
-              {errors.email && (
-                <span className="formError">{errors.email.message}</span>
+              {formik.errors.email && formik.touched.email && (
+                <span className="formError">{formik.errors.email}</span>
               )}
             </div>
 
             <div className="form-group">
-              {/* <Controller as={TextField} name="dob" type="date" fullWidth variant="outlined" label="Ngày sinh" control={control} /> */}
-              <Controller
-                name="dob"
-                control={control}
-                render={({ value, onChange }) => (
-                  <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDatePicker
-                      autoOk
-                      variant="inline"
-                      inputVariant="outlined"
-                      label="Ngày sinh"
-                      format="DD/MM/YYYY"
-                      value={value}
-                      InputAdornmentProps={{ position: 'end' }}
-                      onChange={date => onChange(date)}
-                      fullWidth
-                    />
-                  </MuiPickersUtilsProvider>
-                )}
-              />
-              {errors.dob && (
-                <span className="formError">{errors.dob.message}</span>
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <KeyboardDatePicker
+                  autoOk
+                  name="dob"
+                  variant="inline"
+                  inputVariant="outlined"
+                  label="Ngày sinh"
+                  format="DD/MM/YYYY"
+                  value={
+                    formik.values.dob
+                      ? moment(formik.values.dob).format('DD/MM/YYYY')
+                      : null
+                  }
+                  InputAdornmentProps={{ position: 'end' }}
+                  onChange={date => formik.setFieldValue('dob', date)}
+                  fullWidth
+                />
+              </MuiPickersUtilsProvider>
+              {formik.errors.dob && formik.touched.dob && (
+                <span className="formError">{formik.errors.dob}</span>
               )}
             </div>
 
             <div className="form-group">
-              <Controller
+              <FormControl
+                component="fieldset"
                 name="gender"
-                control={control}
-                render={({ value, onChange }) => (
-                  <FormControl component="fieldset">
-                    <FormLabel
-                      component="legend"
-                      className={classes.labelStyle}
-                    >
-                      Giới tính
-                    </FormLabel>
-                    <RadioGroup
-                      aria-label="gender"
-                      name="gender"
-                      value={value}
-                      onChange={e => onChange(e.target.value)}
-                      className={classes.genderContainer}
-                    >
-                      <FormControlLabel
-                        value="M"
-                        control={<Radio />}
-                        label="Nam"
-                      />
-                      <FormControlLabel
-                        value="F"
-                        control={<Radio />}
-                        label="Nữ"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                )}
-              />
-              {errors.gender && (
-                <span className="formError">{errors.gender.message}</span>
+                value={formik.values.gender}
+              >
+                <FormLabel component="legend" className={classes.labelStyle}>
+                  Giới tính
+                </FormLabel>
+                <RadioGroup
+                  aria-label="gender"
+                  name="gender"
+                  onChange={e =>
+                    formik.setFieldValue('gender', e.target.value)
+                  }
+                  className={classes.genderContainer}
+                  value={formik.values.gender}
+                >
+                  <FormControlLabel
+                    value="M"
+                    control={<Radio />}
+                    label="Nam"
+                  />
+                  <FormControlLabel
+                    value="F"
+                    control={<Radio />}
+                    label="Nữ"
+                  />
+                </RadioGroup>
+              </FormControl>
+              {formik.errors.gender && formik.touched.gender && (
+                <span className="formError">{formik.errors.gender}</span>
               )}
             </div>
 
             <div className="form-group">
-              <Controller
+              <Autocomplete
+                id="country-select-demo"
+                style={{ width: '100%' }}
                 name="nationality"
-                control={control}
-                render={({ value, onChange }) => (
-                  <Autocomplete
-                    id="country-select-demo"
-                    style={{ width: '100%' }}
-                    options={
-                      countries &&
-                      countries.map(country => ({
-                        value: country.isoCode,
-                        label: country.vi,
-                        code: country.isoCode,
-                      }))
-                    }
-                    value={
-                      countries &&
-                      value &&
-                      countries
-                        .filter(country => country.isoCode === value)
-                        .map(country => ({
-                          value: country.isoCode,
-                          label: country.vi,
-                          code: country.isoCode,
-                        }))[0]
-                    }
-                    getOptionSelected={(option, val) =>
-                      option.name === val.name
-                    }
-                    classes={{
-                      option: classes.option,
+                options={
+                  (countries &&
+                    countries.map(country => ({
+                      value: country.isoCode,
+                      label: country.vi,
+                      code: country.isoCode,
+                    }))) || [
+                    {
+                      value: '',
+                      label: '',
+                    },
+                  ]
+                }
+                value={
+                  (countries &&
+                    getCountrySelected(formik.values.nationality)) || {
+                    value: '',
+                    label: '',
+                  }
+                }
+                getOptionSelected={(option, val) => option.name === val.name}
+                classes={{
+                  option: classes.option,
+                }}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    formik.setFieldValue('nationality', newValue.value);
+                  }
+                }}
+                autoHighlight
+                getOptionLabel={option => (option ? option.label : '')}
+                renderOption={option => (
+                  <React.Fragment>
+                    <span>{countryToFlag(option.code)}</span>
+                    {option.label}
+                  </React.Fragment>
+                )}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Quốc gia"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
                     }}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        onChange(newValue.value);
-                      }
-                    }}
-                    autoHighlight
-                    getOptionLabel={option => (option ? option.label : '')}
-                    renderOption={option => (
-                      <React.Fragment>
-                        <span>{countryToFlag(option.code)}</span>
-                        {option.label}
-                      </React.Fragment>
-                    )}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label="Quốc gia"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
                   />
                 )}
               />
-              {errors.nationality && (
-                <span className="formError">
-                  {errors.nationality.message}
-                </span>
+              {formik.errors.nationality && formik.touched.nationality && (
+                <span className="formError">{formik.errors.nationality}</span>
               )}
             </div>
 
             <div className="form-group">
-              <Controller
+              <Autocomplete
+                style={{ width: '100%' }}
+                options={DOCUMENT_TYPE || ['']}
                 name="documentType"
-                control={control}
-                render={({ value, onChange }) => (
-                  <Autocomplete
-                    style={{ width: '100%' }}
-                    options={DOCUMENT_TYPE}
-                    classes={{
-                      option: classes.option,
+                classes={{
+                  option: classes.option,
+                }}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue('documentType', newValue.value);
+                }}
+                value={getDocumentSelected(formik.values.documentType)}
+                autoHighlight
+                getOptionLabel={option => (option ? option.label : '')}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Loại giấy tờ"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
                     }}
-                    onChange={(event, newValue) => {
-                      onChange(newValue.value);
-                    }}
-                    value={getDocumentSelected(value)}
-                    autoHighlight
-                    getOptionLabel={option => (option ? option.label : '')}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label="Loại giấy tờ"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
                   />
                 )}
               />
-              {errors.documentType && (
+              {formik.errors.documentType && formik.touched.documentType && (
                 <span className="formError">
-                  {errors.documentType.message}
+                  {formik.errors.documentType}
                 </span>
               )}
             </div>
 
             <div className="form-group">
-              <Controller
-                as={TextField}
+              <TextField
                 name="documentNumber"
-                type="number"
+                onChange={formik.handleChange}
+                value={formik.values.documentNumber}
+                type="text"
                 fullWidth
                 variant="outlined"
-                label="Số CMND"
-                control={control}
+                label="Số giấy tờ"
               />
-              {errors.documentNumber && (
+              {formik.errors.documentNumber && (
                 <span className="formError">
-                  {errors.documentNumber.message}
+                  {formik.errors.documentNumber}
                 </span>
               )}
             </div>
 
             <div className="form-group">
-              <Controller
-                name="docIssuedDate"
-                control={control}
-                render={({ value, onChange }) => (
-                  <MuiPickersUtilsProvider utils={MomentUtils}>
-                    <KeyboardDatePicker
-                      autoOk
-                      variant="inline"
-                      inputVariant="outlined"
-                      label="Ngày cấp"
-                      format="DD/MM/YYYY"
-                      value={value}
-                      InputAdornmentProps={{ position: 'end' }}
-                      onChange={date => onChange(date)}
-                      fullWidth
-                    />
-                  </MuiPickersUtilsProvider>
+              <Autocomplete
+                style={{ width: '100%' }}
+                options={DOCUMENT_TYPE || ['']}
+                name={`listCustomerIdentityDTO[${1}].documentType`}
+                classes={{
+                  option: classes.option,
+                }}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue(
+                    `listCustomerIdentityDTO[${1}].documentType`,
+                    newValue.value,
+                  );
+                }}
+                value={getDocumentSelected(
+                  formik.values.listCustomerIdentityDTO &&
+                    formik.values.listCustomerIdentityDTO[1] &&
+                    formik.values.listCustomerIdentityDTO[1].documentType
+                    ? formik.values.listCustomerIdentityDTO[1].documentType
+                    : { value: '', label: '' },
                 )}
-              />
-              {errors.docIssuedDate && (
-                <span className="formError">
-                  {errors.docIssuedDate.message}
-                </span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <Controller
-                name="docIssuedPlace"
-                control={control}
-                render={({ value, onChange }) => (
-                  <Autocomplete
-                    style={{ width: '100%' }}
-                    options={
-                      selections &&
-                      selections
-                        .filter(
-                          selection =>
-                            selection.category &&
-                            selection.category === 'PLACEOFISSUE',
-                        )
-                        .map(selection => ({
-                          value: selection.code || '',
-                          label: selection.nameVI || '',
-                        }))
-                    }
-                    value={
-                      selections &&
-                      value &&
-                      selections
-                        .filter(
-                          selection =>
-                            selection.category &&
-                            selection.category === 'PLACEOFISSUE' &&
-                            selection.code &&
-                            selection.code === value,
-                        )
-                        .map(selection => ({
-                          value: selection.code || '',
-                          label: selection.nameVI || '',
-                        }))[0]
-                    }
-                    classes={{
-                      option: classes.option,
+                autoHighlight
+                getOptionLabel={option => (option ? option.label : '')}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Loại giấy tờ thứ 2"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
                     }}
-                    onChange={(event, newValue) => {
-                      onChange(newValue.value);
-                    }}
-                    autoHighlight
-                    getOptionLabel={option => (option ? option.label : '')}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label="Nơi cấp"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
                   />
                 )}
               />
-              {errors.docIssuedPlace && (
+              {formik.errors.listCustomerIdentityDTO &&
+                formik.errors.listCustomerIdentityDTO[1] &&
+                formik.errors.listCustomerIdentityDTO[1].documentType && (
                 <span className="formError">
-                  {errors.docIssuedPlace.message}
+                  {formik.errors.listCustomerIdentityDTO[1].documentType}
                 </span>
               )}
             </div>
 
             <div className="form-group">
-              <Controller
-                as={TextField}
+              <TextField
+                name={`listCustomerIdentityDTO[${1}].documentNumber`}
+                onChange={formik.handleChange}
+                value={
+                  formik.values.listCustomerIdentityDTO &&
+                  formik.values.listCustomerIdentityDTO[1]
+                    ? formik.values.listCustomerIdentityDTO[1].documentNumber
+                    : ''
+                }
+                type="text"
+                fullWidth
+                variant="outlined"
+                label="Số giấy tờ thứ 2"
+              />
+              {formik.errors.listCustomerIdentityDTO &&
+                formik.errors.listCustomerIdentityDTO[1] &&
+                formik.errors.listCustomerIdentityDTO[1].documentNumber && (
+                <span className="formError">
+                  {formik.errors.listCustomerIdentityDTO[1].documentNumber}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <Autocomplete
+                style={{ width: '100%' }}
+                options={DOCUMENT_TYPE || ['']}
+                name={`listCustomerIdentityDTO[${2}].documentType`}
+                classes={{
+                  option: classes.option,
+                }}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue(
+                    `listCustomerIdentityDTO[${2}].documentType`,
+                    newValue.value,
+                  );
+                }}
+                value={getDocumentSelected(
+                  formik.values.listCustomerIdentityDTO &&
+                    formik.values.listCustomerIdentityDTO[2]
+                    ? formik.values.listCustomerIdentityDTO[2].documentType
+                    : { value: '', label: '' },
+                )}
+                autoHighlight
+                getOptionLabel={option => (option ? option.label : '')}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Loại giấy tờ thứ 3"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                  />
+                )}
+              />
+              {formik.errors.listCustomerIdentityDTO &&
+                formik.errors.listCustomerIdentityDTO[2] &&
+                formik.errors.listCustomerIdentityDTO[2].documentType && (
+                <span className="formError">
+                  {formik.errors.listCustomerIdentityDTO[2].documentType}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <TextField
+                name={`listCustomerIdentityDTO[${2}].documentNumber`}
+                onChange={formik.handleChange}
+                value={
+                  formik.values.listCustomerIdentityDTO &&
+                  formik.values.listCustomerIdentityDTO[2]
+                    ? formik.values.listCustomerIdentityDTO[2].documentNumber
+                    : ''
+                }
+                type="text"
+                fullWidth
+                variant="outlined"
+                label="Số giấy tờ thứ 3"
+              />
+              {formik.errors.listCustomerIdentityDTO &&
+                formik.errors.listCustomerIdentityDTO[2] &&
+                formik.errors.listCustomerIdentityDTO[2].documentNumber && (
+                <span className="formError">
+                  {formik.errors.listCustomerIdentityDTO[2].documentNumber}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <MuiPickersUtilsProvider utils={MomentUtils}>
+                <KeyboardDatePicker
+                  autoOk
+                  variant="inline"
+                  inputVariant="outlined"
+                  label="Ngày cấp"
+                  format="DD/MM/YYYY"
+                  name="docIssuedDate"
+                  value={formik.values.docIssuedDate || null}
+                  InputAdornmentProps={{ position: 'end' }}
+                  onChange={date =>
+                    formik.setFieldValue('docIssuedDate', date)
+                  }
+                  fullWidth
+                />
+              </MuiPickersUtilsProvider>
+              {formik.errors.docIssuedDate && (
+                <span className="formError">
+                  {formik.errors.docIssuedDate}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <Autocomplete
+                name="docIssuedPlace"
+                style={{ width: '100%' }}
+                options={
+                  (selections &&
+                    selections
+                      .filter(
+                        selection =>
+                          selection.category &&
+                          selection.category === 'PLACEOFISSUE',
+                      )
+                      .map(selection => ({
+                        value: selection.code || '',
+                        label: selection.nameVI || '',
+                      }))) || ['']
+                }
+                value={
+                  (selections &&
+                    formik.values.docIssuedPlace &&
+                    selections
+                      .filter(
+                        selection =>
+                          selection.category &&
+                          selection.category === 'PLACEOFISSUE' &&
+                          selection.code &&
+                          selection.code === formik.values.docIssuedPlace,
+                      )
+                      .map(selection => ({
+                        value: selection.code || '',
+                        label: selection.nameVI || '',
+                      }))[0]) || { value: '', label: '' }
+                }
+                classes={{
+                  option: classes.option,
+                }}
+                onChange={(event, newValue) => {
+                  // onChange(newValue.value);
+                  formik.setFieldValue('docIssuedPlace', newValue);
+                }}
+                autoHighlight
+                getOptionLabel={option => (option ? option.label : '')}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Nơi cấp"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                  />
+                )}
+              />
+              {formik.errors.docIssuedPlace && (
+                <span className="formError">
+                  {formik.errors.docIssuedPlace}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <TextField
                 name="permanentAddressLine1"
                 type="text"
                 fullWidth
                 variant="outlined"
                 label="Địa chỉ thường trú"
-                control={control}
+                onChange={formik.handleChange}
+                value={formik.values.permanentAddressLine1}
               />
-              {errors.permanentAddressLine1 && (
+              {formik.errors.permanentAddressLine1 && (
                 <span className="formError">
-                  {errors.permanentAddressLine1.message}
+                  {formik.errors.permanentAddressLine1}
                 </span>
               )}
             </div>
 
             <div className="form-group">
-              <Controller
+              <Autocomplete
+                style={{ width: '100%' }}
                 name="permanentProvince"
-                control={control}
-                render={({ value, onChange }) => (
+                options={provinces.map(province => ({
+                  value: province.code,
+                  label: province.name,
+                }))}
+                classes={{
+                  option: classes.option,
+                }}
+                value={
+                  (provinces &&
+                    formik.values.permanentProvince &&
+                    provinces
+                      .filter(
+                        province =>
+                          province.code === formik.values.permanentProvince,
+                      )
+                      .map(province => ({
+                        value: province.code,
+                        label: province.name,
+                      }))[0]) || { value: '', label: '' }
+                }
+                autoHighlight
+                onChange={(event, newValue) => {
+                  changeProvince(newValue);
+                  formik.setFieldValue('permanentProvince', newValue.value);
+                }}
+                getOptionLabel={option => (option ? option.label : '')}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Thành phố"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                  />
+                )}
+              />
+              {formik.errors.permanentProvince && (
+                <span className="formError">
+                  {formik.errors.permanentProvince}
+                </span>
+              )}
+            </div>
+
+            <div className="form-group">
+              <Autocomplete
+                style={{ width: '100%' }}
+                name="permanentProvince"
+                options={
+                  (district &&
+                    district.map(dis => ({
+                      value: dis.code,
+                      label: dis.name,
+                    }))) || ['']
+                }
+                value={
+                  getDistrictSelected(
+                    district,
+                    formik.values.permanentDistrict,
+                  ) || { value: '', label: '' }
+                }
+                classes={{
+                  option: classes.option,
+                }}
+                onChange={(event, newValue) => {
+                  // onChange(newValue.value);
+                  formik.setFieldValue('permanentDistrict', newValue.value);
+                }}
+                autoHighlight
+                getOptionLabel={option => (option ? option.label : '')}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Quận"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                  />
+                )}
+              />
+              {formik.errors.permanentDistrict && (
+                <span className="formError">
+                  {formik.errors.permanentDistrict}
+                </span>
+              )}
+            </div>
+            <div
+              className="form-group checkboxWrapper"
+              name="currentIsPermanent"
+            >
+              <FormControl
+                component="fieldset"
+                name="currentIsPermanent"
+                value={formik.values.currentIsPermanent}
+              >
+                <FormLabel component="legend" className={classes.labelStyle}>
+                  Địa chỉ thường trú trùng với địa chỉ hiện tại
+                </FormLabel>
+                <RadioGroup
+                  aria-label="currentIsPermanent"
+                  name="currentIsPermanent"
+                  value={formik.values.currentIsPermanent}
+                  onChange={e => {
+                    changeCurrentIsPermanent(e.target.value);
+                    formik.setFieldValue(
+                      'currentIsPermanent',
+                      e.target.value,
+                    );
+                  }}
+                  className={classes.genderContainer}
+                >
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio />}
+                    label="Có"
+                  />
+                  <FormControlLabel
+                    value="0"
+                    control={<Radio />}
+                    label="Không"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            {showPermanentAddress && (
+              <>
+                <div className="form-group">
+                  <TextField
+                    name="currentAddressLine1"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    label="Địa chỉ hiện tại"
+                    onChange={formik.handleChange}
+                    value={formik.values.currentAddressLine1}
+                  />
+                  {formik.errors.currentAddressLine1 && (
+                    <span className="formError">
+                      {formik.errors.currentAddressLine1}
+                    </span>
+                  )}
+                </div>
+
+                <div className="form-group">
                   <Autocomplete
                     style={{ width: '100%' }}
-                    options={provinces.map(province => ({
-                      value: province.code,
-                      label: province.name,
-                    }))}
+                    options={
+                      provinces.map(province => ({
+                        value: province.code,
+                        label: province.name,
+                      })) || ['']
+                    }
+                    name="currentProvince"
+                    value={
+                      getCurrentProvinceSelected(
+                        formik.values.currentProvince,
+                      ) || { value: '', label: '' }
+                    }
                     classes={{
                       option: classes.option,
                     }}
-                    value={
-                      provinces &&
-                      value &&
-                      provinces
-                        .filter(province => province.code === value)
-                        .map(province => ({
-                          value: province.code,
-                          label: province.name,
-                        }))[0]
-                    }
                     autoHighlight
                     onChange={(event, newValue) => {
-                      changeProvince(newValue);
-                      onChange(newValue.value);
+                      changeCurrentProvince(newValue);
+                      formik.setFieldValue('currentProvince', newValue.value);
                     }}
                     getOptionLabel={option => (option ? option.label : '')}
                     renderInput={params => (
@@ -708,44 +1127,34 @@ export default function Round1(props) {
                       />
                     )}
                   />
-                )}
-              />
-              {errors.permanentProvince && (
-                <span className="formError">
-                  {errors.permanentProvince.message}
-                </span>
-              )}
-            </div>
+                  {formik.errors.currentProvince && (
+                    <span className="formError">
+                      {formik.errors.currentProvince}
+                    </span>
+                  )}
+                </div>
 
-            <div className="form-group">
-              <Controller
-                name="permanentDistrict"
-                control={control}
-                render={({ value, onChange }) => (
+                <div className="form-group">
                   <Autocomplete
                     style={{ width: '100%' }}
                     options={
-                      district &&
-                      district.map(dis => ({
-                        value: dis.code,
-                        label: dis.name,
-                      }))
+                      (currentDistrict &&
+                        currentDistrict.map(dis => ({
+                          value: dis.code,
+                          label: dis.name,
+                        }))) || ['']
                     }
                     value={
-                      district &&
-                      value &&
-                      district
-                        .filter(distr => distr.code === value)
-                        .map(distr => ({
-                          value: distr.code,
-                          label: distr.name,
-                        }))[0]
+                      getCurrentDistrictSelected(
+                        formik.values.currentDistrict,
+                      ) || { value: '', label: '' }
                     }
                     classes={{
                       option: classes.option,
                     }}
                     onChange={(event, newValue) => {
-                      onChange(newValue.value);
+                      // onChange(newValue.value);
+                      formik.setFieldValue('currentDistrict', newValue.value);
                     }}
                     autoHighlight
                     getOptionLabel={option => (option ? option.label : '')}
@@ -761,166 +1170,9 @@ export default function Round1(props) {
                       />
                     )}
                   />
-                )}
-              />
-              {errors.permanentDistrict && (
-                <span className="formError">
-                  {errors.permanentDistrict.message}
-                </span>
-              )}
-            </div>
-            <div className="form-group checkboxWrapper">
-              <Controller
-                name="currentIsPermanent"
-                control={control}
-                render={({ value, onChange }) => (
-                  <FormControl component="fieldset">
-                    <FormLabel
-                      component="legend"
-                      className={classes.labelStyle}
-                    >
-                      Địa chỉ thường trú trùng với địa chỉ hiện tại
-                    </FormLabel>
-                    <RadioGroup
-                      aria-label="currentIsPermanent"
-                      name="currentIsPermanent"
-                      value={value}
-                      onChange={e => {
-                        changeCurrentIsPermanent(e.target.value);
-                        onChange(e.target.value);
-                      }}
-                      className={classes.genderContainer}
-                    >
-                      <FormControlLabel
-                        value="1"
-                        control={<Radio />}
-                        label="Có"
-                      />
-                      <FormControlLabel
-                        value="0"
-                        control={<Radio />}
-                        label="Không"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                )}
-              />
-            </div>
-            {showPermanentAddress && (
-              <>
-                <div className="form-group">
-                  <Controller
-                    as={TextField}
-                    name="currentAddLine1"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    label="Địa chỉ hiện tại"
-                    control={control}
-                  />
-                  {errors.currentAddLine1 && errors.currentAddLine1 && (
+                  {formik.errors.currentDistrict && (
                     <span className="formError">
-                      {errors.currentAddLine1.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <Controller
-                    name="currentProvince"
-                    control={control}
-                    render={({ value, onChange }) => (
-                      <Autocomplete
-                        style={{ width: '100%' }}
-                        options={provinces.map(province => ({
-                          value: province.code,
-                          label: province.name,
-                        }))}
-                        value={
-                          provinces &&
-                          value &&
-                          provinces.filter(prov => prov.value === value)[0]
-                        }
-                        classes={{
-                          option: classes.option,
-                        }}
-                        autoHighlight
-                        onChange={(event, newValue) => {
-                          changeCurrentProvince(newValue);
-                          onChange(newValue.value);
-                        }}
-                        getOptionLabel={option =>
-                          option ? option.label : ''
-                        }
-                        renderInput={params => (
-                          <TextField
-                            {...params}
-                            label="Thành phố"
-                            variant="outlined"
-                            inputProps={{
-                              ...params.inputProps,
-                              autoComplete: 'new-password', // disable autocomplete and autofill
-                            }}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                  {errors.currentProvince && (
-                    <span className="formError">
-                      {errors.currentProvince.message}
-                    </span>
-                  )}
-                </div>
-
-                <div className="form-group">
-                  <Controller
-                    name="currentDistrict"
-                    control={control}
-                    render={({ value, onChange }) => (
-                      <Autocomplete
-                        style={{ width: '100%' }}
-                        options={
-                          currentDistrict &&
-                          currentDistrict.map(dis => ({
-                            value: dis.code,
-                            label: dis.name,
-                          }))
-                        }
-                        value={
-                          currentDistrict &&
-                          value &&
-                          currentDistrict.filter(
-                            obj => obj.value === value,
-                          )[0]
-                        }
-                        classes={{
-                          option: classes.option,
-                        }}
-                        onChange={(event, newValue) => {
-                          onChange(newValue.value);
-                        }}
-                        autoHighlight
-                        getOptionLabel={option =>
-                          option ? option.label : ''
-                        }
-                        renderInput={params => (
-                          <TextField
-                            {...params}
-                            label="Quận"
-                            variant="outlined"
-                            inputProps={{
-                              ...params.inputProps,
-                              autoComplete: 'new-password', // disable autocomplete and autofill
-                            }}
-                          />
-                        )}
-                      />
-                    )}
-                  />
-                  {errors.currentDistrict && (
-                    <span className="formError">
-                      {errors.currentDistrict.message}
+                      {formik.errors.currentDistrict}
                     </span>
                   )}
                 </div>
@@ -929,7 +1181,7 @@ export default function Round1(props) {
             <button
               type="submit"
               className={classes.action}
-              disabled={formState.isSubmitting}
+              disabled={formik.isSubmitting}
             >
               Tiếp tục
             </button>

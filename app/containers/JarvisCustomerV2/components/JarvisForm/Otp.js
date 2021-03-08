@@ -147,17 +147,18 @@ export default function OTP(props) {
               ),
             );
           }).then(result => {
-            if (result.processStep === 'BasicStep') {
-              props.history.push('/v2/liveness-guiline');
-            } else if (result.processStep === 'Work_Form_R_2') {
-              props.history.push('/v2/round2-1');
-            } else if (result.processStep === 'Work_Form_R_2_2') {
-              props.history.push('/v2/round2-2');
-            } else if (result.processStep === 'Work_Form_R_3') {
-              props.history.push('/v2/round3');
-            } else {
-              props.history.push('/v2/round1Fill');
-            }
+            // if (result.processStep === 'BasicStep') {
+            //   props.history.push('/v2/liveness-guiline');
+            // } else if (result.processStep === 'Work_Form_R_2') {
+            //   props.history.push('/v2/round2-1');
+            // } else if (result.processStep === 'Work_Form_R_2_2') {
+            //   props.history.push('/v2/round2-2');
+            // } else if (result.processStep === 'Work_Form_R_3') {
+            //   props.history.push('/v2/round3');
+            // } else {
+            //   props.history.push('/v2/round1');
+            // }
+            props.history.push('/v2/round1');
           }),
         // }
         // props.setStep(17);

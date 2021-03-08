@@ -3,18 +3,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
 import { makeStyles } from '@material-ui/core/styles';
-// import TextField from '@material-ui/core/TextField';
-import {
-  Button
-} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import { TextField } from 'formik-material-ui';
-import { yupResolver } from '@hookform/resolvers';
-import * as yup from 'yup';
-import XRegExp from 'xregexp';
 import _ from 'lodash';
-import { Formik, Form, Field, useFormik } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import XRegExp from 'xregexp';
 import JarvisFormStyle from './JarvisFormStyle';
 import Header from './Header';
 import StepApp from './StepApp';
@@ -107,47 +101,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const schema = yup.object().shape({
-  fullName: yup
-    .string()
-    .required('Bạn chưa nhập họ tên')
-    .test(
-      `test-name`,
-      'Xin lỗi quý khách, phần họ tên không đúng định dạng',
-      value => {
-        // your logic
-        if (value.split(' ').length < 2) {
-          return false;
-        }
-        return true;
-      },
-    )
-    .max(100, 'Tên không vượt quá 100 kí tự')
-    .matches(XRegExp('^[\\pL\\s]+$'), 'Tên không chứa ký tự đặc biệt'),
-  mobileNumber: yup
-    .string()
-    .required('Bạn chưa nhập số điện thoại')
-    .length(10, 'số điện thoại gồm 10 số')
-    .matches(XRegExp('^[\\d]+$'), 'Số điện thoại chỉ bao gồm số'),
-  email: yup
-    .string()
-    .required('Bạn chưa nhập email')
-    .matches(
-      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-      'Email không đúng định dạng',
-    ),
-});
-
 export default function Round1(props) {
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', null);
-  // const { handleSubmit, errors, control, formState } = useForm({
-  //   reValidateMode: 'onChange',
-  //   shouldFocusError: true,
-  //   shouldUnregister: true,
-  //   defaultValues: {},
-  //   resolver: yupResolver(schema),
-  // });
-  // const errors = {};
   const classes = useStyles();
 
   function onSubmitForm(values) {
@@ -203,15 +158,12 @@ export default function Round1(props) {
             }
             if (!values.mobileNumber) {
               errors.mobileNumber = 'Bạn chưa nhập số điện thoại';
+            } else if (values.mobileNumber && values.mobileNumber.length > 10) {
+              errors.mobileNumber = 'Số điện thoại chỉ từ 10 số';
             }
             return errors;
           }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              setSubmitting(false);
-              alert(JSON.stringify(values, null, 2));
-            }, 500);
-          }}
+          onSubmit={values => onSubmitForm(values)}
         >
           {({ submitForm, isSubmitting }) => (
             <Form>
@@ -228,9 +180,6 @@ export default function Round1(props) {
                       root: classes.inputStyle,
                     }}
                   />
-                  {/* {errors.fullName && (
-                    <span className="formError">{errors.fullName}</span>
-                  )} */}
                 </div>
                 <div className="form-group">
                   <Field
@@ -244,9 +193,6 @@ export default function Round1(props) {
                       root: classes.inputStyle,
                     }}
                   />
-                  {/* {errors.mobileNumber && (
-                    <span className="formError">{errors.mobileNumber}</span>
-                  )} */}
                 </div>
 
                 <div className="form-group">
@@ -261,9 +207,6 @@ export default function Round1(props) {
                       root: classes.inputStyle,
                     }}
                   />
-                  {/* {errors.email && (
-                    <span className="formError">{errors.email}</span>
-                  )} */}
                 </div>
 
                 <Button
