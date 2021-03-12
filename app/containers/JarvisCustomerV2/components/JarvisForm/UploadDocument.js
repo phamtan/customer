@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import EmailIcon from '@material-ui/icons/Email';
 import Modal from 'react-bootstrap/Modal';
@@ -13,6 +13,7 @@ import _ from 'lodash';
 import Header from './Header';
 import StepApp from './StepApp';
 import JarvisFormStyle from './JarvisFormStyle';
+import * as Actions from '../../actions';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -21,6 +22,8 @@ const useStyles = makeStyles(theme => ({
     minHeight: '100vh',
     backgroundColor: 'white',
     marginTop: '16px',
+    paddingLeft: '16px',
+    paddingRight: '16px',
     [theme.breakpoints.up('md')]: {
       marginTop: '0px',
       marginBottom: '32px',
@@ -79,6 +82,7 @@ const useStyles = makeStyles(theme => ({
     width: '120px',
     height: '120px',
     borderRadius: '1px',
+    marginRight: '8px',
     border: '2px dashed #979797',
     display: 'flex',
     justifyContent: 'center',
@@ -122,11 +126,34 @@ const useStyles = makeStyles(theme => ({
     border: 'none',
     textTransform: 'uppercase',
   },
+  imageContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  imgDocument: {
+    width: '120px',
+    height: '120px',
+    marginRight: '8px',
+    border: '1px solid #ddd',
+    borderRadius: '5px',
+  },
 }));
 
-export default function ConfirmDocument(props) {
+export default function UploadDocument(props) {
   const classes = useStyles();
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
+  const documentRequired = _.get(
+    props,
+    'jarvisCustomerV2.docRequired.listDocs',
+    [
+      'IdProff',
+      'ResidenceProof',
+      'EmploymentProof',
+      'FinancialProof',
+      'AdditionalResidenceProof',
+    ],
+  );
+  const documents = _.get(props, 'jarvisCustomerV2.documents', null);
   const { handleSubmit } = useForm({
     reValidateMode: 'onChange',
     shouldFocusError: true,
@@ -134,37 +161,129 @@ export default function ConfirmDocument(props) {
     defaultValues: {},
   });
   const [show, setShow] = useState(false);
-  const [appform, setAppform] = useState();
-  const [idProof, setIdProof] = useState();
-  const [addProof, setAddProof] = useState();
-  const [financeProof, setFinanceProof] = useState();
-  const [employmentProof, setEmploymentProof] = useState();
-  const [signature, setSignature] = useState();
+  const [checkAddProof, setCheckAddProof] = useState(false);
+  const [allowSubmit, setAllowSubmit] = useState(false);
 
-  function onSubmitForm() {}
-  function upload(event, type) {
-    if (type === 'appform') {
-      setAppform(URL.createObjectURL(event.target.files[0]));
-    } else if (type === 'idProof') {
-      setIdProof(URL.createObjectURL(event.target.files[0]));
-    } else if (type === 'addProof') {
-      setAddProof(URL.createObjectURL(event.target.files[0]));
-    } else if (type === 'financeProof') {
-      setFinanceProof(URL.createObjectURL(event.target.files[0]));
-    } else if (type === 'employmentProof') {
-      setEmploymentProof(URL.createObjectURL(event.target.files[0]));
-    } else if (type === 'signature') {
-      setSignature(URL.createObjectURL(event.target.files[0]));
+  useEffect(() => {
+    if (jarvisCustomer && !jarvisCustomer.applicationId) {
+      props.history.push('/v2/login');
+    } else {
+      props.dispatch(
+        Actions.getDocRequired({ id: jarvisCustomer.applicationId }),
+      );
+      props.dispatch(Actions.getDocApp({ id: jarvisCustomer.applicationId }));
+    }
+  }, [props.dispatch]);
+
+  useEffect(() => {
+    if (jarvisCustomer && jarvisCustomer.applicationId) {
+      if (
+        jarvisCustomer.checkSaleLocation &&
+        !jarvisCustomer.checkSaleLocation.allowPermanentAddress
+      ) {
+        setCheckAddProof(true);
+      }
+      checkDocumentRequired();
+    }
+  }, [jarvisCustomer]);
+
+  function upload(event, type, typeId) {
+    return new Promise((resolve, reject) => {
+      props.dispatch(
+        Actions.uploadDocument(
+          {
+            multipartFile: event.target.files[0],
+            documentType: typeId,
+            appId: jarvisCustomer.applicationId,
+          },
+          resolve,
+          reject,
+        ),
+      );
+    })
+      .then(() => {
+        props.handleShoMessage({
+          message: 'Tải ảnh thành công',
+          severity: 'success',
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        props.handleShoMessage({
+          message: 'Có lỗi xảy ra vui lòng thử lại',
+          severity: 'error',
+        });
+      });
+  }
+
+  function regisDone() {
+    return new Promise((resolve, reject) => {
+      props.dispatch(
+        Actions.checkLosRound3(
+          {
+            jarvisId: jarvisCustomer.jarvisId,
+          },
+          resolve,
+          reject,
+        ),
+      );
+    })
+      .then(() => {
+        props.history.push('/v2/regis-done');
+      })
+      .catch(err => {
+        console.log(err);
+        props.handleShoMessage({
+          message: 'Có lỗi xảy ra vui lòng thử lại',
+          severity: 'error',
+        });
+      });
+  }
+
+  function checkDocumentRequired() {
+    if (documentRequired && documents && documents.length > 0) {
+      let allow = true;
+      if (
+        documentRequired.indexOf('IdProff') > -1 &&
+        documents.filter(doc => doc.subTypeId === 1).length < 1
+      ) {
+        allow = false;
+      }
+      if (
+        documentRequired.indexOf('ResidenceProof') > -1 &&
+        documents.filter(doc => doc.subTypeId === 4).length < 1
+      ) {
+        allow = false;
+      }
+      if (
+        checkAddProof &&
+        documentRequired.indexOf('ResidenceProof') > -1 &&
+        documents.filter(doc => doc.subTypeId === 7).length < 1
+      ) {
+        allow = false;
+      }
+      if (
+        documentRequired.indexOf('FinancialProof') > -1 &&
+        documents.filter(doc => doc.subTypeId === 12).length < 1
+      ) {
+        allow = false;
+      }
+      if (
+        documentRequired.indexOf('EmploymentProof') > -1 &&
+        documents.filter(doc => doc.subTypeId === 9).length < 1
+      ) {
+        allow = false;
+      }
+      setAllowSubmit(allow);
     }
   }
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   return (
     <JarvisFormStyle>
       <Header className="header" step={5} />
-      <StepApp />
+      <StepApp step={2} />
       <div className={classes.container}>
         <div className={classes.pageTitle}>NỘP HỒ SƠ</div>
         <div className={classes.secondHeader}>
@@ -173,86 +292,122 @@ export default function ConfirmDocument(props) {
           <b> giấy tờ dưới đây</b>
         </div>
         <Divider className={classes.divider} />
-        <form className="documentWrapper" onSubmit={handleSubmit(onSubmitForm)}>
+        {documentRequired && documentRequired.indexOf('IdProff') > -1 && (
           <div className="uploadItem">
-            <div>
-              <div className={classes.documentTitle}>
-                <ArrowForwardIcon className={classes.arrowIcon} />
-                Đề nghị mở thẻ
-              </div>
-              <div className="uploadImg">
-                <input
-                  type="file"
-                  id="appformfile"
-                  onChange={e => upload(e, 'appform')}
-                  style={{ display: 'none' }}
-                />
-                <label className={classes.uploadItem} htmlFor="appformfile">
-                  <CameraAltIcon className={classes.iconCamera} />
-                </label>
-              </div>
+            <div className={classes.documentTitle}>
+              <ArrowForwardIcon className={classes.arrowIcon} />
+              Chứng minh thông tin cá nhân *
             </div>
-          </div>
-          <div>
-            <img src={appform} />
-          </div>
-          <div className="uploadItem">
-            <div>
-              <div className={classes.documentTitle}>
-                <ArrowForwardIcon className={classes.arrowIcon} />
-                Chứng minh thông tin cá nhân *
-              </div>
+            <div className={classes.imageContainer}>
               <div className="uploadImg">
                 <input
                   type="file"
                   id="idProoffile"
-                  onChange={e => upload(e, 'idProof')}
+                  onChange={e => upload(e, 'idProof', 1)}
                   style={{ display: 'none' }}
                 />
                 <label className={classes.uploadItem} htmlFor="idProoffile">
                   <CameraAltIcon className={classes.iconCamera} />
                 </label>
               </div>
+              <div>
+                {documents &&
+                  documents
+                    .filter(doc => doc.subTypeId === 1)
+                    .map(doc => (
+                      <img
+                        key={doc.id}
+                        className={classes.imgDocument}
+                        src={`data:image/png;base64,${doc.document}`}
+                      />
+                    ))}
+              </div>
             </div>
           </div>
-          <div>
-            <img src={idProof} />
-          </div>
-
+        )}
+        {documentRequired && documentRequired.indexOf('ResidenceProof') > -1 && (
           <div className="uploadItem">
-            <div>
+            <div className={classes.documentTitle}>
+              <ArrowForwardIcon className={classes.arrowIcon} />
+              Chứng minh nơi ở
+            </div>
+            <div className={classes.imageContainer}>
+              <div className="uploadImg">
+                <input
+                  type="file"
+                  id="residentProoffile"
+                  onChange={e => upload(e, 'residentProoffile', 4)}
+                  style={{ display: 'none' }}
+                />
+                <label
+                  className={classes.uploadItem}
+                  htmlFor="residentProoffile"
+                >
+                  <CameraAltIcon className={classes.iconCamera} />
+                </label>
+              </div>
+              <div>
+                {documents &&
+                  documents
+                    .filter(doc => doc.subTypeId === 4)
+                    .map(doc => (
+                      <img
+                        key={doc.id}
+                        className={classes.imgDocument}
+                        src={`data:image/png;base64,${doc.document}`}
+                      />
+                    ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {checkAddProof &&
+          documentRequired &&
+          documentRequired.indexOf('ResidenceProof') > -1 && (
+            <div className="uploadItem">
               <div className={classes.documentTitle}>
                 <ArrowForwardIcon className={classes.arrowIcon} />
                 Chứng minh nơi ở hiện tại
               </div>
-              <div className="uploadImg">
-                <input
-                  type="file"
-                  id="addProoffile"
-                  onChange={e => upload(e, 'addProof')}
-                  style={{ display: 'none' }}
-                />
-                <label className={classes.uploadItem} htmlFor="addProoffile">
-                  <CameraAltIcon className={classes.iconCamera} />
-                </label>
+              <div className={classes.imageContainer}>
+                <div className="uploadImg">
+                  <input
+                    type="file"
+                    id="addProoffile"
+                    onChange={e => upload(e, 'addProof', 7)}
+                    style={{ display: 'none' }}
+                  />
+                  <label className={classes.uploadItem} htmlFor="addProoffile">
+                    <CameraAltIcon className={classes.iconCamera} />
+                  </label>
+                </div>
+                <div>
+                  {documents &&
+                    documents
+                      .filter(doc => doc.subTypeId === 7)
+                      .map(doc => (
+                        <img
+                          key={doc.id}
+                          className={classes.imgDocument}
+                          src={`data:image/png;base64,${doc.document}`}
+                        />
+                      ))}
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <img src={addProof} />
-          </div>
-
+          )}
+        {documentRequired && documentRequired.indexOf('FinancialProof') > -1 && (
           <div className="uploadItem">
-            <div>
-              <div className={classes.documentTitle}>
-                <ArrowForwardIcon className={classes.arrowIcon} />
-                Chứng minh tài chính
-              </div>
+            <div className={classes.documentTitle}>
+              <ArrowForwardIcon className={classes.arrowIcon} />
+              Chứng minh tài chính
+            </div>
+            <div className={classes.imageContainer}>
               <div className="uploadImg">
                 <input
                   type="file"
                   id="financeProoffile"
-                  onChange={e => upload(e, 'financeProof')}
+                  onChange={e => upload(e, 'financeProof', 12)}
                   style={{ display: 'none' }}
                 />
                 <label
@@ -262,23 +417,33 @@ export default function ConfirmDocument(props) {
                   <CameraAltIcon className={classes.iconCamera} />
                 </label>
               </div>
+              <div>
+                {documents &&
+                  documents
+                    .filter(doc => doc.subTypeId === 12)
+                    .map(doc => (
+                      <img
+                        key={doc.id}
+                        className={classes.imgDocument}
+                        src={`data:image/png;base64,${doc.document}`}
+                      />
+                    ))}
+              </div>
             </div>
           </div>
-          <div>
-            <img src={financeProof} />
-          </div>
-
+        )}
+        {documentRequired && documentRequired.indexOf('EmploymentProof') > -1 && (
           <div className="uploadItem">
-            <div>
-              <div className={classes.documentTitle}>
-                <ArrowForwardIcon className={classes.arrowIcon} />
-                Chứng minh công việc
-              </div>
+            <div className={classes.documentTitle}>
+              <ArrowForwardIcon className={classes.arrowIcon} />
+              Chứng minh công việc
+            </div>
+            <div className={classes.imageContainer}>
               <div className="uploadImg">
                 <input
                   type="file"
                   id="employmentProoffile"
-                  onChange={e => upload(e, 'employmentProof')}
+                  onChange={e => upload(e, 'employmentProof', 9)}
                   style={{ display: 'none' }}
                 />
                 <label
@@ -288,39 +453,30 @@ export default function ConfirmDocument(props) {
                   <CameraAltIcon className={classes.iconCamera} />
                 </label>
               </div>
-            </div>
-          </div>
-          <div>
-            <img src={employmentProof} />
-          </div>
-
-          <div className="uploadItem">
-            <div>
-              <div className={classes.documentTitle}>
-                <ArrowForwardIcon className={classes.arrowIcon} />
-                Chữ ký
-              </div>
-              <div className="uploadImg">
-                <input
-                  type="file"
-                  id="signaturefile"
-                  onChange={e => upload(e, 'signature')}
-                  style={{ display: 'none' }}
-                />
-                <label className={classes.uploadItem} htmlFor="signature">
-                  <CameraAltIcon className={classes.iconCamera} />
-                </label>
+              <div>
+                {documents &&
+                  documents
+                    .filter(doc => doc.subTypeId === 9)
+                    .map(doc => (
+                      <img
+                        key={doc.id}
+                        className={classes.imgDocument}
+                        src={`data:image/png;base64,${doc.document}`}
+                      />
+                    ))}
               </div>
             </div>
           </div>
-          <div>
-            <img src={signature} />
-          </div>
+        )}
 
-          <button type="button" onClick={handleShow} className={classes.action}>
-            Tiếp tục
-          </button>
-        </form>
+        <button
+          type="button"
+          disabled={!allowSubmit}
+          onClick={() => regisDone()}
+          className={classes.action}
+        >
+          Tiếp tục
+        </button>
       </div>
       <Modal
         show={show}

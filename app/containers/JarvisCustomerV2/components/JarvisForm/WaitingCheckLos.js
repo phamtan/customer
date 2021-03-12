@@ -137,7 +137,7 @@ const useStyles = makeStyles(theme => ({
     width: '160px',
     height: '160px',
     borderRadius: '50%',
-    backgroundColor: '#18b7c7',
+    backgroundColor: '#1ac5d6',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

@@ -11,6 +11,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: 'white',
     width: '100%',
     maxWidth: '470px',
+    minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

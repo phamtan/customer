@@ -156,11 +156,20 @@ const CAPTURE_OPTIONS = {
 };
 export default function Round2OCRGuide(props) {
   const jarvisCustomer = _.get(props, 'jarvisCustomerV2.jarvisCustomer', {});
+  const selections = _.get(props, 'jarvisCustomerV2.selections', {});
   const [isCameraOpen, setIsCameraOpen] = useState(true);
   const [open, setOpen] = React.useState(false);
   const [cardImage, setCardImage] = useState();
   const classes = useStyles();
   const cameraRef = useRef();
+
+  function removeUnicode(str) {
+    return (str || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/Đ/g, 'D');
+  }
 
   function handleTakePhoto(blob) {
     // Do stuff with the photo...
@@ -193,18 +202,15 @@ export default function Round2OCRGuide(props) {
             .then(resFacceMatching => {
               if (resFacceMatching.statusCodeValue === 200) {
                 const valueSubmit = jarvisCustomer;
-                if (
-                  responseOCR.data &&
-                  responseOCR.data[0] &&
-                  responseOCR.data[0].id
-                ) {
+                if (responseOCR.data && responseOCR.data[0]) {
                   const docIssuedDate = responseOCR.data[0].issue_date;
-                  if (
-                    !!docIssuedDate &&
-                    docIssuedDate !== 'N/A' &&
-                    (moment(docIssuedDate, 'DD/MM/YYYY', true).isValid() ||
-                      moment(docIssuedDate, 'DD-MM-YYYY', true).isValid())
-                  ) {
+                  let docIssuedPlace = responseOCR.data[0].issue_loc;
+                  if (responseOCR.data[0].type_new === 'new_back') {
+                    docIssuedPlace = 'Cuc CSDKQL cu tru va DLQG ve dan cu';
+                  } else if (responseOCR.data[0].type_new === 'passport') {
+                    docIssuedPlace = 'Cuc quan ly xuat nhap canh';
+                  }
+                  if (!!docIssuedDate && docIssuedDate !== 'N/A') {
                     const formatDate = docIssuedDate.includes('-')
                       ? 'DD-MM-YYYY'
                       : 'DD/MM/YYYY';
@@ -213,6 +219,19 @@ export default function Round2OCRGuide(props) {
                       formatDate,
                     ).format('DD/MM/YYYY');
                     valueSubmit.docIssuedDate = issueDateConvert || '';
+                  }
+                  if (docIssuedPlace && selections) {
+                    const selectionPlaces = selections.filter(
+                      selection => selection.category === 'PLACEOFISSUE',
+                    );
+                    const provinceCheck = selectionPlaces.filter(prov =>
+                      removeUnicode(prov.nameVI)
+                        .toLowerCase()
+                        .includes(removeUnicode(docIssuedPlace).toLowerCase()),
+                    );
+                    if (provinceCheck && provinceCheck.length > 0) {
+                      valueSubmit.docIssuedPlace = provinceCheck[0].code;
+                    }
                   }
                 }
                 props.dispatch(Actions.saveRawData(valueSubmit));

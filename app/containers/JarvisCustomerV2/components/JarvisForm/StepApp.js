@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#f7f8f8',
     border: '1px solid white',
     height: '38px',
-    marginTop: '16px',
+    marginTop: '80px',
     [theme.breakpoints.up('md')]: {
       backgroundColor: 'white',
       paddingTop: '48px',

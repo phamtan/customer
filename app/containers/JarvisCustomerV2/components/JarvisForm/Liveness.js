@@ -14,10 +14,8 @@ import RecordRTC from 'recordrtc';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import AutorenewIcon from '@material-ui/icons/Autorenew';
 import Typography from '@material-ui/core/Typography';
-import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 import Slider from '@material-ui/core/Slider';
 import _ from 'lodash';
 import captureBtn from 'images/capture.svg';
@@ -28,11 +26,10 @@ import * as Actions from '../../actions';
 const useStyles = makeStyles(theme => ({
   pageContainer: {
     width: '100%',
-    marginTop: '18px',
     minHeight: '100vh',
     maxWidth: '470px',
     [theme.breakpoints.up('md')]: {
-      marginTop: '16px',
+      marginTop: '0px',
       marginBottom: '32px',
       borderRadius: '4px',
     },
@@ -130,13 +127,7 @@ const useStyles = makeStyles(theme => ({
     boxSizing: 'content-box',
     position: 'fixed',
     [theme.breakpoints.up('sm')]: {
-      marginTop: '-90vw',
-      height: '80vw',
-    },
-    [theme.breakpoints.up('lg')]: {
-      marginTop: '-95vw',
-      width: '20vw',
-      height: '30vw',
+      display: 'none',
     },
   },
   root: {
@@ -167,6 +158,23 @@ const useStyles = makeStyles(theme => ({
     top: '27px',
     left: '30%',
     textTransform: 'uppercase',
+  },
+  countDown: {
+    position: 'absolute',
+    zIndex: '1000',
+    bottom: '55px',
+    color: 'white',
+    right: '50%',
+    fontSize: '35px',
+  },
+  rotateCamera: {
+    position: 'absolute',
+    bottom: '35px',
+    zIndex: '1000',
+    color: 'white',
+    right: '20%',
+    width: '48px',
+    height: '48px',
   },
 }));
 
@@ -275,10 +283,11 @@ export default function VideoKYC(props) {
       (/Macintosh/i.test(navigator.userAgent) && 'ontouchend' in document),
   );
   const [localMediaStream, setLocalMediaStream] = useState(null);
-  const [useFrontCamera, setUseFrontCamera] = useState(null);
+  const [useFrontCamera, setUseFrontCamera] = useState(!!(isMobile || isIpad));
   const [recording, setRecording] = useState(false);
   const [process, setProcess] = useState(false);
   const [open, setOpen] = React.useState(false);
+  const [countDown, setCountDown] = React.useState(7);
 
   useEffect(() => {
     openCamera();
@@ -347,9 +356,10 @@ export default function VideoKYC(props) {
 
   function showError() {
     props.handleShoMessage({
-      message: 'Bạn chỉ được chọn tối đa 2 thẻ',
+      message: 'Bạn cần cho phép mở camera để thực hiện xác thực',
       severity: 'error',
     });
+    // openCamera();
   }
 
   function initCameraInfo(stream) {
@@ -374,6 +384,14 @@ export default function VideoKYC(props) {
       const recorder = RecordRTC(stream, constraints);
       recorder.startRecording();
       setRecording(true);
+      let count = 7;
+      const countInterval = setInterval(() => {
+        count -= 1;
+        setCountDown(count);
+      }, 1000);
+      if (count === 0) {
+        clearInterval(countInterval);
+      }
       const sleep = m => new Promise(r => setTimeout(r, m));
       await sleep(7000);
 
@@ -404,8 +422,8 @@ export default function VideoKYC(props) {
               !response.is_deepfake &&
               res.statusCodeValue === 200
             ) {
-              props.history.push('/v2/ocr-guideline');
               turnOffCamera();
+              props.history.push('/v2/ocr-guideline');
             } else {
               setOpen(true);
             }
@@ -458,19 +476,19 @@ export default function VideoKYC(props) {
             className={classes.backIcon}
             onClick={() => props.history.push('/v2/liveness-guiline')}
           />
-          {isMobile && (
-            <FlipCameraIosOutlinedIcon
-              onClick={() => changeCamera()}
-              className={classes.changeCamera}
-            />
-          )}
           <div className={classes.divOverlay} />
+          {(isMobile || isIpad) && (
+            <div className={classes.textGuidline}>
+              {!recording && !process ? 'Để mặt bạn vừa trong hình oval' : ''}
+            </div>
+          )}
           <div className={classes.textGuidline}>
-            {!recording && !process
-              ? 'Để mặt bạn vừa trong hình oval'
-              : 'Đang quay'}
+            {recording ? 'Đang quay' : ''}
           </div>
-          {!process && (
+          <div className={classes.textGuidline}>
+            {process ? 'Đang xử lý' : ''}
+          </div>
+          {!process && !recording && (
             <img
               src={captureBtn}
               disabled={recording}
@@ -479,6 +497,14 @@ export default function VideoKYC(props) {
               onClick={recordVideo}
             />
           )}
+          {(isMobile || isIpad) && !recording && !process && (
+            <AutorenewIcon
+              classes={{ root: classes.rotateCamera }}
+              onClick={() => changeCamera()}
+              className={classes.rotateCamera}
+            />
+          )}
+          {recording && <div className={classes.countDown}>{countDown}</div>}
           <canvas style={{ display: 'none' }} />
           <Dialog
             onClose={handleClose}

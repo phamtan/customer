@@ -32,6 +32,21 @@ import {
   GET_DETAIL,
   GET_DETAIL_APP_BY_TOKEN,
   LOGIN,
+  GET_ALL_CARD,
+  GET_ALL_CARD_SUCCESS,
+  GET_BRANCHES_SUCCESS,
+  GET_BRANCHES,
+  GET_DOC_REQUIRED,
+  GET_DOC_REQUIRED_SUCCESS,
+  UPLOAD_DOCUMENT,
+  GET_DOC_APP,
+  GET_DOC_APP_SUCCESS,
+  UPLOAD_DOCUMENT_SUCCESS,
+  GET_SHOW_VIRTUAL_CARD,
+  GET_SHOW_VIRTUAL_CARD_SUCCESS,
+  CHECK_LOS_ROUND3,
+  SHOW_LOADING,
+  HIDE_LOADING,
 } from './constants';
 
 export function defaultAction() {
@@ -113,6 +128,76 @@ export function getProvincesError() {
 export function getCompaniesSuccess(data) {
   return {
     type: REQUEST_COMPANIES_SUCCESS,
+    payload: data,
+  };
+}
+
+export function getAllCard() {
+  return {
+    type: GET_ALL_CARD,
+  };
+}
+
+export function getAllCardSuccess(data) {
+  return {
+    type: GET_ALL_CARD_SUCCESS,
+    payload: data,
+  };
+}
+
+export function getBranches() {
+  return {
+    type: GET_BRANCHES,
+  };
+}
+
+export function getBranchesSuccess(data) {
+  return {
+    type: GET_BRANCHES_SUCCESS,
+    payload: data,
+  };
+}
+
+export function getDocRequired(data) {
+  return {
+    type: GET_DOC_REQUIRED,
+    payload: data,
+  };
+}
+
+export function getDocRequiredSuccess(data) {
+  return {
+    type: GET_DOC_REQUIRED_SUCCESS,
+    payload: data,
+  };
+}
+
+export function getDocApp(data) {
+  return {
+    type: GET_DOC_APP,
+    payload: data,
+  };
+}
+
+export function getDocAppSuccess(data) {
+  return {
+    type: GET_DOC_APP_SUCCESS,
+    payload: data,
+  };
+}
+
+export function uploadDocument(data, resolve, reject) {
+  return {
+    type: UPLOAD_DOCUMENT,
+    payload: data,
+    resolve,
+    reject,
+  };
+}
+
+export function uploadDocumentSuccess(data) {
+  return {
+    type: UPLOAD_DOCUMENT_SUCCESS,
     payload: data,
   };
 }
@@ -249,5 +334,40 @@ export function login(data, resolve, reject) {
     payload: data,
     resolve,
     reject,
+  };
+}
+
+export function getShowVirtualCard(data) {
+  return {
+    type: GET_SHOW_VIRTUAL_CARD,
+    payload: data,
+  };
+}
+
+export function getShowVirtualCardSuccess(data) {
+  return {
+    type: GET_SHOW_VIRTUAL_CARD_SUCCESS,
+    payload: data,
+  };
+}
+
+export function checkLosRound3(data, resolve, reject) {
+  return {
+    type: CHECK_LOS_ROUND3,
+    payload: data,
+    resolve,
+    reject,
+  };
+}
+
+export function showLoading() {
+  return {
+    type: SHOW_LOADING,
+  };
+}
+
+export function hideLoading() {
+  return {
+    type: HIDE_LOADING,
   };
 }

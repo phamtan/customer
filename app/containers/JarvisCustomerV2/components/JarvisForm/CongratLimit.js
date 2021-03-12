@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-shadow */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -12,6 +13,25 @@ import TextField from '@material-ui/core/TextField';
 import logo from 'images/logo-vp.svg';
 import _ from 'lodash';
 import dataCard from 'images/data.json';
+import platinumCashbackCard from 'images/cards/platinum-cashback.png';
+import stepupCard from 'images/cards/step-up-card.png';
+import ladyCard from 'images/cards/lady-card.png';
+import mobiClassicCard from 'images/cards/mobi-classic.png';
+import mobiPlatinumCard from 'images/cards/mobi-platinum-card.png';
+import mobiTitaniumCard from 'images/cards/mobi-titanium-card.png';
+import californiacenturyon from 'images/cards/californiacenturyonhorizon.png';
+import californiaplatinum from 'images/cards/californiaplatinum.png';
+import platinumTravel from 'images/cards/platinum-travel.png';
+import shopeesuper from 'images/cards/shopeesuper.png';
+import signatureTravel from 'images/cards/signature-travel.png';
+import theshopee from 'images/cards/theshopee.png';
+import titaniumcashback from 'images/cards/titanium-cashback.png';
+import travelgold from 'images/cards/travelgold.png';
+import no1Card from 'images/cards/no1-card.png';
+import mc2Card from 'images/cards/mc2-card.png';
+import vnaCard from 'images/cards/vna-card.png';
+import platinumCard from 'images/cards/platinum-card.png';
+import congrat from 'images/congrat.png';
 import Header from './Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -147,6 +167,43 @@ const useStyles = makeStyles(() => ({
     width: '40px',
     marginLeft: '6px',
   },
+  cardImage: {
+    width: '258px',
+    margin: 'auto',
+    zIndex: '10',
+  },
+  congrat: {
+    marginTop: '-120px',
+  },
+  congratContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  congratText: {
+    fontFamily: 'Roboto',
+    fontSize: '24px',
+    lineHeight: '1.33',
+    letterSpacing: '0.18px',
+    textAlign: 'center',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontWeight: '400',
+  },
+  congratSubText: {
+    fontFamily: 'Roboto',
+    fontSize: '16px',
+    lineHeight: '1.5',
+    letterSpacing: '0.15px',
+    textAlign: 'center',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontWeight: '400',
+    marginTop: '16px',
+    marginBottom: '10px',
+  },
+  congratLimit: {
+    fontSize: '16px',
+    marginBottom: '16px',
+  },
 }));
 
 export default function ChooseLimit(props) {
@@ -154,17 +211,77 @@ export default function ChooseLimit(props) {
   const { cards } = dataCard;
   const classes = useStyles();
   const [amount, setAmount] = useState(card ? Number(card.maxLimit) * 0.5 : 30);
-  const card = cards.filter(
-    card => card.id_int === jarvisCustomer.selectedCard,
-  )[0];
+  const card = cards.filter(card => card.id_int === 1)[0];
 
   useEffect(() => {
     if (card) {
-      setAmount(Number(card.maxLimit) * 0.5);
+      setAmount(
+        jarvisCustomer && jarvisCustomer.finalApprovedLimit
+          ? jarvisCustomer.finalApprovedLimit
+          : 10,
+      );
     } else {
       props.history.push('/v2');
     }
   }, [card]);
+
+  function getCardImage(id) {
+    if (id === 1) {
+      return mc2Card;
+    }
+    if (id === 2) {
+      return ladyCard;
+    }
+    if (id === 3) {
+      return stepupCard;
+    }
+    if (id === 4) {
+      return platinumCard;
+    }
+    if (id === 5) {
+      return vnaCard;
+    }
+    if (id === 6) {
+      return mobiClassicCard;
+    }
+    if (id === 7) {
+      return mobiPlatinumCard;
+    }
+    if (id === 8) {
+      return mobiTitaniumCard;
+    }
+    if (id === 9) {
+      return no1Card;
+    }
+    if (id === 10) {
+      return platinumCashbackCard;
+    }
+    if (id === 11) {
+      return platinumTravel;
+    }
+    if (id === 12) {
+      return titaniumcashback;
+    }
+    if (id === 13) {
+      return californiaplatinum;
+    }
+    if (id === 14) {
+      return californiacenturyon;
+    }
+    if (id === 15) {
+      return travelgold;
+    }
+    if (id === 16) {
+      return signatureTravel;
+    }
+    if (id === 17) {
+      return theshopee;
+    }
+    if (id === 18) {
+      return shopeesuper;
+    }
+    return vnaCard;
+  }
 
   function chooseThisBenefit() {
     const values = jarvisCustomer;
@@ -225,6 +342,27 @@ export default function ChooseLimit(props) {
       <div className={classes.pageContainer}>
         <div className={classes.titleHeader}>
           <div>Chọn hạn mức phù hợp</div>
+        </div>
+        <div className={classes.congratContainer}>
+          <img
+            className={classes.cardImage}
+            src={getCardImage(card ? card.id_int : 1)}
+          />
+          <img className={classes.congrat} src={congrat} />
+        </div>
+
+        <div className={classes.congratText}>Xin chúc mừng</div>
+        <div className={classes.congratSubText}>
+          Bạn <b>đủ điều kiện</b> để đăng ký <b>{card.name}</b>
+        </div>
+        <div className={classes.congratLimit}>
+          Hạn mức bạn được phê duyệt là{' '}
+          <b>
+            {jarvisCustomer && jarvisCustomer.finalApprovedLimit
+              ? jarvisCustomer.finalApprovedLimit
+              : ''}{' '}
+            triệu VNĐ
+          </b>
         </div>
 
         <Card className={classes.cardStyle}>

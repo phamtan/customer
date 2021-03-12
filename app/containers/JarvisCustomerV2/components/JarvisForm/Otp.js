@@ -2,7 +2,7 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import { makeStyles } from '@material-ui/core/styles';
@@ -62,6 +62,7 @@ const useStyles = makeStyles(theme => ({
     margin: '4px',
     border: 'none',
     textAlign: 'center',
+    padding: 0,
     [theme.breakpoints.up('sm')]: {
       width: '50px',
     },
@@ -106,6 +107,10 @@ export default function OTP(props) {
 
   const classes = useStyles();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   function handleOtpChange(value, index) {
     if (value) {
       const currentOtp = [...otpValues];
@@ -133,37 +138,39 @@ export default function OTP(props) {
         ),
       );
     })
-      .then(
-        () =>
-          // if (jarvisCustomer.message) {
-          new Promise((res, rej) => {
-            props.dispatch(
-              Actions.getDetailApp(
-                {
-                  custId: jarvisCustomer.id,
-                },
-                res,
-                rej,
-              ),
-            );
-          }).then(result => {
-            // if (result.processStep === 'BasicStep') {
-            //   props.history.push('/v2/liveness-guiline');
-            // } else if (result.processStep === 'Work_Form_R_2') {
-            //   props.history.push('/v2/round2-1');
-            // } else if (result.processStep === 'Work_Form_R_2_2') {
-            //   props.history.push('/v2/round2-2');
-            // } else if (result.processStep === 'Work_Form_R_3') {
-            //   props.history.push('/v2/round3');
-            // } else {
-            //   props.history.push('/v2/round1');
-            // }
+      .then(() =>
+        new Promise((res, rej) => {
+          props.dispatch(
+            Actions.getDetailApp(
+              {
+                custId: jarvisCustomer.id,
+              },
+              res,
+              rej,
+            ),
+          );
+        }).then(result => {
+          if (['Canceled', 'Rejected', 'Cancelled'].includes(result.status)) {
+            props.history.push('/v2/reject');
+          } else if (result.processStep === 'BasicStep') {
+            props.history.push('/v2/liveness-guiline');
+          } else if (result.processStep === 'Work_Form_R_2') {
+            props.history.push('/v2/round2-1');
+          } else if (result.processStep === 'Work_Form_R_2_2') {
+            props.history.push('/v2/round2-2');
+          } else if (result.processStep === 'Work_Form_R_3') {
+            props.history.push('/v2/round3');
+          } else if (
+            result.processStep === 'Work_Form_R_1' &&
+            result.flow === 'PA'
+          ) {
+            props.history.push('/v2/round3');
+          } else {
             props.history.push('/v2/round1');
-          }),
-        // }
-        // props.setStep(17);
+          }
+        }),
       )
-      .catch(() => {
+      .catch(err => {
         props.handleShoMessage({
           message: 'Lỗi xác thực OTP',
           severity: 'error',

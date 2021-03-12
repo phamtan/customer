@@ -10,6 +10,9 @@ import logo from 'images/logo-vp.svg';
 
 const useStyles = makeStyles(theme => ({
   headerContainer: {
+    position: 'fixed',
+    top: 0,
+    zIndex: 100,
     width: '100%',
     backgroundColor: 'white',
     display: 'flex',

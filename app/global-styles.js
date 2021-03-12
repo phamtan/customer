@@ -525,6 +525,11 @@ const GlobalStyle = createGlobalStyle`
   .slick-track {
     display: flex !important;
   }
+  input[type=number]::-webkit-inner-spin-button, 
+  input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+  }
 `;
 
 export default GlobalStyle;

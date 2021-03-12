@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   titleHeader: {
-    fontSize: '24px',
+    fontSize: '16px',
     width: '100%',
     textAlign: 'center',
     marginTop: '16px',
@@ -106,6 +106,7 @@ export default function Round1(props) {
   const classes = useStyles();
 
   function onSubmitForm(values) {
+    props.dispatch(Actions.showLoading());
     const valuesSubmit = Object.assign(jarvisCustomer, values);
     valuesSubmit.type = 'CC';
     valuesSubmit.processStep = 'BasicStep';
@@ -116,6 +117,7 @@ export default function Round1(props) {
         if (data.needVerifyOTP) {
           props.history.push('/v2/otp');
         }
+        setTimeout(props.dispatch(Actions.hideLoading()), 1000);
       })
       .catch(() => {
         props.handleShoMessage({
@@ -131,8 +133,7 @@ export default function Round1(props) {
       <StepApp />
       <div className={classes.formContainer}>
         <div className={classes.titleHeader}>
-          <div>Xin chào!</div>
-          <div>Nhập thông tin của bạn để mở thẻ tín dụng mới.</div>
+          <div>Chào bạn, cùng bắt đầu nhé!</div>
         </div>
         <Formik
           initialValues={jarvisCustomer || {}}
@@ -141,7 +142,7 @@ export default function Round1(props) {
             if (!values.email) {
               errors.email = 'Bạn chưa nhập email';
             } else if (
-              !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i.test(
+              !/^[a-zA-Z0-9!#$%&’*+/=?^_{|}~-]+(?:\.[a-zA-Z0-9!#$%&’*+/=?^_{|}~-]+)*@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/i.test(
                 values.email,
               )
             ) {
@@ -158,8 +159,16 @@ export default function Round1(props) {
             }
             if (!values.mobileNumber) {
               errors.mobileNumber = 'Bạn chưa nhập số điện thoại';
-            } else if (values.mobileNumber && values.mobileNumber.length > 10) {
+            } else if (
+              values.mobileNumber &&
+              values.mobileNumber.length !== 10
+            ) {
               errors.mobileNumber = 'Số điện thoại chỉ từ 10 số';
+            } else if (
+              values.mobileNumber &&
+              !/^[0-9]+$/i.test(values.mobileNumber)
+            ) {
+              errors.mobileNumber = 'Số điện thoại chỉ bao gồm số';
             }
             return errors;
           }}

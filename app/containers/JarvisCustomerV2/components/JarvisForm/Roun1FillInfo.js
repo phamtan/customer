@@ -13,6 +13,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -78,6 +79,14 @@ const useStyles = makeStyles(theme => ({
       fontSize: 18,
     },
   },
+  formSubItemContainer: {
+    display: 'flex',
+    marginBottom: '1rem',
+    alignItems: 'center',
+  },
+  formSubItem: {
+    width: '100%',
+  }
 }));
 
 
@@ -111,18 +120,16 @@ export default function Round1(props) {
   //   ),
   // );
 
-  // useEffect(() => {
-  //   if (!jarvisCustomer) {
-  //     props.history.push('/v2');
-  //   }
-  // }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const validate = values => {
     const errors = {};
     if (!values.email) {
       errors.email = 'Bạn chưa nhập email';
     } else if (
-      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i.test(
+      !/^[a-zA-Z0-9!#$%&’*+/=?^_{|}~-]+(?:\.[a-zA-Z0-9!#$%&’*+/=?^_{|}~-]+)*@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/i.test(
         values.email,
       )
     ) {
@@ -141,12 +148,17 @@ export default function Round1(props) {
       errors.mobileNumber = 'Bạn chưa nhập số điện thoại';
     } else if (values.mobileNumber && values.mobileNumber.length > 10) {
       errors.mobileNumber = 'Số điện thoại chỉ từ 10 số';
+    } else if (
+      values.mobileNumber &&
+      !/^[0-9]+$/i.test(values.mobileNumber)
+    ) {
+      errors.mobileNumber = 'Số điện thoại chỉ bao gồm số';
     }
 
     if (!values.dob) {
       errors.dob = 'Bạn chưa nhập ngày sinh'
     } else if (values.dob) {
-      const doDob = moment(values.dob);
+      const doDob = moment(values.dob, 'DD/MM/YYYY');
       const currentYear = moment();
       if (doDob.year()) {
         const diffYears = currentYear.diff(doDob, 'years', true);
@@ -154,6 +166,9 @@ export default function Round1(props) {
           errors.dob =
             'Xin lỗi quý khách, Tuổi không được nhỏ hơn 18 và lớn hơn 65';
         }
+      } else {
+        errors.dob =
+           'Xin lỗi quý khách, phần nhập ngày sinh sai định dạng';
       }
     }
 
@@ -164,7 +179,7 @@ export default function Round1(props) {
         'Xin lỗi quý khách, Hiện tại hệ thống chưa hỗ trợ người nước ngoài';
     }
 
-    const listCustomerIdentityDTO = [{}];
+    const listCustomerIdentityDTO = [];
 
     if (!values.documentType) {
       errors.documentType = 'Bạn chưa chọn loại giấy tờ';
@@ -205,12 +220,12 @@ export default function Round1(props) {
     } else if (
       values.documentType === 'PV' &&
       (!values.listCustomerIdentityDTO ||
+      (!values.listCustomerIdentityDTO[0] ||
+        !values.listCustomerIdentityDTO[0].documentNumber) &&
       (!values.listCustomerIdentityDTO[1] ||
-        !values.listCustomerIdentityDTO[1].documentNumber) &&
-      (!values.listCustomerIdentityDTO[2] ||
-        !values.listCustomerIdentityDTO[2].documentNumber))
+        !values.listCustomerIdentityDTO[1].documentNumber))
     ) {
-      listCustomerIdentityDTO.splice(1, 0, {
+      listCustomerIdentityDTO.splice(0, 0, {
         documentNumber:
           'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
       });
@@ -218,12 +233,12 @@ export default function Round1(props) {
     } else if (
       values.documentType === 'PV' &&
       (!values.listCustomerIdentityDTO ||
+      values.listCustomerIdentityDTO[0] &&
+      values.listCustomerIdentityDTO[0] === 'PV' &&
       values.listCustomerIdentityDTO[1] &&
-      values.listCustomerIdentityDTO[1] === 'PV' &&
-      values.listCustomerIdentityDTO[2] &&
-      !values.listCustomerIdentityDTO[2].documentNumber)
+      !values.listCustomerIdentityDTO[1].documentNumber)
     ) {
-      listCustomerIdentityDTO.splice(1, 0, {
+      listCustomerIdentityDTO.splice(0, 0, {
         documentNumber:
           'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
       });
@@ -231,11 +246,11 @@ export default function Round1(props) {
     } else if (
       values.documentType === 'PV' &&
       values.listCustomerIdentityDTO &&
-             values.listCustomerIdentityDTO[1] &&
-             values.listCustomerIdentityDTO[1].documentType ===
+             values.listCustomerIdentityDTO[0] &&
+             values.listCustomerIdentityDTO[0].documentType ===
                'PV' &&
-               values.listCustomerIdentityDTO[2] && 
-             values.listCustomerIdentityDTO[2].documentType === 'PV'
+               values.listCustomerIdentityDTO[1] && 
+             values.listCustomerIdentityDTO[1].documentType === 'PV'
     ) {
       errors.documentNumber =
                'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư';
@@ -245,7 +260,25 @@ export default function Round1(props) {
       const documentLength = values.documentNumber;
       if (documentLength < 8 || documentLength > 13) {
         errors.documentNumber =
-          'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư';
+          'Xin lỗi quý khách, Hộ chiếu quý khách vừa nhập không hợp lệ';
+      }
+    }
+
+    if (
+      values.listCustomerIdentityDTO &&
+      values.listCustomerIdentityDTO[0] &&
+      values.listCustomerIdentityDTO[0].documentType === 'PV' &&
+      values.listCustomerIdentityDTO[0] &&
+      values.listCustomerIdentityDTO[0].documentNumber
+    ) {
+      const documentLength =
+        values.listCustomerIdentityDTO[0].documentNumber;
+      if (documentLength < 8 || documentLength > 13) {
+        listCustomerIdentityDTO.splice(1, 0, {
+          documentNumber:
+            'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
+        });
+        errors.listCustomerIdentityDTO = listCustomerIdentityDTO;
       }
     }
 
@@ -259,25 +292,7 @@ export default function Round1(props) {
       const documentLength =
         values.listCustomerIdentityDTO[1].documentNumber;
       if (documentLength < 8 || documentLength > 13) {
-        listCustomerIdentityDTO.splice(1, 0, {
-          documentNumber:
-            'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
-        });
-        errors.listCustomerIdentityDTO = listCustomerIdentityDTO;
-      }
-    }
-
-    if (
-      values.listCustomerIdentityDTO &&
-      values.listCustomerIdentityDTO[2] &&
-      values.listCustomerIdentityDTO[2].documentType === 'PV' &&
-      values.listCustomerIdentityDTO[2] &&
-      values.listCustomerIdentityDTO[2].documentNumber
-    ) {
-      const documentLength =
-        values.listCustomerIdentityDTO[2].documentNumber;
-      if (documentLength < 8 || documentLength > 13) {
-        listCustomerIdentityDTO.splice(1, 0, {
+        listCustomerIdentityDTO.splice(0, 0, {
           documentNumber:
             'Xin lỗi quý khách, Bạn cần nhập ít nhất 1 số chứng minh thư',
         });
@@ -298,6 +313,9 @@ export default function Round1(props) {
       ) {
         errors.docIssuedDate =
                  'Xin lỗi quý khách, Hộ chiếu quá hạn 10 năm không được chấp nhận';
+      } else if (!doIssue.year()) {
+        errors.docIssuedDate =
+                 'Xin lỗi quý khách, Ngày cấp không đúng định dạng';
       }
     }
 
@@ -305,10 +323,19 @@ export default function Round1(props) {
       errors.docIssuedPlace = 'Xin lỗi quý khách, Bạn chưa chọn nơi cấp';
     } 
 
+    const reg = /[`~@!#$^%&*()_+=\\\-[\]';,./{}|"":<>?]/g;
+
     if (!values.permanentAddressLine1) {
       errors.permanentAddressLine1 =
         'Xin lỗi quý khách, Bạn chưa nhập địa chỉ thường trú';
+    } else if (
+      values.permanentAddressLine1 &&
+             reg.test(values.permanentAddressLine1)
+    ) {
+      errors.permanentAddressLine1 =
+               'Xin lỗi quý khách, Địa chỉ không có kí tự đặc biệt';
     } 
+    
 
     if (!values.permanentProvince) {
       errors.permanentProvince =
@@ -323,11 +350,19 @@ export default function Round1(props) {
     if (
       values.currentIsPermanent &&
       values.currentIsPermanent === '0' &&
-      !values.currentAddLine1
+      !values.currentAddressLine1
     ) {
-      errors.permanentAddressLine1 =
+      errors.currentAddressLine1 =
         'Xin lỗi quý khách, Bạn chưa nhập địa chỉ hiện tại';
-    } 
+    } else if (
+      values.currentIsPermanent &&
+             values.currentIsPermanent === '0' &&
+             values.currentAddressLine1 &&
+             reg.test(values.currentAddressLine1)
+    ) {
+      errors.currentAddressLine1 =
+               'Xin lỗi quý khách, Địa chỉ không có kí tự đặc biệt';
+    }
 
     if (
       values.currentIsPermanent &&
@@ -407,20 +442,33 @@ export default function Round1(props) {
 
   function onSubmitForm(values) {
     const valuesSubmit = Object.assign(jarvisCustomer, values);
-    valuesSubmit.docIssuedDate = moment(valuesSubmit.docIssuedDate).format(
-      'DD/MM/YYYY',
-    );
-    valuesSubmit.dob = moment(valuesSubmit.dob).format(
-      'YYYY-MM-DDTHH:mm:ss.SSS',
-    );
+    valuesSubmit.dob = moment(valuesSubmit.dob, 'DD/MM/YYYY')
+      .utc()
+      .isValid()
+      ? moment(valuesSubmit.dob, 'DD/MM/YYYY').format(
+        'YYYY-MM-DDTHH:mm:ss.SSS',
+      )
+      : null;
+    if (values.docIssuedDate && typeof values.docIssuedDate !== 'string') {
+      valuesSubmit.docIssuedDate = valuesSubmit.docIssuedDate.format('DD/MM/YYYY');
+    }
+    
     valuesSubmit.processStep = 'Work_Form_R_1';
     return new Promise((resolve, reject) => {
+      props.dispatch(Actions.saveDataApp(valuesSubmit, resolve, reject));
+    }).then((result) => new Promise((resolve, reject) => {
       props.dispatch(
-        Actions.checkLosRound1(valuesSubmit, resolve, reject),
+        Actions.checkLosRound1(
+          {
+            jarvisId: result.jarvisId,
+          },
+          resolve,
+          reject,
+        ),
       );
     }).then(() => {
       props.history.push('/v2/waiting');
-    }).catch(() => {
+    })).catch(() => {
       props.handleShoMessage({
         message: 'Có lỗi xảy ra',
         severity: 'error',
@@ -434,7 +482,7 @@ export default function Round1(props) {
       if (opt.value === value)
         return { value: opt.value, label: opt.label };
     });
-    return { value: item && item.value, label: item && item.label } || {};
+    return { value: item && item.value || '', label: item && item.label || '' } || null;
   }
 
   function getDistrictSelected(options, value) {
@@ -442,7 +490,7 @@ export default function Round1(props) {
       if (opt.code === value)
         return { value: opt.code, label: opt.name };
     });
-    return { value: item && item.code, label: item && item.name } || {};
+    return item && item.code ? { value: item && item.code || '', label: item && item.name || '' } : null;
   }
 
   function getCountrySelected(value) {
@@ -450,7 +498,7 @@ export default function Round1(props) {
       if (opt.isoCode === value)
         return { value: opt.isoCode, label: opt.vi };
     });
-    return { value: item && item.isoCode, label: item && item.vi } || {};
+    return item && item.isoCode ? { value: item && item.isoCode || '', label: item && item.vi || '' } : null;
   }
 
   function getCurrentProvinceSelected(value) {
@@ -460,7 +508,7 @@ export default function Round1(props) {
         if (opt.code === value)
           return { value: opt.code, label: opt.name };
       });
-    return { value: item && item.code, label: item && item.name } || {};
+    return item && item.code ? { value: item && item.code, label: item && item.name } : null;
   }
 
   function getCurrentDistrictSelected(value) {
@@ -469,10 +517,18 @@ export default function Round1(props) {
       currentDistrict.find(opt => {
         if (opt.code === value) return { value: opt.code, label: opt.name };
       });
-    return { value: item && item.code, label: item && item.name } || {};
+    return item && item.code ? { value: item && item.code, label: item && item.name } : null;
   }
 
-  ;
+  function getPlaceIssueSelected(value) {
+    const item = selections && selections.find(opt => {
+      if (opt.category === 'PLACEOFISSUE' && opt.code === value)
+        return { value: opt.code, label: opt.nameVI };
+    });
+    return { value: item && item.code, label: item && item.nameVI } || {};
+  }
+
+  const dateFormatter = str => str;
 
   return (
     <JarvisFormStyle>
@@ -491,6 +547,7 @@ export default function Round1(props) {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.fullName}
+                placeholder="Nguyễn văn A"
               />
               {formik.errors.fullName && formik.touched.fullName && (
                 <span className="formError">{formik.errors.fullName}</span>
@@ -505,6 +562,7 @@ export default function Round1(props) {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 className={classes.inputSytle}
+                placeholder="09765444"
                 classes={{
                   root: classes.inputStyle,
                 }}
@@ -537,7 +595,10 @@ export default function Round1(props) {
             </div>
 
             <div className="form-group">
-              <MuiPickersUtilsProvider utils={MomentUtils}>
+              <MuiPickersUtilsProvider
+                utils={MomentUtils}
+                libInstance={moment}
+              >
                 <KeyboardDatePicker
                   autoOk
                   name="dob"
@@ -545,17 +606,24 @@ export default function Round1(props) {
                   inputVariant="outlined"
                   label="Ngày sinh"
                   format="DD/MM/YYYY"
-                  value={
-                    formik.values.dob
-                      ? moment(formik.values.dob).format('DD/MM/YYYY')
+                  defaultValue={
+                    formik.values.dob &&
+                    moment(formik.values.dob, 'DD/MM/YYYY').isValid()
+                      ? formik.values.dob
                       : null
                   }
+                  value={formik.values.dob}
                   InputAdornmentProps={{ position: 'end' }}
+                  rifmFormatter={dateFormatter}
                   onChange={date => formik.setFieldValue('dob', date)}
+                  invalidDateMessage=""
+                  minDateMessage=""
+                  maxDateMessage=""
+                  disableFuture
                   fullWidth
                 />
               </MuiPickersUtilsProvider>
-              {formik.errors.dob && formik.touched.dob && (
+              {formik.errors.dob && (
                 <span className="formError">{formik.errors.dob}</span>
               )}
             </div>
@@ -601,24 +669,15 @@ export default function Round1(props) {
                 style={{ width: '100%' }}
                 name="nationality"
                 options={
-                  (countries &&
-                    countries.map(country => ({
-                      value: country.isoCode,
-                      label: country.vi,
-                      code: country.isoCode,
-                    }))) || [
-                    {
-                      value: '',
-                      label: '',
-                    },
-                  ]
+                  countries &&
+                  countries.map(country => ({
+                    value: country.isoCode,
+                    label: country.vi,
+                    code: country.isoCode,
+                  }))
                 }
                 value={
-                  (countries &&
-                    getCountrySelected(formik.values.nationality)) || {
-                    value: '',
-                    label: '',
-                  }
+                  countries && getCountrySelected(formik.values.nationality)
                 }
                 getOptionSelected={(option, val) => option.name === val.name}
                 classes={{
@@ -644,7 +703,7 @@ export default function Round1(props) {
                     variant="outlined"
                     inputProps={{
                       ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
+                      autoComplete: 'off', // disable autocomplete and autofill
                     }}
                   />
                 )}
@@ -686,22 +745,199 @@ export default function Round1(props) {
                 </span>
               )}
             </div>
+            <div className={classes.formSubItemContainer}>
+              <SubdirectoryArrowRightIcon />
+              <div className={classes.formSubItem}>
+                <TextField
+                  name="documentNumber"
+                  onChange={formik.handleChange}
+                  value={formik.values.documentNumber}
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  label="Số giấy tờ"
+                />
+                {formik.errors.documentNumber &&
+                  formik.touched.documentNumber && (
+                    <span className="formError">
+                      {formik.errors.documentNumber}
+                    </span>
+                  )}
+              </div>
+            </div>
+
+            <div className={classes.formSubItemContainer}>
+              <SubdirectoryArrowRightIcon />
+              <div className={classes.formSubItem}>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                  <KeyboardDatePicker
+                    autoOk
+                    variant="inline"
+                    inputVariant="outlined"
+                    label="Ngày cấp"
+                    format="DD/MM/YYYY"
+                    name="docIssuedDate"
+                    value={
+                      formik.values.docIssuedDate &&
+                      moment(
+                        formik.values.docIssuedDate,
+                        'DD/MM/YYYY',
+                      ).isValid()
+                        ? formik.values.docIssuedDate
+                        : null
+                    }
+                    defaultValue={
+                      formik.values.docIssuedDate &&
+                      moment(
+                        formik.values.docIssuedDate,
+                        'DD/MM/YYYY',
+                      ).isValid()
+                        ? formik.values.docIssuedDate
+                        : null
+                    }
+                    InputAdornmentProps={{ position: 'end' }}
+                    onChange={date => {
+                      formik.setFieldValue('docIssuedDate', date);
+                    }}
+                    fullWidth
+                    invalidDateMessage=""
+                    minDateMessage=""
+                    maxDateMessage=""
+                    disableFuture
+                  />
+                </MuiPickersUtilsProvider>
+                {formik.errors.docIssuedDate &&
+                  formik.touched.docIssuedDate && (
+                    <span className="formError">
+                      {formik.errors.docIssuedDate}
+                    </span>
+                  )}
+              </div>
+            </div>
+
+            <div className={classes.formSubItemContainer}>
+              <SubdirectoryArrowRightIcon />
+              <div className={classes.formSubItem}>
+                <Autocomplete
+                  name="docIssuedPlace"
+                  style={{ width: '100%' }}
+                  options={
+                    (selections &&
+                      selections
+                        .filter(
+                          selection =>
+                            selection.category &&
+                            selection.category === 'PLACEOFISSUE',
+                        )
+                        .map(selection => ({
+                          value: selection.code || '',
+                          label: selection.nameVI || '',
+                        }))) || ['']
+                  }
+                  value={getPlaceIssueSelected(formik.values.docIssuedPlace)}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  onChange={(event, newValue) => {
+                    // onChange(newValue.value);
+                    formik.setFieldValue('docIssuedPlace', newValue.value);
+                  }}
+                  autoHighlight
+                  getOptionLabel={option => (option ? option.label : '')}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label="Nơi cấp"
+                      variant="outlined"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+                {formik.errors.docIssuedPlace &&
+                  formik.touched.docIssuedPlace && (
+                    <span className="formError">
+                      {formik.errors.docIssuedPlace}
+                    </span>
+                  )}
+              </div>
+            </div>
 
             <div className="form-group">
-              <TextField
-                name="documentNumber"
-                onChange={formik.handleChange}
-                value={formik.values.documentNumber}
-                type="text"
-                fullWidth
-                variant="outlined"
-                label="Số giấy tờ"
+              <Autocomplete
+                style={{ width: '100%' }}
+                options={DOCUMENT_TYPE}
+                name={`listCustomerIdentityDTO[${0}].documentType`}
+                classes={{
+                  option: classes.option,
+                }}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue(
+                    `listCustomerIdentityDTO[${0}].documentType`,
+                    newValue.value,
+                  );
+                }}
+                value={getDocumentSelected(
+                  formik.values.listCustomerIdentityDTO &&
+                    formik.values.listCustomerIdentityDTO[0] &&
+                    formik.values.listCustomerIdentityDTO[0].documentType
+                    ? formik.values.listCustomerIdentityDTO[0].documentType
+                    : null,
+                )}
+                autoHighlight
+                getOptionLabel={option => (option ? option.label : '')}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Loại giấy tờ thứ 2"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password', // disable autocomplete and autofill
+                    }}
+                  />
+                )}
               />
-              {formik.errors.documentNumber && (
-                <span className="formError">
-                  {formik.errors.documentNumber}
-                </span>
-              )}
+              {formik.errors.listCustomerIdentityDTO &&
+                formik.errors.listCustomerIdentityDTO[0] &&
+                formik.errors.listCustomerIdentityDTO[0].documentType && (
+                  <span className="formError">
+                    {formik.errors.listCustomerIdentityDTO[0].documentType}
+                  </span>
+                )}
+            </div>
+
+            <div className={classes.formSubItemContainer}>
+              <SubdirectoryArrowRightIcon />
+              <div className={classes.formSubItem}>
+                <TextField
+                  name={`listCustomerIdentityDTO[${1}].documentNumber`}
+                  onChange={formik.handleChange}
+                  value={
+                    formik.values.listCustomerIdentityDTO &&
+                    formik.values.listCustomerIdentityDTO[0]
+                      ? formik.values.listCustomerIdentityDTO[0]
+                          .documentNumber
+                      : ''
+                  }
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  label="Số giấy tờ thứ 2"
+                />
+                {formik.errors.listCustomerIdentityDTO &&
+                  formik.errors.listCustomerIdentityDTO[0] &&
+                  formik.errors.listCustomerIdentityDTO[0].documentNumber && (
+                    <span className="formError">
+                      {
+                        formik.errors.listCustomerIdentityDTO[0]
+                          .documentNumber
+                      }
+                    </span>
+                  )}
+              </div>
             </div>
 
             <div className="form-group">
@@ -720,77 +956,9 @@ export default function Round1(props) {
                 }}
                 value={getDocumentSelected(
                   formik.values.listCustomerIdentityDTO &&
-                    formik.values.listCustomerIdentityDTO[1] &&
-                    formik.values.listCustomerIdentityDTO[1].documentType
+                    formik.values.listCustomerIdentityDTO[1]
                     ? formik.values.listCustomerIdentityDTO[1].documentType
-                    : { value: '', label: '' },
-                )}
-                autoHighlight
-                getOptionLabel={option => (option ? option.label : '')}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="Loại giấy tờ thứ 2"
-                    variant="outlined"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-              {formik.errors.listCustomerIdentityDTO &&
-                formik.errors.listCustomerIdentityDTO[1] &&
-                formik.errors.listCustomerIdentityDTO[1].documentType && (
-                <span className="formError">
-                  {formik.errors.listCustomerIdentityDTO[1].documentType}
-                </span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <TextField
-                name={`listCustomerIdentityDTO[${1}].documentNumber`}
-                onChange={formik.handleChange}
-                value={
-                  formik.values.listCustomerIdentityDTO &&
-                  formik.values.listCustomerIdentityDTO[1]
-                    ? formik.values.listCustomerIdentityDTO[1].documentNumber
-                    : ''
-                }
-                type="text"
-                fullWidth
-                variant="outlined"
-                label="Số giấy tờ thứ 2"
-              />
-              {formik.errors.listCustomerIdentityDTO &&
-                formik.errors.listCustomerIdentityDTO[1] &&
-                formik.errors.listCustomerIdentityDTO[1].documentNumber && (
-                <span className="formError">
-                  {formik.errors.listCustomerIdentityDTO[1].documentNumber}
-                </span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <Autocomplete
-                style={{ width: '100%' }}
-                options={DOCUMENT_TYPE || ['']}
-                name={`listCustomerIdentityDTO[${2}].documentType`}
-                classes={{
-                  option: classes.option,
-                }}
-                onChange={(event, newValue) => {
-                  formik.setFieldValue(
-                    `listCustomerIdentityDTO[${2}].documentType`,
-                    newValue.value,
-                  );
-                }}
-                value={getDocumentSelected(
-                  formik.values.listCustomerIdentityDTO &&
-                    formik.values.listCustomerIdentityDTO[2]
-                    ? formik.values.listCustomerIdentityDTO[2].documentType
-                    : { value: '', label: '' },
+                    : null,
                 )}
                 autoHighlight
                 getOptionLabel={option => (option ? option.label : '')}
@@ -807,121 +975,43 @@ export default function Round1(props) {
                 )}
               />
               {formik.errors.listCustomerIdentityDTO &&
-                formik.errors.listCustomerIdentityDTO[2] &&
-                formik.errors.listCustomerIdentityDTO[2].documentType && (
-                <span className="formError">
-                  {formik.errors.listCustomerIdentityDTO[2].documentType}
-                </span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <TextField
-                name={`listCustomerIdentityDTO[${2}].documentNumber`}
-                onChange={formik.handleChange}
-                value={
-                  formik.values.listCustomerIdentityDTO &&
-                  formik.values.listCustomerIdentityDTO[2]
-                    ? formik.values.listCustomerIdentityDTO[2].documentNumber
-                    : ''
-                }
-                type="text"
-                fullWidth
-                variant="outlined"
-                label="Số giấy tờ thứ 3"
-              />
-              {formik.errors.listCustomerIdentityDTO &&
-                formik.errors.listCustomerIdentityDTO[2] &&
-                formik.errors.listCustomerIdentityDTO[2].documentNumber && (
-                <span className="formError">
-                  {formik.errors.listCustomerIdentityDTO[2].documentNumber}
-                </span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <MuiPickersUtilsProvider utils={MomentUtils}>
-                <KeyboardDatePicker
-                  autoOk
-                  variant="inline"
-                  inputVariant="outlined"
-                  label="Ngày cấp"
-                  format="DD/MM/YYYY"
-                  name="docIssuedDate"
-                  value={formik.values.docIssuedDate || null}
-                  InputAdornmentProps={{ position: 'end' }}
-                  onChange={date =>
-                    formik.setFieldValue('docIssuedDate', date)
-                  }
-                  fullWidth
-                />
-              </MuiPickersUtilsProvider>
-              {formik.errors.docIssuedDate && (
-                <span className="formError">
-                  {formik.errors.docIssuedDate}
-                </span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <Autocomplete
-                name="docIssuedPlace"
-                style={{ width: '100%' }}
-                options={
-                  (selections &&
-                    selections
-                      .filter(
-                        selection =>
-                          selection.category &&
-                          selection.category === 'PLACEOFISSUE',
-                      )
-                      .map(selection => ({
-                        value: selection.code || '',
-                        label: selection.nameVI || '',
-                      }))) || ['']
-                }
-                value={
-                  (selections &&
-                    formik.values.docIssuedPlace &&
-                    selections
-                      .filter(
-                        selection =>
-                          selection.category &&
-                          selection.category === 'PLACEOFISSUE' &&
-                          selection.code &&
-                          selection.code === formik.values.docIssuedPlace,
-                      )
-                      .map(selection => ({
-                        value: selection.code || '',
-                        label: selection.nameVI || '',
-                      }))[0]) || { value: '', label: '' }
-                }
-                classes={{
-                  option: classes.option,
-                }}
-                onChange={(event, newValue) => {
-                  // onChange(newValue.value);
-                  formik.setFieldValue('docIssuedPlace', newValue);
-                }}
-                autoHighlight
-                getOptionLabel={option => (option ? option.label : '')}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="Nơi cấp"
-                    variant="outlined"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
+                formik.errors.listCustomerIdentityDTO[1] &&
+                formik.errors.listCustomerIdentityDTO[1].documentType && (
+                  <span className="formError">
+                    {formik.errors.listCustomerIdentityDTO[1].documentType}
+                  </span>
                 )}
-              />
-              {formik.errors.docIssuedPlace && (
-                <span className="formError">
-                  {formik.errors.docIssuedPlace}
-                </span>
-              )}
+            </div>
+
+            <div className={classes.formSubItemContainer}>
+              <SubdirectoryArrowRightIcon />
+              <div className={classes.formSubItem}>
+                <TextField
+                  name={`listCustomerIdentityDTO[${1}].documentNumber`}
+                  onChange={formik.handleChange}
+                  value={
+                    formik.values.listCustomerIdentityDTO &&
+                    formik.values.listCustomerIdentityDTO[1]
+                      ? formik.values.listCustomerIdentityDTO[1]
+                          .documentNumber
+                      : ''
+                  }
+                  type="text"
+                  fullWidth
+                  variant="outlined"
+                  label="Số giấy tờ thứ 3"
+                />
+                {formik.errors.listCustomerIdentityDTO &&
+                  formik.errors.listCustomerIdentityDTO[1] &&
+                  formik.errors.listCustomerIdentityDTO[1].documentNumber && (
+                    <span className="formError">
+                      {
+                        formik.errors.listCustomerIdentityDTO[1]
+                          .documentNumber
+                      }
+                    </span>
+                  )}
+              </div>
             </div>
 
             <div className="form-group">
@@ -934,105 +1024,115 @@ export default function Round1(props) {
                 onChange={formik.handleChange}
                 value={formik.values.permanentAddressLine1}
               />
-              {formik.errors.permanentAddressLine1 && (
-                <span className="formError">
-                  {formik.errors.permanentAddressLine1}
-                </span>
-              )}
+              {formik.errors.permanentAddressLine1 &&
+                formik.touched.permanentAddressLine1 && (
+                  <span className="formError">
+                    {formik.errors.permanentAddressLine1}
+                  </span>
+                )}
             </div>
 
-            <div className="form-group">
-              <Autocomplete
-                style={{ width: '100%' }}
-                name="permanentProvince"
-                options={provinces.map(province => ({
-                  value: province.code,
-                  label: province.name,
-                }))}
-                classes={{
-                  option: classes.option,
-                }}
-                value={
-                  (provinces &&
-                    formik.values.permanentProvince &&
-                    provinces
-                      .filter(
-                        province =>
-                          province.code === formik.values.permanentProvince,
-                      )
-                      .map(province => ({
-                        value: province.code,
-                        label: province.name,
-                      }))[0]) || { value: '', label: '' }
-                }
-                autoHighlight
-                onChange={(event, newValue) => {
-                  changeProvince(newValue);
-                  formik.setFieldValue('permanentProvince', newValue.value);
-                }}
-                getOptionLabel={option => (option ? option.label : '')}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="Thành phố"
-                    variant="outlined"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-              {formik.errors.permanentProvince && (
-                <span className="formError">
-                  {formik.errors.permanentProvince}
-                </span>
-              )}
+            <div className={classes.formSubItemContainer}>
+              <SubdirectoryArrowRightIcon />
+              <div className={classes.formSubItem}>
+                <Autocomplete
+                  style={{ width: '100%' }}
+                  name="permanentProvince"
+                  options={provinces.map(province => ({
+                    value: province.code,
+                    label: province.name,
+                  }))}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  value={
+                    (provinces &&
+                      formik.values.permanentProvince &&
+                      provinces
+                        .filter(
+                          province =>
+                            province.code === formik.values.permanentProvince,
+                        )
+                        .map(province => ({
+                          value: province.code,
+                          label: province.name,
+                        }))[0]) ||
+                    null
+                  }
+                  autoHighlight
+                  onChange={(event, newValue) => {
+                    changeProvince(newValue);
+                    formik.setFieldValue('permanentProvince', newValue.value);
+                  }}
+                  getOptionLabel={option => (option ? option.label : '')}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label="Tỉnh/Thành phố"
+                      variant="outlined"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+                {formik.errors.permanentProvince &&
+                  formik.touched.permanentProvince && (
+                    <span className="formError">
+                      {formik.errors.permanentProvince}
+                    </span>
+                  )}
+              </div>
             </div>
 
-            <div className="form-group">
-              <Autocomplete
-                style={{ width: '100%' }}
-                name="permanentProvince"
-                options={
-                  (district &&
-                    district.map(dis => ({
-                      value: dis.code,
-                      label: dis.name,
-                    }))) || ['']
-                }
-                value={
-                  getDistrictSelected(
-                    district,
-                    formik.values.permanentDistrict,
-                  ) || { value: '', label: '' }
-                }
-                classes={{
-                  option: classes.option,
-                }}
-                onChange={(event, newValue) => {
-                  // onChange(newValue.value);
-                  formik.setFieldValue('permanentDistrict', newValue.value);
-                }}
-                autoHighlight
-                getOptionLabel={option => (option ? option.label : '')}
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    label="Quận"
-                    variant="outlined"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
-                    }}
-                  />
-                )}
-              />
-              {formik.errors.permanentDistrict && (
-                <span className="formError">
-                  {formik.errors.permanentDistrict}
-                </span>
-              )}
+            <div className={classes.formSubItemContainer}>
+              <SubdirectoryArrowRightIcon />
+              <div className={classes.formSubItem}>
+                <Autocomplete
+                  style={{ width: '100%' }}
+                  name="permanentProvince"
+                  options={
+                    (district &&
+                      district.map(dis => ({
+                        value: dis.code,
+                        label: dis.name,
+                      }))) || ['']
+                  }
+                  value={
+                    getDistrictSelected(
+                      district,
+                      formik.values.permanentDistrict,
+                    ) || null
+                  }
+                  classes={{
+                    option: classes.option,
+                  }}
+                  onChange={(event, newValue) => {
+                    // onChange(newValue.value);
+                    formik.setFieldValue('permanentDistrict', newValue.value);
+                  }}
+                  autoHighlight
+                  getOptionLabel={option => (option ? option.label : '')}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label="Quận/Huyện/Thành Phố"
+                      variant="outlined"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                />
+                {formik.errors.permanentDistrict &&
+                  formik.touched.permanentDistrict && (
+                    <span className="formError">
+                      {formik.errors.permanentDistrict}
+                    </span>
+                  )}
+              </div>
             </div>
             <div
               className="form-group checkboxWrapper"
@@ -1084,97 +1184,112 @@ export default function Round1(props) {
                     onChange={formik.handleChange}
                     value={formik.values.currentAddressLine1}
                   />
-                  {formik.errors.currentAddressLine1 && (
-                    <span className="formError">
-                      {formik.errors.currentAddressLine1}
-                    </span>
-                  )}
+                  {formik.errors.currentAddressLine1 &&
+                    formik.touched.currentAddressLine1 && (
+                      <span className="formError">
+                        {formik.errors.currentAddressLine1}
+                      </span>
+                    )}
                 </div>
 
-                <div className="form-group">
-                  <Autocomplete
-                    style={{ width: '100%' }}
-                    options={
-                      provinces.map(province => ({
-                        value: province.code,
-                        label: province.name,
-                      })) || ['']
-                    }
-                    name="currentProvince"
-                    value={
-                      getCurrentProvinceSelected(
-                        formik.values.currentProvince,
-                      ) || { value: '', label: '' }
-                    }
-                    classes={{
-                      option: classes.option,
-                    }}
-                    autoHighlight
-                    onChange={(event, newValue) => {
-                      changeCurrentProvince(newValue);
-                      formik.setFieldValue('currentProvince', newValue.value);
-                    }}
-                    getOptionLabel={option => (option ? option.label : '')}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label="Thành phố"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
-                  />
-                  {formik.errors.currentProvince && (
-                    <span className="formError">
-                      {formik.errors.currentProvince}
-                    </span>
-                  )}
+                <div className={classes.formSubItemContainer}>
+                  <SubdirectoryArrowRightIcon />
+                  <div className={classes.formSubItem}>
+                    <Autocomplete
+                      style={{ width: '100%' }}
+                      options={
+                        provinces.map(province => ({
+                          value: province.code,
+                          label: province.name,
+                        })) || ['']
+                      }
+                      name="currentProvince"
+                      value={
+                        getCurrentProvinceSelected(
+                          formik.values.currentProvince,
+                        ) || null
+                      }
+                      classes={{
+                        option: classes.option,
+                      }}
+                      autoHighlight
+                      onChange={(event, newValue) => {
+                        changeCurrentProvince(newValue);
+                        formik.setFieldValue(
+                          'currentProvince',
+                          newValue.value,
+                        );
+                      }}
+                      getOptionLabel={option => (option ? option.label : '')}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          label="Tỉnh/Thành phố"
+                          variant="outlined"
+                          inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'new-password', // disable autocomplete and autofill
+                          }}
+                        />
+                      )}
+                    />
+                    {formik.errors.currentProvince &&
+                      formik.touched.currentProvince && (
+                        <span className="formError">
+                          {formik.errors.currentProvince}
+                        </span>
+                      )}
+                  </div>
                 </div>
 
-                <div className="form-group">
-                  <Autocomplete
-                    style={{ width: '100%' }}
-                    options={
-                      (currentDistrict &&
-                        currentDistrict.map(dis => ({
-                          value: dis.code,
-                          label: dis.name,
-                        }))) || ['']
-                    }
-                    value={
-                      getCurrentDistrictSelected(
-                        formik.values.currentDistrict,
-                      ) || { value: '', label: '' }
-                    }
-                    classes={{
-                      option: classes.option,
-                    }}
-                    onChange={(event, newValue) => {
-                      // onChange(newValue.value);
-                      formik.setFieldValue('currentDistrict', newValue.value);
-                    }}
-                    autoHighlight
-                    getOptionLabel={option => (option ? option.label : '')}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label="Quận"
-                        variant="outlined"
-                        inputProps={{
-                          ...params.inputProps,
-                          autoComplete: 'new-password', // disable autocomplete and autofill
-                        }}
-                      />
-                    )}
-                  />
-                  {formik.errors.currentDistrict && (
-                    <span className="formError">
-                      {formik.errors.currentDistrict}
-                    </span>
-                  )}
+                <div className={classes.formSubItemContainer}>
+                  <SubdirectoryArrowRightIcon />
+                  <div className={classes.formSubItem}>
+                    <Autocomplete
+                      style={{ width: '100%' }}
+                      options={
+                        (currentDistrict &&
+                          currentDistrict.map(dis => ({
+                            value: dis.code,
+                            label: dis.name,
+                          }))) || ['']
+                      }
+                      value={
+                        getCurrentDistrictSelected(
+                          formik.values.currentDistrict,
+                        ) || null
+                      }
+                      classes={{
+                        option: classes.option,
+                      }}
+                      onChange={(event, newValue) => {
+                        // onChange(newValue.value);
+                        formik.setFieldValue(
+                          'currentDistrict',
+                          newValue.value,
+                        );
+                      }}
+                      autoHighlight
+                      getOptionLabel={option => (option ? option.label : '')}
+                      renderInput={params => (
+                        <TextField
+                          {...params}
+                          label="Quận/Huyện/Thành Phố"
+                          variant="outlined"
+                          inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'new-password', // disable autocomplete and autofill
+                          }}
+                        />
+                      )}
+                    />
+                    {formik.errors.currentDistrict &&
+                      formik.touched.currentDistrict && (
+                        <span className="formError">
+                          {formik.errors.currentDistrict}
+                        </span>
+                      )}
+                  </div>
                 </div>
               </>
             )}

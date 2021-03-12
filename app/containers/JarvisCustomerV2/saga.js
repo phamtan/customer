@@ -1,6 +1,6 @@
 import { takeEvery, call, put, all } from 'redux-saga/effects';
 import * as Api from 'utils/request';
-import { values } from 'lodash';
+import moment from 'moment';
 import {
   REQUEST_COUNTRIES,
   REQUEST_OTP,
@@ -20,6 +20,13 @@ import {
   GET_DETAIL,
   GET_DETAIL_APP_BY_TOKEN,
   LOGIN,
+  GET_ALL_CARD,
+  GET_BRANCHES,
+  GET_DOC_REQUIRED,
+  UPLOAD_DOCUMENT,
+  GET_DOC_APP,
+  GET_SHOW_VIRTUAL_CARD,
+  CHECK_LOS_ROUND3,
 } from './constants';
 import {
   callapiSuccess,
@@ -30,23 +37,31 @@ import {
   createApplicationSuccess,
   getSelectionSuccess,
   getCompaniesSuccess,
+  getAllCardSuccess,
+  getBranchesSuccess,
+  getDocRequiredSuccess,
+  getDocAppSuccess,
+  uploadDocumentSuccess,
+  getShowVirtualCardSuccess,
+  showLoading,
+  hideLoading,
 } from './actions';
 
 function* fetchCountriesSaga() {
   const payload = {
-    url: '/countries',
+    url: '/c-flow/countries',
     params: null,
   };
   const payloadProvinces = {
-    url: '/provinces',
+    url: '/c-flow/provinces',
     params: null,
   };
   const payloadSelection = {
-    url: '/selection-list-all',
+    url: '/c-flow/selection-list-all',
     params: null,
   };
   const payloadCompanies = {
-    url: '/companies',
+    url: '/c-flow/companies',
     params: {
       searchKey: '',
     },
@@ -67,9 +82,57 @@ function* fetchCountriesSaga() {
   }
 }
 
+function* fetchCardSaga() {
+  const payloadCards = {
+    url: '/credit-cards',
+  };
+  try {
+    const cards = yield call(Api.get, payloadCards);
+    yield put(getAllCardSuccess(cards));
+  } catch (error) {
+    // yield put(callapiErorr());
+  }
+}
+
+function* fetchBranchesSaga() {
+  const payloadBranches = {
+    url: '/branches',
+  };
+  try {
+    const branches = yield call(Api.get, payloadBranches);
+    yield put(getBranchesSuccess(branches));
+  } catch (error) {
+    // yield put(callapiErorr());
+  }
+}
+
+function* fetchDocRequiredSaga(action) {
+  const payloadDocRequired = {
+    url: `/c-flow/c-flow/get-doc-required/${action.payload.id}`,
+  };
+  try {
+    const docRequired = yield call(Api.get, payloadDocRequired);
+    yield put(getDocRequiredSuccess(docRequired));
+  } catch (error) {
+    // yield put(callapiErorr());
+  }
+}
+
+function* fetchDocAppSaga(action) {
+  const payloadDocRequired = {
+    url: `/c-flow/c-flow/get-docs-by-appid/${action.payload.id}`,
+  };
+  try {
+    const docRequired = yield call(Api.post, payloadDocRequired);
+    yield put(getDocAppSuccess(docRequired));
+  } catch (error) {
+    // yield put(callapiErorr());
+  }
+}
+
 function* saveApplicationSaga(action) {
   const payload = {
-    url: '/customer/save',
+    url: '/c-flow/customer/save',
     params: null,
     data: action.payload,
   };
@@ -90,8 +153,9 @@ function* saveApplicationSaga(action) {
 }
 
 function* registerSaga(action) {
+  yield put(showLoading());
   const payload = {
-    url: '/c-flow/register',
+    url: '/c-flow/c-flow/register',
     params: null,
     data: action.payload,
   };
@@ -115,7 +179,7 @@ function* registerSaga(action) {
 
 function* saveDataApplicationSaga(action) {
   const payload = {
-    url: '/customer/save',
+    url: '/c-flow/customer/save',
     params: null,
     data: action.payload,
   };
@@ -149,7 +213,7 @@ function* saveDataApplicationSaga(action) {
 
 function* requestOtpSaga(action) {
   const payload = {
-    url: '/esb/assign-otp',
+    url: '/c-flow/esb/assign-otp',
     params: action.payload,
   };
   try {
@@ -161,7 +225,7 @@ function* requestOtpSaga(action) {
 
 function* verifyOtpSaga(action) {
   const payload = {
-    url: '/esb/verify-otp',
+    url: '/c-flow/esb/verify-otp',
     params: action.payload,
   };
   try {
@@ -175,8 +239,8 @@ function* verifyOtpSaga(action) {
 
 function* checkLosRound1(action) {
   const payload = {
-    url: '/c-flow/check-round-one',
-    data: action.payload,
+    url: '/c-flow/c-flow/check-round-one',
+    params: action.payload,
   };
   try {
     const response = yield call(Api.post, payload);
@@ -190,7 +254,7 @@ function* checkLosRound1(action) {
 
 function* checkLosRound2(action) {
   const payload = {
-    url: '/c-flow/check-round-two',
+    url: '/c-flow/c-flow/check-round-two',
     data: action.payload,
   };
   try {
@@ -206,7 +270,7 @@ function* uploadLiveness(action) {
   const formData = new FormData();
   formData.append('video', action.payload.video);
   const payload = {
-    url: `/jarvis-bio/customer-liveness/${action.payload.customerId}`,
+    url: `/c-flow/jarvis-bio/customer-liveness/${action.payload.customerId}`,
     data: formData,
   };
   try {
@@ -228,7 +292,7 @@ function* saveRawDataSaga(action) {
 
 function* checkLosResultSaga(action) {
   const payload = {
-    url: `/c-flow/check-result-los/${action.payload.appId}`,
+    url: `/c-flow/c-flow/check-result-los/${action.payload.appId}`,
     params: {
       step: action.payload.round,
     },
@@ -246,7 +310,7 @@ function* uploadOCRFrontSaga(action) {
   const formData = new FormData();
   formData.append('imgFront', action.payload.imgFront);
   const payload = {
-    url: `/jarvis-bio/customer-orcFront/${action.payload.customerId}`,
+    url: `/c-flow/jarvis-bio/customer-orcFront/${action.payload.customerId}`,
     data: formData,
   };
   try {
@@ -262,7 +326,7 @@ function* uploadOCRBackSaga(action) {
   const formData = new FormData();
   formData.append('imgBack', action.payload.imgBack);
   const payload = {
-    url: `/jarvis-bio/customer-ocrBack/${action.payload.customerId}`,
+    url: `/c-flow/jarvis-bio/customer-ocrBack/${action.payload.customerId}`,
     data: formData,
   };
   try {
@@ -276,7 +340,9 @@ function* uploadOCRBackSaga(action) {
 
 function* faceMatchingSaga(action) {
   const payload = {
-    url: `/jarvis-bio/customer-facematching/${action.payload.customerId}`,
+    url: `/c-flow/jarvis-bio/customer-facematching/${
+      action.payload.customerId
+    }`,
   };
   try {
     const response = yield call(Api.post, payload);
@@ -289,7 +355,7 @@ function* faceMatchingSaga(action) {
 
 function* fetchCompaniesSearchSaga(action) {
   const payloadCompanies = {
-    url: '/companies',
+    url: '/c-flow/companies',
     params: {
       searchKey: action.payload,
     },
@@ -308,12 +374,14 @@ function* fetchCompaniesSearchSaga(action) {
 function* getApplicationDataSaga(action) {
   const payload = {
     // url: `/customer/get-app-detail/${action.payload.custId}`,
-    url: `/customer/get-app-detail`,
+    url: `/c-flow/customer/get-app-detail`,
     params: null,
   };
   try {
     const response = yield call(Api.get, payload);
-
+    if (response.dob) {
+      response.dob = moment(response.dob).format('DD/MM/YYYY');
+    }
     yield put(createApplicationSuccess(response));
     action.resolve(response);
   } catch (error) {
@@ -324,20 +392,22 @@ function* getApplicationDataSaga(action) {
 
 function* getApplicationByTokenSaga() {
   const payload = {
-    url: `/customer/get-app-detail`,
+    url: `/c-flow/customer/get-app-detail`,
     params: null,
   };
   try {
     const response = yield call(Api.get, payload);
 
     yield put(createApplicationSuccess(response));
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function* loginSaga(action) {
   const payload = {
     // url: `/customer/get-app-detail/${action.payload.custId}`,
-    url: `/c-flow/check-exist/${action.payload.mobileNumber}`,
+    url: `/c-flow/c-flow/check-exist/${action.payload.mobileNumber}`,
     params: null,
   };
   try {
@@ -356,6 +426,53 @@ function* loginSaga(action) {
   } catch (error) {
     // yield put(callapiErorr());
     action.reject(error);
+  }
+}
+
+function* uploadDocumentSaga(action) {
+  const formData = new FormData();
+  formData.append('uploadingFiles', action.payload.multipartFile);
+  formData.append('documentType', action.payload.documentType);
+  const payload = {
+    url: `/c-flow/c-flow/upload-docs/${action.payload.appId}`,
+    data: formData,
+  };
+  try {
+    const response = yield call(Api.post, payload);
+    yield put(uploadDocumentSuccess(response[0]));
+    action.resolve(response[0]);
+  } catch (error) {
+    // yield put(callapiErorr());
+    action.reject(error);
+  }
+}
+
+function* fetchShowVirtualCardSaga(action) {
+  const payloadVirtualCard = {
+    url: '/c-flow/virtual-cards/has-config',
+    params: action.payload,
+  };
+  try {
+    const docRequired = yield call(Api.get, payloadVirtualCard);
+    yield put(getShowVirtualCardSuccess(docRequired));
+  } catch (error) {
+    // yield put(callapiErorr());
+  }
+}
+
+function* checkLosRound3Saga(action) {
+  const payload = {
+    url: `/c-flow/c-flow/check-two-third`,
+    params: {
+      jarvisId: action.payload.jarvisId,
+    },
+  };
+
+  try {
+    const response = yield call(Api.post, payload);
+    action.resolve(response);
+  } catch (error) {
+    // yield put(callapiErorr());
   }
 }
 
@@ -379,5 +496,12 @@ export default function* jarvisCustomerV2Saga() {
     takeEvery(GET_DETAIL, getApplicationDataSaga),
     takeEvery(LOGIN, loginSaga),
     takeEvery(GET_DETAIL_APP_BY_TOKEN, getApplicationByTokenSaga),
+    takeEvery(GET_ALL_CARD, fetchCardSaga),
+    takeEvery(GET_BRANCHES, fetchBranchesSaga),
+    takeEvery(GET_DOC_REQUIRED, fetchDocRequiredSaga),
+    takeEvery(UPLOAD_DOCUMENT, uploadDocumentSaga),
+    takeEvery(GET_DOC_APP, fetchDocAppSaga),
+    takeEvery(GET_SHOW_VIRTUAL_CARD, fetchShowVirtualCardSaga),
+    takeEvery(CHECK_LOS_ROUND3, checkLosRound3Saga),
   ]);
 }
